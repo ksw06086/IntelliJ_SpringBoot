@@ -1,0 +1,77 @@
+타임리프 : 서버사이드 자바 템플릿 엔진(자바기반 템플릿 엔진)
+ㄴ 대체가 많이 되고 있음
+문법
+<table>
+  <thead>
+    <tr>
+      <th th:text="#{msgs.headers.name}">Name</th> // 값 가져오기
+      <th th:text="#{msgs.headers.price}">Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr th:each="prod: ${allProducts}(배열)"> // 해당 값이 있으면 그만큼 돌면서 값을 출력해줌
+      <td th:text="${prod.name}">Oranges</td>
+      <td th:text="${#numbers.formatDecimal(prod.price, 1, 2)}">0.99</td>
+    </tr>
+  </tbody>
+</table>
+
+
+****** 텍스트 사용 ********
+1. 일반 string값 사용 : th:text
+<p th:text="#{home.welcome}">Welcome to our grocery store!</p> => 값이 home.welcome으로 바뀜
+2. 링크 연결 : th:href
+<link rel="stylesheet" type="text/css" media="all" => 링크 연결
+          href="../../css/gtvg.css"(일반 html구동) th:href="@{/css/gtvg.css}"(서버 적용시) /> 
+
+3. 태그 있는 텍스트 사용시 : th:utext
+* home.welcome=Welcome to our <b>fantastic</b> grocery store!
+* <p th:utext="#{home.welcome}">Welcome to our grocery store!</p>
+=> <p>Welcome to our <b>fantastic</b> grocery store!</p>
+
+****** 표현 방법 ******
+ㄴ #{...} : 메시지 보낼 때(다국어 지원) 
+ㄴ @{...} : URL 링크 연결 시
+ㄴ ${...} : 컨트롤러에서 온 값을 사용할 때
+ㄴ *{...} : 오브젝트의 속성값 나타냄
+ㄴ ~{...} : 화면별로 공통적인 화면이 있을 경우 하나 작성하고 여러곳에서 활용할 때 이걸로 불러올 수 있음
+
+간단한 표현:
+	변수 표현식		:${...}	
+	선택 변수 표현식	:*{...}
+	메시지 표현		:#{...}
+	링크 URL 표현식	:@{...}
+	조각 표현		:~{...}
+리터럴
+	텍스트 리터럴		: 'one text', 'Another one!',…
+	숫자 리터럴		: 0, 34, 3.0, 12.3,…
+	부울 리터럴		: true,false
+	널 리터럴		:null
+	리터럴 토큰		: one, sometext, main,…
+텍스트 작업:
+	문자열 연결		:+
+	리터럴 대체		:|The name is ${name}|
+산술 연산:
+	이항 연산자			: +, -, *, /,%
+	빼기 기호(단항 연산자)	:-
+부울 연산:
+	이진 연산자			: and,or
+	부울 부정(단항 연산자)	: !,not
+비교와 평등:
+	비교기				: >, <, >=, <=( gt, lt, ge, le)
+	같음 연산자			: ==, !=( eq, ne)
+조건 연산자:
+	그렇다면			:(if) ? (then)
+	if-then-else		:(if) ? (then) : (else)
+	기본				:(value) ?: (defaultvalue)
+특수 토큰:
+	비작동				:_
+
+
+
+
+
+
+
+
+
