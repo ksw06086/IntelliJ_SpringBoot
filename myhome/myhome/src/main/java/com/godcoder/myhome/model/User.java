@@ -36,5 +36,6 @@ public class User {
        + EAGER : 사용자 정보 가져올 때 board까지 가져옴(@OneToOne, @ManyToOne)
        + LAZY : board를 사용할 때만 데이터 조회가 됨(@OneToMany, @ManyToMany) */
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Board> boards = new ArrayList<>();
 }
