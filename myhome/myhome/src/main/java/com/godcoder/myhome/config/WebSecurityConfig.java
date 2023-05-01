@@ -23,8 +23,9 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .csrf().disable() // 이거 하면 보안에 취약하나 테스트 원활히 가능, 이거 없으면 추가,수정이 어려움
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/", "/css/**").permitAll()
+                        .requestMatchers("/", "/css/**", "/account/register", "/api/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
@@ -49,10 +50,10 @@ public class WebSecurityConfig {
                 .usersByUsernameQuery("select username, password, enabled "
                         + "from user "
                         + "where username = ?")
-                .authoritiesByUsernameQuery("select username, name "
+                .authoritiesByUsernameQuery("select u.username, r.name "
                         + "from user_role ur inner join user u on ur.user_id = u.id "
                         + "inner join role r on ur.role_id = r.id "
-                        + "where username = ?");
+                        + "where u.username = ?");
     }
     // Authentication : 로그인 처리
     // Authorization : 권한

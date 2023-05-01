@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head th:replace="fragments/common :: head('게시판')">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -124,22 +124,32 @@
             </div>
         </div>
         <div class="text-end">
+            <a th:href="@{/board/list}" class="btn btn-primary">취소</a>
+            <button type="button" class="btn btn-primary" sec:authorize="hasRole('ROLE_ADMIN')" th:onclick="|deleteBoard(*{id})|">삭제</button>
             <button type="submit" class="btn btn-primary">확인</button>
-            <a th:href="@{/board/list}" class="btn btn-danger">취소</a>
         </div>
     </form>
 
 </div>
 
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
-        integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE"
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"
-        integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ"
-        crossorigin="anonymous"></script>
+<footer th:replace="fragments/common :: footer"></footer>
+<script>
+    function deleteBoard(id) {
+        //DELETE /api/boards/{id}
+        /* *** ajax 보낼 때 form에서 기본적으로 보안을 위해
+           새로운 hidden input을 생성해주어 name이 _cslf라는 이름을
+           가진 키를 주는데 그걸 같이 보내주어야 값을 수정,추가,삭제가 가능함
+           (해킹을 막기위한 방법 중 하나임) */
+        $.ajax({
+            url: ('/api/boards/' + id),
+            type: 'DELETE',
+            success: function(result) {
+                //AJAX 성공시 실행 코드
+                alert('삭제했습니다.');
+                window.location.href="/board/list";
+            }
+        });
+    }
+</script>
 </body>
 </html>
