@@ -1,5 +1,6 @@
 package com.godcoder.myhome.controller;
 
+import com.godcoder.myhome.mapper.UserMapper;
 import com.godcoder.myhome.model.Board;
 import com.godcoder.myhome.model.QUser;
 import com.godcoder.myhome.model.User;
@@ -22,6 +23,9 @@ class UserApiController {
     @Autowired
     private final UserRepository repository;
 
+    @Autowired
+    private UserMapper userMapper;
+
     UserApiController(UserRepository repository) {
         this.repository = repository;
     }
@@ -42,6 +46,10 @@ class UserApiController {
             users = repository.findAll(predicate);
         } else if("querydslCustom".equals(method)){
             users = repository.findByUsernameCustom(text);
+        } else if("jdbc".equals(method)){
+            users = repository.findByUsernameJdbc(text);
+        } else if("mybatis".equals(method)){
+            users = userMapper.getUsers(text);
         } else {
             users = repository.findAll(); // => 이건 board를 지금 사용안해서 조회 안함
         }
