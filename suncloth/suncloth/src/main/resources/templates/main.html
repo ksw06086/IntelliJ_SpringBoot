@@ -1,16 +1,103 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/common :: head('main')">
+<head th:replace="fragments/guest_common :: head('main')">
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-    <div class="d-flex mb-3">
-        <div class="p-2"><img src="https://www.customicondesign.com/images/freeicons/countryflag/48/Korea-flag-48.png" alt="한국어" th:width="25px" th:height="20px"/></div>
-        <div class="p-2"><img src="https://www.customicondesign.com/images/freeicons/countryflag/48/Jarvis-island-flag-48.png" alt="영어" th:width="25px" th:height="20px"/></div>
-        <div class="ms-auto p-2">Flex item</div>
+    <!-- guest page header(guest_common.html) -->
+    <header th:replace="fragments/guest_common :: header"></header>
+
+    <!-- image slide(guest_common.html) -->
+    <div th:replace="fragments/guest_common :: imageslide"></div>
+
+    <!-- image list -->
+    <div class="text-center">
+        <img src="https://hips.hearstapps.com/hmg-prod/images/door-shaded-by-bougainvillea-porquerolles-france-royalty-free-image-1653423252.jpg?crop=0.668xw:1.00xh;0.165xw,0&resize=980:*" class="rounded" alt="..." width="20%">
+        <img src="https://hips.hearstapps.com/hmg-prod/images/door-shaded-by-bougainvillea-porquerolles-france-royalty-free-image-1653423252.jpg?crop=0.668xw:1.00xh;0.165xw,0&resize=980:*" class="rounded" alt="..." width="20%">
+        <img src="https://hips.hearstapps.com/hmg-prod/images/door-shaded-by-bougainvillea-porquerolles-france-royalty-free-image-1653423252.jpg?crop=0.668xw:1.00xh;0.165xw,0&resize=980:*" class="rounded" alt="..." width="20%">
     </div>
 
+    <!-- Weekly Product List -->
+    <article id = "weekly">
+        <p class = "sub-title"><b>WEEKLY PRODUCT</b></p>
+        <ul class="nav nav-underline justify-content-center">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Outer</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Top</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Shirt</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Knit</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Bottom</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Suit</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">ACC</a>
+            </li>
+        </ul>
+
+        <!-- category product imageList -->
+        <div class="d-flex">
+            <div class="p-1 flex-fill">
+                <img src="https://hips.hearstapps.com/hmg-prod/images/door-shaded-by-bougainvillea-porquerolles-france-royalty-free-image-1653423252.jpg?crop=0.668xw:1.00xh;0.165xw,0&resize=980:*" class="rounded" alt="..." width="100%" height="100%">
+            </div>
+            <div class="flex-fill">
+                <div class="d-flex flex-column">
+                    <div class="">
+                        <div class="d-flex">
+                            <div class="p-1 flex-fill"><img src="https://hips.hearstapps.com/hmg-prod/images/door-shaded-by-bougainvillea-porquerolles-france-royalty-free-image-1653423252.jpg?crop=0.668xw:1.00xh;0.165xw,0&resize=980:*" class="rounded" alt="..." width="100%"></div>
+                            <div class="p-1 flex-fill"><img src="https://hips.hearstapps.com/hmg-prod/images/door-shaded-by-bougainvillea-porquerolles-france-royalty-free-image-1653423252.jpg?crop=0.668xw:1.00xh;0.165xw,0&resize=980:*" class="rounded" alt="..." width="100%"></div>
+                            <div class="p-1 flex-fill"><img src="https://hips.hearstapps.com/hmg-prod/images/door-shaded-by-bougainvillea-porquerolles-france-royalty-free-image-1653423252.jpg?crop=0.668xw:1.00xh;0.165xw,0&resize=980:*" class="rounded" alt="..." width="100%"></div>
+                        </div>
+                    </div>
+                    <div class="">
+                        <div class="d-flex">
+                            <div class="p-1 flex-fill"><img src="https://hips.hearstapps.com/hmg-prod/images/door-shaded-by-bougainvillea-porquerolles-france-royalty-free-image-1653423252.jpg?crop=0.668xw:1.00xh;0.165xw,0&resize=980:*" class="rounded" alt="..." width="100%"></div>
+                            <div class="p-1 flex-fill"><img src="https://hips.hearstapps.com/hmg-prod/images/door-shaded-by-bougainvillea-porquerolles-france-royalty-free-image-1653423252.jpg?crop=0.668xw:1.00xh;0.165xw,0&resize=980:*" class="rounded" alt="..." width="100%"></div>
+                            <div class="p-1 flex-fill"><img src="https://hips.hearstapps.com/hmg-prod/images/door-shaded-by-bougainvillea-porquerolles-france-royalty-free-image-1653423252.jpg?crop=0.668xw:1.00xh;0.165xw,0&resize=980:*" class="rounded" alt="..." width="100%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <!-- new product list -->
+    <p class="text-center sub-title"><b> - NEW - </b></p>
+    <div class="text-center">
+        <span id = "new1"><img src="https://hips.hearstapps.com/hmg-prod/images/door-shaded-by-bougainvillea-porquerolles-france-royalty-free-image-1653423252.jpg?crop=0.668xw:1.00xh;0.165xw,0&resize=980:*" class="rounded" alt="..." width="23%"></span>
+        <img src="https://hips.hearstapps.com/hmg-prod/images/door-shaded-by-bougainvillea-porquerolles-france-royalty-free-image-1653423252.jpg?crop=0.668xw:1.00xh;0.165xw,0&resize=980:*" class="rounded" alt="..." width="23%">
+        <img src="https://hips.hearstapps.com/hmg-prod/images/door-shaded-by-bougainvillea-porquerolles-france-royalty-free-image-1653423252.jpg?crop=0.668xw:1.00xh;0.165xw,0&resize=980:*" class="rounded" alt="..." width="23%">
+        <img src="https://hips.hearstapps.com/hmg-prod/images/door-shaded-by-bougainvillea-porquerolles-france-royalty-free-image-1653423252.jpg?crop=0.668xw:1.00xh;0.165xw,0&resize=980:*" class="rounded" alt="..." width="23%">
+    </div>
+
+    <!-- best product list -->
+    <p class="text-center sub-title"><b> - BEST - </b></p>
+    <div class="text-center">
+        <img src="https://hips.hearstapps.com/hmg-prod/images/door-shaded-by-bougainvillea-porquerolles-france-royalty-free-image-1653423252.jpg?crop=0.668xw:1.00xh;0.165xw,0&resize=980:*" class="rounded" alt="..." width="23%">
+        <img src="https://hips.hearstapps.com/hmg-prod/images/door-shaded-by-bougainvillea-porquerolles-france-royalty-free-image-1653423252.jpg?crop=0.668xw:1.00xh;0.165xw,0&resize=980:*" class="rounded" alt="..." width="23%">
+        <img src="https://hips.hearstapps.com/hmg-prod/images/door-shaded-by-bougainvillea-porquerolles-france-royalty-free-image-1653423252.jpg?crop=0.668xw:1.00xh;0.165xw,0&resize=980:*" class="rounded" alt="..." width="23%">
+        <img src="https://hips.hearstapps.com/hmg-prod/images/door-shaded-by-bougainvillea-porquerolles-france-royalty-free-image-1653423252.jpg?crop=0.668xw:1.00xh;0.165xw,0&resize=980:*" class="rounded" alt="..." width="23%">
+    </div>
+
+    <!-- 그림 마우스 오버되면 css 바꾸기 -->
+    <!--<script>
+        let newproduct = document.getElementById("new1");
+        newproduct.addEventListener("mouseover", () => {
+            newproduct.innerHTML = "10000원";
+            newproduct.style.backgroundColor = "#000";
+            newproduct.style.color = "#fff";
+        })
+    </script>-->
     <footer th:replace="fragments/common :: footer"></footer>
 </body>
 </html>
