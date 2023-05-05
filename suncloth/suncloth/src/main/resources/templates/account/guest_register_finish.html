@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/guest_common :: head('register_finish')">
+  <meta charset="UTF-8">
+  <title>Register Finish</title>
+</head>
+<body class="text-center">
+<!-- guest page header(guest_common.html) -->
+<header th:replace="fragments/guest_common :: header"></header>
+
+<div class="mx-3 my-3"><h4>Register Complete</h4></div>
+
+<fieldset id="userInfo" class="mx-auto my-4 w-50 border">
+  <div class="p-3">
+    <b>*** 저희 쇼핑몰을 이용해 주셔서 감사합니다. ***</b>
+  </div>
+  <div class="text-start ms-5">
+    <div class="fw-bold" th:text="${user != null}? 'ID : ' + ${user.username} : 'ID : kim'"></div>
+    <div th:text="|Name : 홍길동|"></div>
+    <div th:text="|Email : ksw1234@naver.com|"></div>
+  </div>
+  <div class="my-3 d-flex">
+    <div class="p-2 flex-fill">
+      <a th:href="@{/main}" class="btn btn-dark">메인으로 이동</a>
+    </div>
+  </div>
+</fieldset>
+
+<footer th:replace="fragments/guest_common :: footer"></footer>
+</body>
+</html>
