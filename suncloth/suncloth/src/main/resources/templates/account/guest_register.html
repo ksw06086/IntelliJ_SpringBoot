@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/guest_common :: head('register')">
+    <meta charset="UTF-8">
+    <title>Register</title>
+</head>
+<body class="text-center">
+<!-- guest page header(guest_common.html) -->
+<header th:replace="fragments/guest_common :: header"></header>
+
+<div class="mx-3 mt-5 mb-4"><h3>Register Customers</h3></div>
+
+<form id="formInfo" th:action="@{/account/register}" method="post">
+    <div th:if="${param.error}" class="alert alert-danger" role="alert">
+        Invalid username and password.
+    </div>
+    <table class="table caption-top text-start">
+        <caption class="text-secondary ms-4"><h5><b>&lt;기본정보&gt;</b></h5></caption>
+        <colgroup>
+            <col width="20%">
+            <col width="80%">
+        </colgroup>
+        <tbody>
+        <!-- ID -->
+        <tr class="border-top">
+            <th scope="row">
+                <label for="idInput" class="ms-2 col-form-label">
+                    <span class="text-danger">*</span> ID
+                </label>
+            </th>
+            <td>
+                <div class="mx-3">
+                    <input type="text" id="idInput" name="username" class="form-control">
+                </div>
+            </td>
+        </tr>
+        <!-- Password -->
+        <tr>
+            <th scope="row">
+                <label for="pwdInput" class="ms-2 col-form-label">
+                    <span class="text-danger">*</span> Password
+                </label>
+            </th>
+            <td>
+                <div class="mx-3">
+                    <input type="password" id="pwdInput" name="password" class="form-control">
+                </div>
+            </td>
+        </tr>
+        <!-- Password Chk -->
+        <tr>
+            <th scope="row">
+                <label for="pwdChkInput" class="ms-2 col-form-label">
+                    <span class="text-danger">*</span> Password Chk
+                </label>
+            </th>
+            <td>
+                <div class="mx-3">
+                    <input type="password" id="pwdChkInput" name="passwordChk" class="form-control">
+                </div>
+            </td>
+        </tr>
+        <!-- username -->
+        <tr>
+            <th scope="row">
+                <label for="userNameInput" class="ms-2 col-form-label">
+                    <span class="text-danger">*</span> username
+                </label>
+            </th>
+            <td>
+                <div class="mx-3">
+                    <input type="text" id="userNameInput" name="name" class="form-control">
+                </div>
+            </td>
+        </tr>
+        <!-- Address -->
+        <tr>
+            <th scope="row">
+                <label for="addressInput" class="ms-2 col-form-label">
+                    <span class="text-danger">*</span> Address
+                </label>
+            </th>
+            <td>
+                <div>
+                    <div class="mx-3 mb-2 d-flex">
+                        <input type="text" id="addressInput" name="address" class="form-control w-25">
+                        <button type="button" class="btn btn-outline-secondary">우편번호</button>
+                    </div>
+                </div>
+                <div class="form-floating mx-3 mb-2">
+                    <input type="text" id="subAddressInput" name="subAddress" class="form-control">
+                    <label for="subAddressInput">SubAddress</label>
+                </div>
+                <div class="form-floating mx-3 mb-2">
+                    <input type="text" id="detailAddressInput" name="detailAddress" class="form-control">
+                    <label for="detailAddressInput">DetailAddress</label>
+                </div>
+            </td>
+        </tr>
+        <!-- userPhoneNumber -->
+        <tr>
+            <th scope="row">
+                <label for="baseHPInput" class="ms-2 col-form-label">
+                    <span class="text-danger">*</span> Phone Number
+                </label>
+            </th>
+            <td>
+                <div class="mx-3 d-flex">
+                    <select class="form-select w-25" id="baseHPInput" name="baseHP" aria-label="Default select example">
+                        <option selected>선택</option>
+                        <option value="010">010</option>
+                        <option value="011">011</option>
+                        <option value="012">012</option>
+                    </select>
+                    <span>&nbsp;-&nbsp;</span>
+                    <input type="text" id="secondHPInput" name="secondHP" class="form-control w-50">
+                    <span>&nbsp;-&nbsp;</span>
+                    <input type="text" id="thirdHPInput" name="thirdHP" class="form-control w-50">
+                    <button type="button" class="btn btn-outline-secondary w-25">인증</button>
+                </div>
+            </td>
+        </tr>
+        <!-- formal Number Check -->
+        <tr class="d-none">
+            <th scope="row">
+                <label for="formalInput" class="ms-2 col-form-label">
+                    <span class="text-danger">*</span> 인증번호
+                </label>
+            </th>
+            <td>
+                <div class="mx-3 d-flex flex-row">
+                    <input type="text" id="formalInput" name="formalNum" class="form-control w-25">
+                    <button type="button" class="btn btn-outline-secondary">확인</button>
+                </div>
+            </td>
+        </tr>
+        <!-- Email -->
+        <tr>
+            <th scope="row">
+                <label for="idNameInput" class="ms-2 col-form-label">
+                    <span class="text-danger">*</span> Email
+                </label>
+            </th>
+            <td>
+                <div class="mx-3 d-flex">
+                    <input type="text" id="idNameInput" name="idName" class="form-control">
+                    <span>&nbsp;@&nbsp;</span>
+                    <input type="text" id="urlCodeInput" name="urlCode" class="form-control">
+                    <select class="form-select" id="urlSelect" name="urlSelect" aria-label="Default select example">
+                        <option selected>직접입력</option>
+                        <option value="naver.com">naver.com</option>
+                        <option value="daum.com">daum.com</option>
+                        <option value="nate.com">nate.com</option>
+                        <option value="gmail.com">gmail.com</option>
+                        <option value="hanmail.com">hanmail.com</option>
+                    </select>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table class="table caption-top text-start mt-4">
+        <caption class="text-secondary ms-4"><h5><b>&lt;추가정보&gt;</b></h5></caption>
+        <colgroup>
+            <col width="20%">
+            <col width="80%">
+        </colgroup>
+        <tbody>
+        <!-- BirthDay -->
+        <tr class="border-top">
+            <th scope="row">
+                <label class="ms-4 col-form-label">BirthDay</label>
+            </th>
+            <td>
+                <div class="mx-3 d-flex">
+                    <input type="date" id="birthDayInput" name="birthDay" class="form-control w-50 me-2">
+                    <div class="form-check form-check-inline align-self-center">
+                        <input class="form-check-input" type="radio" name="birthTypes" id="birthType1" value="yang">
+                        <label class="" for="birthType1">양력</label>
+                    </div>
+                    <div class="form-check form-check-inline align-self-center">
+                        <input class="form-check-input" type="radio" name="birthTypes" id="birthType2" value="umm">
+                        <label class="" for="birthType2">음력</label>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <!-- refund account info -->
+        <tr>
+            <th scope="row">
+                <label for="addressInput" class="ms-2 col-form-label">
+                    <span class="text-danger">*</span> Refund Account
+                </label>
+            </th>
+            <td>
+                <div>
+                    <div class="form-floating mx-3 mb-2">
+                        <input type="text" id="accHostInput" name="accHost" class="form-control">
+                        <label for="accHostInput">AccHost</label>
+                    </div>
+                </div>
+                <div class="form-floating mx-3 mb-2">
+                    <select class="form-select" id="bankInput" name="bank">
+                        <option selected>==선택==</option>
+                        <option value="기업">기업</option>
+                        <option value="국민">국민</option>
+                        <option value="농협">농협</option>
+                        <option value="우리">우리</option>
+                        <option value="신한">신한</option>
+                        <option value="삼성증권">삼성증권</option>
+                        <option value="새마을금고">새마을금고</option>
+                        <option value="카카오뱅크">카카오뱅크</option>
+                    </select>
+                    <label for="bankInput">Bank</label>
+                </div>
+                <div class="form-floating mx-3 mb-2">
+                    <input type="text" id="accNumberInput" name="accNumber" class="form-control">
+                    <label for="accNumberInput">accNumber</label>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h5 class="text-start text-secondary mt-4 ms-4 mb-3"><b>&lt;약관동의&gt;</b></h5>
+    <!-- using Check Info & agree Chk -->
+    <div class="form-floating">
+        <textarea class="form-control" id="useInfo" readonly>
+First heading
+This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted. It's repeated throughout the component example. We keep adding some more example copy here to emphasize the scrolling and highlighting.
+Second heading
+This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted. It's repeated throughout the component example. We keep adding some more example copy here to emphasize the scrolling and highlighting.
+Third heading
+This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted. It's repeated throughout the component example. We keep adding some more example copy here to emphasize the scrolling and highlighting.
+Four heading
+This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted. It's repeated throughout the component example. We keep adding some more example copy here to emphasize the scrolling and highlighting.
+Five heading
+This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted. It's repeated throughout the component example. We keep adding some more example copy here to emphasize the scrolling and highlighting.
+        </textarea>
+        <label for="useInfo">Using Info</label>
+    </div>
+    <div class="my-3">
+        <div class="d-flex flex-row-reverse">
+            <input class="form-check-input" type="checkbox" id="useAgree" name="agrees">
+            <label class="form-check-label" for="useAgree"> 동의함 </label>
+            <span class="text-danger me-1">*</span>
+        </div>
+    </div>
+
+    <!-- UserData Check & Agree Chk -->
+    <div class="form-floating">
+        <textarea class="form-control" id="dataInfo" readonly>
+First heading
+This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted. It's repeated throughout the component example. We keep adding some more example copy here to emphasize the scrolling and highlighting.
+Second heading
+This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted. It's repeated throughout the component example. We keep adding some more example copy here to emphasize the scrolling and highlighting.
+Third heading
+This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted. It's repeated throughout the component example. We keep adding some more example copy here to emphasize the scrolling and highlighting.
+Four heading
+This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted. It's repeated throughout the component example. We keep adding some more example copy here to emphasize the scrolling and highlighting.
+Five heading
+This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted. It's repeated throughout the component example. We keep adding some more example copy here to emphasize the scrolling and highlighting.
+        </textarea>
+        <label for="dataInfo">UserData Info</label>
+    </div>
+    <div class="my-3">
+        <div class="d-flex flex-row-reverse">
+            <input class="form-check-input" type="checkbox" id="dataAgree" name="agrees">
+            <label class="form-check-label" for="dataAgree"> 동의함 </label>
+            <span class="text-danger me-1">*</span>
+        </div>
+    </div>
+    <div class="mt-4 mb-3">
+        <div>
+            <input class="form-check-input" type="checkbox" id="allAgree" name="allAgree">
+            <label class="form-check-label" for="allAgree"> 전체 동의함 </label>
+        </div>
+    </div>
+
+    <div class="p-2">
+        <button type="submit" class="btn btn-outline-dark w-100">회원가입</button>
+    </div>
+</form>
+
+<footer th:replace="fragments/guest_common :: footer"></footer>
+</body>
+</html>

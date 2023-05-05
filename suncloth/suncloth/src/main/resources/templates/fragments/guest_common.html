@@ -12,6 +12,7 @@
     <link th:href="@{/css/guest_topNbottom.css}" rel="stylesheet"> <!-- guest topNbottom css -->
     <link th:href="${title} == 'main'? @{/css/main.css}" rel="stylesheet"> <!-- main page -->
     <link th:href="${title} == 'login'? @{/css/login.css}" rel="stylesheet"> <!-- login page -->
+    <link th:href="${title} == 'register'? @{/css/register.css}" rel="stylesheet"> <!-- register page -->
 </head>
 
 <body>
@@ -35,7 +36,7 @@
 
     <!-- main name -->
     <div id="mainname">
-        <h2><a th:href="@{/}"><b>SunCloth</b></a></h2>
+        <h2><a th:href="@{/main}"><b>SunCloth</b></a></h2>
     </div>
 
 

@@ -22,13 +22,13 @@ public class AccountController {
 
     @GetMapping("/register")
     public String register() {
-        return "account/register";
+        return "account/guest_register";
     }
 
     @PostMapping("/register")
     public String register(User user) {
         userService.save(user);
         System.out.println("user = " + user);
-        return "redirect:/";
+        return "redirect:/main";
     }
 }
