@@ -11,9 +11,6 @@
 <div class="mx-3 mt-5 mb-4"><h3>Register Customers</h3></div>
 
 <form id="formInfo" th:action="@{/account/register}" method="post">
-    <div th:if="${param.error}" class="alert alert-danger" role="alert">
-        Invalid username and password.
-    </div>
     <table class="table caption-top text-start">
         <caption class="text-secondary ms-4"><h5><b>&lt;기본정보&gt;</b></h5></caption>
         <colgroup>
