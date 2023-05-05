@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/guest_common :: head('login')">
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body class="text-center">
+<!-- guest page header(guest_common.html) -->
+<header th:replace="fragments/guest_common :: header"></header>
+
+<form class="form-signin" th:action="@{/account/login}" method="post">
+    <fieldset>
+        <div class="mx-3 mb-4"><h3>Login Customers</h3></div>
+        <div th:if="${param.error}" class="alert alert-danger" role="alert">
+            Invalid ID and Password.
+        </div>
+        <div th:if="${param.logout}" class="alert alert-primary" role="alert">
+            You have been logged out.
+        </div>
+        <div class="form-floating mx-3 mb-2">
+            <input type="text" id="idInput" name="username" class="form-control">
+            <label for="idInput">ID</label>
+        </div>
+        <div class="form-floating mx-3 mb-2">
+            <input type="password" id="pwdInput" name="password" class="form-control">
+            <label for="pwdInput">Password</label>
+        </div>
+        <div class="mb-3">
+            <div class="">
+                <input class="form-check-input" type="checkbox" id="disabledFieldsetCheck">
+                <label class="form-check-label" for="disabledFieldsetCheck">
+                    로그인 저장
+                </label>
+            </div>
+        </div>
+        <div class="d-flex">
+            <div class="p-2 flex-fill">
+                <button type="submit" class="btn btn-dark w-100">로그인</button>
+            </div>
+            <div class="p-2 flex-fill">
+                <a th:href="@{/account/register}" class="btn btn-light w-100">회원가입</a>
+            </div>
+        </div>
+    </fieldset>
+</form>
+
+<footer th:replace="fragments/guest_common :: footer"></footer>
+</body>
+</html>

@@ -1,31 +1,6 @@
-#mainname{
-    text-align:center;
-    margin:0 auto 30px;
-}
-#mainname a {
-    text-decoration: none;
-    color: black;
-}
-
-nav {
-    border-top:1px solid #cccccc;
-    border-bottom:1px solid #cccccc;
-    padding:10px;
-}
-
-nav a {
-    color:#282828;
-    font-size:1.1em;
-    padding:5px 12px;
-}
-
 #weekly{
     background: #F2F3F4;
     text-align:center;
-}
-
-.navi a:hover, .navi a:focus{
-    opacity: 0.5;
 }
 
 .carousel-inner > .carousel-item > img {
