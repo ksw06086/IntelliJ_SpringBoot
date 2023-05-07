@@ -10,7 +10,7 @@
 
 <div class="mx-3 mt-5 mb-4"><h3>Register Customers</h3></div>
 
-<form id="formInfo" th:action="@{/account/register_finish}" method="post">
+<form id="formInfo" class="row g-3 needs-validation" novalidate th:action="@{/account/register_finish}" method="post">
     <table class="table caption-top text-start">
         <caption class="text-secondary ms-4"><h5><b>&lt;기본정보&gt;</b></h5></caption>
         <colgroup>
@@ -26,8 +26,11 @@
                 </label>
             </th>
             <td>
-                <div class="mx-3">
-                    <input type="text" id="idInput" name="username" class="form-control">
+                <div class="mx-3 was-validated">
+                    <input type="text" id="idInput" name="username" class="form-control" required max="5" min="2">
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
                 </div>
             </td>
         </tr>
@@ -280,6 +283,25 @@ This is some placeholder content for the scrollspy page. Note that as you scroll
     </div>
 </form>
 
+<script>
+    (() => {
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        const forms = document.querySelectorAll('.needs-validation')
+
+        // Loop over them and prevent submission
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                console.log(form);
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+</script>
 <footer th:replace="fragments/guest_common :: footer"></footer>
 </body>
 </html>
