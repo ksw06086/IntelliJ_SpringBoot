@@ -21,4 +21,9 @@ public class GuestController {
         return "/guest/guest_category";
     }
 
+    @GetMapping("/cartlist")
+    public String cartlist(Model model) {
+        return "/guest/guest_cartlist";
+    }
+
 }

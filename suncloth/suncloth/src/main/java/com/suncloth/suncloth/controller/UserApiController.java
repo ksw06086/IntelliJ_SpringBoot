@@ -43,6 +43,12 @@ public class UserApiController {
         return repository.findById(id).orElse(null);
     }
 
+    @GetMapping("/userCheck/{username}")
+    User idCheck(@PathVariable String username) {
+
+        return repository.findByUsername(username);
+    }
+
     @PutMapping("/users/{id}")
     User replaceUser(@RequestBody User newUser, @PathVariable Long id) {
 

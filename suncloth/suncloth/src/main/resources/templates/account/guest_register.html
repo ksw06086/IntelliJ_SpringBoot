@@ -10,7 +10,7 @@
 
 <div class="mx-3 mt-5 mb-4"><h3>Register Customers</h3></div>
 
-<form id="formInfo" class="row g-3 needs-validation" novalidate th:action="@{/account/register_finish}" method="post">
+<form id="formInfo" class="row g-3" novalidate th:action="@{/account/register_finish}" method="post">
     <table class="table caption-top text-start">
         <caption class="text-secondary ms-4"><h5><b>&lt;기본정보&gt;</b></h5></caption>
         <colgroup>
@@ -26,11 +26,9 @@
                 </label>
             </th>
             <td>
-                <div class="mx-3 was-validated">
-                    <input type="text" id="idInput" name="username" class="form-control" required max="5" min="2">
-                    <div class="valid-feedback">
-                        Looks good!
-                    </div>
+                <div class="mx-3" id="IDForm">
+                    <input type="text" id="idInput" name="username" class="form-control" th:oninput="idCheck(this.value)">
+                    <div id="IDdiv"></div>
                 </div>
             </td>
         </tr>
@@ -43,7 +41,8 @@
             </th>
             <td>
                 <div class="mx-3">
-                    <input type="password" id="pwdInput" name="password" class="form-control">
+                    <input type="password" id="pwdInput" name="password" class="form-control" th:oninput="pwdCheck(this.value)">
+                    <div id="pwdDiv" class="mt-2"></div>
                 </div>
             </td>
         </tr>
@@ -84,7 +83,7 @@
                 <div>
                     <div class="mx-3 mb-2 d-flex">
                         <input type="text" id="addressInput" name="address" class="form-control w-25">
-                        <button type="button" class="btn btn-outline-secondary">우편번호</button>
+                        <button type="button" class="btn btn-outline-secondary" th:onclick="addressSearch()">우편번호</button>
                     </div>
                 </div>
                 <div class="form-floating mx-3 mb-2">
@@ -283,24 +282,100 @@ This is some placeholder content for the scrollspy page. Note that as you scroll
     </div>
 </form>
 
-<script>
-    (() => {
-        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        const forms = document.querySelectorAll('.needs-validation')
+<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 
-        // Loop over them and prevent submission
-        Array.from(forms).forEach(form => {
-            form.addEventListener('submit', event => {
-                console.log(form);
-                if (!form.checkValidity()) {
-                    event.preventDefault()
-                    event.stopPropagation()
+<script>
+    // 비밀번호 정규식
+    // 1) 최소 하나 이상의 소문자, 하나의 대문자, 하나의 숫자, 하나의 특수문자, 최소 8 자리
+    // 2) 비밀번호 6 자리 이상, 모든 요구 사항을 충족하거나 숫자만 빼고 나머지를 충족하는 경우
+    let strongPassword = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})');
+    let mediumPassword = new RegExp('((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,}))|((?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9])(?=.{8,}))');
+
+    function idCheck(id){
+        const idForm = document.getElementById("IDForm");
+        const idDiv = document.getElementById("IDdiv");
+
+        $.ajax({
+            url: '/api/userCheck/' + id,
+            type: 'GET',
+            success: (result) => {
+                //AJAX 성공시 실행 코드
+                if(id === ""){
+                    idDiv.previousElementSibling.className = "form-control is-invalid";
+                    idDiv.className = "invalid-feedback"
+                    idDiv.innerText = "입력해주세요.";
+                } else if(result === ""){
+                    idDiv.previousElementSibling.className = "form-control is-valid";
+                    idDiv.className = "valid-feedback";
+                    idDiv.innerText = "사용가능한 아이디입니다.";
+                } else {
+                    idDiv.previousElementSibling.className = "form-control is-invalid";
+                    idDiv.className = "invalid-feedback"
+                    idDiv.innerText = "중복된 아이디입니다. 사용이 불가능합니다.";
+                }
+            }
+        });
+    }
+
+    function pwdCheck(pwd){
+        const pwdDiv = document.getElementById("pwdDiv");
+        if(pwd === ""){
+            pwdDiv.style.color = "red";
+            pwdDiv.textContent = "입력해주세요.";
+        } else if(strongPassword.test(pwd)){
+            pwdDiv.style.color = "green";
+            pwdDiv.textContent = "강함";
+        } else if(mediumPassword.test(pwd)){
+            pwdDiv.style.color = "blue";
+            pwdDiv.textContent = "보통";
+        } else {
+            pwdDiv.style.color = "red";
+            pwdDiv.textContent = "위험";
+        }
+    }
+
+    // 우편번호 버튼 클릭 기능
+    function addressSearch(){
+        new daum.Postcode({
+            oncomplete: function(data) {
+                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                var fullAddr = ''; // 최종 주소 변수
+                var extraAddr = ''; // 조합형 주소 변수
+
+                // 사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                    fullAddr = data.roadAddress;
+
+                } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                    fullAddr = data.jibunAddress;
                 }
 
-                form.classList.add('was-validated')
-            }, false)
-        })
-    })()
+                // 사용자가 선택한 주소가 도로명 타입일때 조합한다.
+                if(data.userSelectedType === 'R'){
+                    //법정동명이 있을 경우 추가한다.
+                    if(data.bname !== ''){
+                        extraAddr += data.bname;
+                    }
+                    // 건물명이 있을 경우 추가한다.
+                    if(data.buildingName !== ''){
+                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                    }
+                    // 조합형주소의 유무에 따라 양쪽에 괄호를 추가하여 최종 주소를 만든다.
+                    fullAddr += (extraAddr !== '' ? ' ('+ extraAddr +')' : '');
+                }
+
+                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                document.getElementById('addressInput').value = data.zonecode; //5자리 새우편번호 사용
+                document.getElementById('subAddressInput').value = fullAddr;
+
+                // 커서를 상세주소 필드로 이동한다.
+                document.getElementById('detailAddressInput').focus();
+            }
+        }).open();
+    }
 </script>
 <footer th:replace="fragments/guest_common :: footer"></footer>
 </body>
