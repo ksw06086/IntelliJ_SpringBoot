@@ -1,0 +1,8 @@
+.table, .cntBox, .searchBox {
+    width:90%;
+    margin:0 auto;
+}
+
+.searchBox * {
+    font-size: 0.9em;
+}

@@ -15,6 +15,7 @@
     <link th:href="${title} == 'register'? @{/css/register.css}" rel="stylesheet"> <!-- register page -->
     <link th:href="${title} == 'register_finish'? @{/css/register_finish.css}" rel="stylesheet"> <!-- register finish page -->
     <link th:href="${title} == 'cart'? @{/css/cartlist.css}" rel="stylesheet"> <!-- cartlist page -->
+    <link th:href="${title} == 'board'? @{/css/board.css}" rel="stylesheet"> <!-- boardList page -->
 </head>
 
 <body>
@@ -61,7 +62,7 @@
         </div>
 
         <div class="ms-auto p-2">
-            <a>공지</a>
+            <a th:href="@{/board/noticeList}">공지</a>
             <a>FAQ</a>
             <a>Q&A</a>
             <a>후기</a>
