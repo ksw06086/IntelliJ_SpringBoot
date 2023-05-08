@@ -1,0 +1,15 @@
+#memberInfo, .memberMenu {
+    font-size: 0.9em;
+}
+
+.memberMenu div {
+    padding: 20px 0;
+    border-collapse: collapse;
+    border: 1px solid #ccc;
+}
+
+.memberMenu a {
+    text-decoration: none;
+    color: black;
+    font-size: 0.9em;
+}

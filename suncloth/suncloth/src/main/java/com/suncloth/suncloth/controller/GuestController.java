@@ -22,8 +22,13 @@ public class GuestController {
     }
 
     @GetMapping("/cartlist")
-    public String cartlist(Model model) {
+    public String cartlist() {
         return "/guest/guest_cartlist";
+    }
+
+    @GetMapping("/mypage")
+    public String mypage() {
+        return "/guest/guest_mypage";
     }
 
 }
