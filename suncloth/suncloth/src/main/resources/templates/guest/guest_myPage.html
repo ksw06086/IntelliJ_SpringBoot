@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/guest_common :: head('mypage')">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- guest page header(guest_common.html) -->
+<header th:replace="fragments/guest_common :: header"></header>
+
+<!-- category product list -->
+<h4 class="sub-title my-4 text-center fw-bold">MY PAGE</h4>
+
+<section id="body">
+    <p class="memberInfoText">&lt;저희 쇼핑몰을 이용해주셔서 감사합니다. <b>kim</b>님은 <b>[FAMILY]</b> 회원이십니다.&gt;</p>
+
+    <div class="d-flex text-center memberInfo">
+        <div class="flex-fill"><a href = "#"><b>ORDER</b><br>주문내역 조회</a></div>
+        <div class="flex-fill"><a href = "#"><b>PROFILE</b><br>회원 정보</a></div>
+        <div class="flex-fill"><a th:href = "@{/guest/cartList}"><b>CART LIST</b><br>장바구니</a></div>
+        <div class="flex-fill"><a th:href = "@{/guest/mileage}"><b>MILEAGE</b><br>적립금 관리</a></div>
+        <div class="flex-fill"><a href = "#"><b>BOARD</b><br>내 게시물 관리</a></div>
+    </div>
+
+    <div class="border border-top-0">
+        <div class="d-flex mileageInfo">
+            <div class="flex-fill text-start">가용 적립금</div>
+            <div class="flex-fill text-end text-decoration-underline"><a href="#" th:onclick="alert('1234')">10000원</a></div>
+            <div class="flex-fill border-start text-start">총 적립금</div>
+            <div class="flex-fill text-end">15000원</div>
+        </div>
+
+        <div class="d-flex mileageInfo">
+            <div class="flex-fill text-start">사용 적립금</div>
+            <div class="flex-fill text-end">10000원</div>
+            <div class="flex-fill border-start text-start">총 주문</div>
+            <div class="flex-fill text-end">KRW+48000(1회)</div>
+        </div>
+    </div>
+
+    <!-- My Order State -->
+    <p class="orderInfoText">&lt;나의 주문 처리 현황&gt;</p>
+    <div class="d-flex text-center orderInfo">
+        <div class="flex-fill">
+            <div>입금전</div>
+            <div class="orderCnt">12</div>
+        </div>
+        <div class="flex-fill">
+            <div>배송준비중</div>
+            <div class="orderCnt">12</div>
+        </div>
+        <div class="flex-fill">
+            <div>배송중</div>
+            <div class="orderCnt">12</div>
+        </div>
+        <div class="flex-fill">
+            <div>배송완료</div>
+            <div class="orderCnt">12</div>
+        </div>
+        <div class="flex-fill">
+            <div>취소 : 1건</div>
+            <div>환불 : 2건</div>
+        </div>
+    </div>
+</section>
+
+<!-- footer List & bootstrap using script -->
+<footer th:replace="fragments/guest_common :: footer"></footer>
+</body>
+</html>

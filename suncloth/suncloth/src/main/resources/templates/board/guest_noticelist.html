@@ -14,9 +14,41 @@
     <div class="text-center mb-4">
         SunCloth의 공지사항입니다:)
     </div>
-
-    <div class="cntBox">
-        <p class="ms-3 mt-3"><b th:text="| 검색 ${10}건 / 총 ${50}건|"></b></p>
+    <section id="body">
+    <div class="d-flex">
+        <div class="me-auto">
+            <p class="ms-1 mt-3 cntText"><b th:text="| 검색 ${10}건 / 총 ${50}건|"></b></p>
+        </div>
+        <div class="d-flex justify-content-end mt-2 searchBox">
+            <div>
+                <select class="form-select" id="blockNum" name="blockNum">
+                    <option value="10">10개씩 출력</option>
+                    <option value="30">30개씩 출력</option>
+                    <option value="50">50개씩 출력</option>
+                </select>
+            </div>
+            <div>
+                <select class="form-select" id="dayType" name="dayType">
+                    <option value="all">전체</option>
+                    <option value="week">일주일</option>
+                    <option value="month">한달</option>
+                    <option value="month3">세달</option>
+                </select>
+            </div>
+            <div>
+                <select class="form-select" aria-label=".form-select-sm example" id="searchType" name="searchType">
+                    <option value="title">제목</option>
+                    <option value="content">내용</option>
+                    <option value="id">아이디</option>
+                </select>
+            </div>
+            <div>
+                <input type="search" class="form-control" placeholder="search">
+            </div>
+            <div>
+                <button type="button" class="btn btn-outline-dark">검색</button>
+            </div>
+        </div>
     </div>
     <table class="table">
         <thead>
@@ -44,37 +76,6 @@
         </tbody>-->
     </table>
 
-    <div class="d-flex justify-content-end mt-2 searchBox">
-        <div>
-            <select class="form-select" id="blockNum" name="blockNum">
-                <option value="10">10개씩 출력</option>
-                <option value="30">30개씩 출력</option>
-                <option value="50">50개씩 출력</option>
-            </select>
-        </div>
-        <div>
-            <select class="form-select" id="dayType" name="dayType">
-                <option value="all">전체</option>
-                <option value="week">일주일</option>
-                <option value="month">한달</option>
-                <option value="month3">세달</option>
-            </select>
-        </div>
-        <div>
-            <select class="form-select" aria-label=".form-select-sm example" id="searchType" name="searchType">
-                <option value="title">제목</option>
-                <option value="content">내용</option>
-                <option value="id">아이디</option>
-            </select>
-        </div>
-        <div>
-            <input type="search" class="form-control" placeholder="search">
-        </div>
-        <div>
-            <button type="button" class="btn btn-outline-dark">검색</button>
-        </div>
-    </div>
-
 
     <!-- Paging Process -->
     <ul class="pagination justify-content-center py-4">
@@ -95,6 +96,7 @@
         </li>
     </ul>
 
+    </section>
     <!-- footer List & bootstrap using script -->
     <footer th:replace="fragments/guest_common :: footer"></footer>
 </body>

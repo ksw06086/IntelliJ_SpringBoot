@@ -17,6 +17,7 @@
     <link th:href="${title} == 'cart'? @{/css/cartlist.css}" rel="stylesheet"> <!-- cartlist page -->
     <link th:href="${title} == 'board'? @{/css/board.css}" rel="stylesheet"> <!-- boardList page -->
     <link th:href="${title} == 'mypage'? @{/css/mypage.css}" rel="stylesheet"> <!-- mypage page -->
+    <link th:href="${title} == 'mileage'? @{/css/mileage.css}" rel="stylesheet"> <!-- mileage page -->
 </head>
 
 <body>
@@ -57,9 +58,9 @@
                 <span sec:authentication="principal.authorities">권한</span>
                 <a th:href="@{/logout}">로그아웃</a>
             </span>
-            <a th:href="@{/guest/cartlist}">장바구니</a>
+            <a th:href="@{/guest/cartList}">장바구니</a>
             <a>주문관리</a>
-            <a th:href="@{/guest/mypage}">마이페이지</a>
+            <a th:href="@{/guest/myPage}">마이페이지</a>
         </div>
 
         <div class="ms-auto p-2">

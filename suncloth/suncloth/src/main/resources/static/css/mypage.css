@@ -1,15 +1,50 @@
-#memberInfo, .memberMenu {
-    font-size: 0.9em;
+#body {
+    width: 90%;
+    margin: 0 auto;
 }
 
-.memberMenu div {
+.memberInfoText, .orderInfoText {
+    font-size: 0.8em;
+    margin: 20px 0 5px 15px;
+}
+
+.memberInfo {
+    font-size: 0.85em;
+}
+
+.orderInfo {
+    font-size: 0.9em;
+    margin-bottom: 50px;
+}
+
+.memberInfo div {
     padding: 20px 0;
     border-collapse: collapse;
     border: 1px solid #ccc;
 }
 
-.memberMenu a {
+.memberInfo a {
     text-decoration: none;
     color: black;
     font-size: 0.9em;
+}
+
+.mileageInfo div {
+    width: 25%;
+    padding: 5px 30px;
+    font-size: 0.85em;
+}
+
+.mileageInfo a {
+    color: black;
+}
+
+.orderCnt {
+    font-weight: bolder;
+}
+
+.orderInfo > div {
+    padding: 10px 15px;
+    border-collapse: collapse;
+    border: 1px solid #ccc;
 }

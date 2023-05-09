@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/guest_common :: head('mileage')">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <!-- guest page header(guest_common.html) -->
+    <header th:replace="fragments/guest_common :: header"></header>
+
+    <!-- category product list -->
+    <h4 class="mt-4 fw-bold text-center">MILEAGE</h4>
+    <!-- SubCategory Name List -->
+    <div class="text-center mb-4">
+        고객님의 사용가능 적립금 금액입니다.
+    </div>
+
+    <section id="body">
+        <div class="border">
+            <div class="d-flex mileageInfo">
+                <div class="flex-fill text-start">총 적립금</div>
+                <div class="flex-fill text-end">10000원</div>
+                <div class="flex-fill border-start text-start">사용가능 적립금</div>
+                <div class="flex-fill text-end">15000원</div>
+            </div>
+
+            <div class="d-flex mileageInfo">
+                <div class="flex-fill text-start">사용된 적립금</div>
+                <div class="flex-fill text-end">10000원</div>
+                <div class="flex-fill border-start text-start">환불예정 적립금</div>
+                <div class="flex-fill text-end">10000원</div>
+            </div>
+        </div>
+
+        <p class="mileageInfoText">총 15건</p>
+        <table class="table mileageList border-top">
+            <col style = "width:15%;">
+            <col>
+            <col style = "width:20%;">
+            <col>
+            <col style = "width:15%;">
+            <thead class="align-middle">
+            <tr>
+                <th scope="col">주문날짜</th>
+                <th scope="col">관련 주문</th>
+                <th scope="col">사용가능 예정일</th>
+                <th scope="col">내용</th>
+                <th scope="col">적립금</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th scope="row">2021-01-15 18:15</th>
+                <td>아름다운 옷 [옵션: blue/M]</td>
+                <td>2021-07-05 ~ 2022-01-01</td>
+                <td>상품 주문 적립금</td>
+                <td>500원</td>
+            </tr>
+            <!-- 적립금 내용이 없을 때 -->
+            <tr>
+                <td colspan="5">적립금 내역이 없습니다.</td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Paging Process -->
+    <ul class="pagination justify-content-center py-2">
+        <li class="page-item disabled">
+            <a class="page-link">Previous</a>
+        </li>
+        <li class="page-item active">
+            <a class="page-link" href="#">1</a>
+        </li>
+        <li class="page-item" aria-current="page">
+            <a class="page-link" href="#">2</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="#">3</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="#">Next</a>
+        </li>
+    </ul>
+
+    <!-- footer List & bootstrap using script -->
+    <footer th:replace="fragments/guest_common :: footer"></footer>
+</body>
+</html>

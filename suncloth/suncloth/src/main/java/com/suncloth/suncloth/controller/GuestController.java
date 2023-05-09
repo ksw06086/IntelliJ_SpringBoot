@@ -21,14 +21,19 @@ public class GuestController {
         return "/guest/guest_category";
     }
 
-    @GetMapping("/cartlist")
-    public String cartlist() {
-        return "/guest/guest_cartlist";
+    @GetMapping("/cartList")
+    public String cartList() {
+        return "/guest/guest_cartList";
     }
 
-    @GetMapping("/mypage")
-    public String mypage() {
-        return "/guest/guest_mypage";
+    @GetMapping("/myPage")
+    public String myPage() {
+        return "/guest/guest_myPage";
+    }
+
+    @GetMapping("/mileage")
+    public String mileage() {
+        return "/guest/guest_mileage";
     }
 
 }
