@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/board")
 public class BoardController {
-    @GetMapping("/noticeList")
-    public String noticeList(Model model) {
-        return "/board/guest_noticelist";
+    @GetMapping("/boardList")
+    public String noticeList(Model model
+            , @RequestParam(required = false) String name) {
+        model.addAttribute("name", name);
+        return "/board/guest_boardList";
     }
 
 }

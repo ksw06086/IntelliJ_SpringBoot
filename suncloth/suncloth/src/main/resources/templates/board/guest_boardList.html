@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/guest_common :: head('board')">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <!-- guest page header(guest_common.html) -->
+    <header th:replace="fragments/guest_common :: header"></header>
+
+    <!-- BoardList -->
+    <section th:replace="fragments/guest_common :: boardList(${name})"></section>
+
+    <!-- footer List & bootstrap using script -->
+    <footer th:replace="fragments/guest_common :: footer"></footer>
+</body>
+</html>

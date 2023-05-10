@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/guest_common :: head('order')">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- guest page header(guest_common.html) -->
+<header th:replace="fragments/guest_common :: header"></header>
+
+<!-- category product list -->
+<h4 class="sub-title my-4 text-center fw-bold">ORDER LIST</h4>
+
+<section id="body">
+
+    <ul class="nav nav-tabs nav-fill mb-3">
+        <li class="nav-item">
+            <a class="nav-link active" href="#">주문내역조회</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">환불내역조회</a>
+        </li>
+    </ul>
+
+    <div class="border searchBox">
+        <select class="p-2 me-2" style="font-size: 0.65em;">
+            <option value = "allorder">전체 주문처리상태</option>
+            <option value = "paybefore">입금전</option>
+            <option value = "delready">배송준비중</option>
+            <option value = "deling">배송중</option>
+            <option value = "delfinish">배송완료</option>
+            <option value = "cancel">취소</option>
+            <option value = "return">반품</option>
+        </select> |
+        <input type = "radio" id="today" name = "dayType" value = "today">
+        <label for = "today">오늘</label>
+        <input type = "radio" id="week" name = "dayType" value = "today">
+        <label for = "today">1주일</label>
+        <input type = "radio" id="month1" name = "dayType" value = "today">
+        <label for = "today">1개월</label>
+        <input type = "radio" id="month3" name = "dayType" value = "today">
+        <label for = "today">3개월</label>
+        <input type = "radio" id="month6" name = "dayType" value = "today">
+        <label for = "today">6개월</label>
+        <input type = "date" id = "firstDay" name = "firstDay">
+        <input type = "date" id = "lastDay" name = "lastDay">
+        <button type = "button" class="btn btn-light">조회</button>
+    </div>
+
+    <div class = "basetext">
+        <p>·기본적으로 최근 3개월간의 자료가 조회되며, 기간 검색시 지난 주문내역을 조회하실 수 있습니다.<br>
+            ·주문번호를 클릭하시면 해당 주문에 대한 상세내역을 확인하실 수 있습니다.</p>
+    </div>
+
+    <div class = "orderPrdTitle">
+        <p><b>주문 상품 정보</b></p>
+    </div>
+
+    ${srhCnt}/${cnt}
+    <form name = "order" method = "post">
+        <table id="orderList" class="table">
+            <colgroup>
+                <col>
+                <col>
+                <col style = "width:30%;">
+                <col>
+                <col>
+                <col>
+                <col style = "width:9%;">
+            </colgroup>
+            <tr class="orderListTitle">
+                <td>주문일자<br>[주문번호]</td>
+                <td>이미지</td>
+                <td>상품정보</td>
+                <td>수량</td>
+                <td>상품구매금액</td>
+                <td>주문처리상태</td>
+                <td>취소/교환/반품</td>
+            </tr>
+            <!-- 게시글이 있으면 -->
+            <tr class = "orderPrd">
+                <td>2021-04-15 12:15
+                    <br>[${list.num}]</td>
+                <td>
+                    <img src="" width = "50px" height = "60px">
+                </td>
+                <td>
+                    <a href = "h_productForm?num=${list.num}&number=${number+1}&pageNum=${pageNum}">
+                        <b>${list.prdname}</b><br>
+                        [옵션: ${list.colorname}/${list.sizename}]
+                    </a>
+                </td>
+                <td>${list.count}
+                </td>
+                <td><b>KRW ${list.price}</b></td>
+                <td>${list.state}</td>
+                <td>
+                    <button class="refundBtn" onclick = "window.location = 'order?num=${list.num}&statenumber=2'">반품하기</button>
+                    <button class="cancelBtn" onclick = "window.location = 'order?num=${list.num}&statenumber=1&count=${list.count}'">취소하기</button>
+                        -
+                </td>
+            </tr>
+            <!-- 게시글이 없으면 -->
+            <tr class = "orderPrd">
+                <td colspan = "7">
+                    주문한 상품이 없을 때 나오는 글자입니다~!
+                </td>
+            </tr>
+            <tr>
+                <td colspan = "7">
+                    <p class="text-end me-2">합계:   KRW ${ncount}</p>
+                </td>
+            </tr>
+        </table>
+
+        <div style = "width:100%; text-align:right; margin:20px 0px;">
+            <button class="btn btn-outline-secondary">쇼핑계속하기</button>
+        </div>
+
+    </form>
+
+</section>
+
+<!-- footer List & bootstrap using script -->
+<footer th:replace="fragments/guest_common :: footer"></footer>
+</body>
+</html>

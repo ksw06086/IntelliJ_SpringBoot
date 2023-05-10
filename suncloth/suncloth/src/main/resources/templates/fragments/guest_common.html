@@ -14,10 +14,13 @@
     <link th:href="${title} == 'login'? @{/css/login.css}" rel="stylesheet"> <!-- login page -->
     <link th:href="${title} == 'register'? @{/css/register.css}" rel="stylesheet"> <!-- register page -->
     <link th:href="${title} == 'register_finish'? @{/css/register_finish.css}" rel="stylesheet"> <!-- register finish page -->
-    <link th:href="${title} == 'cart'? @{/css/cartlist.css}" rel="stylesheet"> <!-- cartlist page -->
+    <link th:href="${title} == 'cart'? @{/css/cartlist.css}" rel="stylesheet"> <!-- cartList page -->
     <link th:href="${title} == 'board'? @{/css/board.css}" rel="stylesheet"> <!-- boardList page -->
-    <link th:href="${title} == 'mypage'? @{/css/mypage.css}" rel="stylesheet"> <!-- mypage page -->
+    <link th:href="${title} == 'mypage'? @{/css/mypage.css}" rel="stylesheet"> <!-- myPage page -->
     <link th:href="${title} == 'mileage'? @{/css/mileage.css}" rel="stylesheet"> <!-- mileage page -->
+    <link th:href="${title} == 'myBoard'? @{/css/myBoard.css}" rel="stylesheet"> <!-- myBoard page -->
+    <link th:href="${title} == 'order'? @{/css/orderlist.css}" rel="stylesheet"> <!-- orderList page -->
+    <link th:href="${title} == 'productDetail'? @{/css/productDetail.css}" rel="stylesheet"> <!-- productDetail page -->
 </head>
 
 <body>
@@ -59,15 +62,15 @@
                 <a th:href="@{/logout}">로그아웃</a>
             </span>
             <a th:href="@{/guest/cartList}">장바구니</a>
-            <a>주문관리</a>
+            <a th:href="@{/guest/orderList}">주문관리</a>
             <a th:href="@{/guest/myPage}">마이페이지</a>
         </div>
 
         <div class="ms-auto p-2">
-            <a th:href="@{/board/noticeList}">공지</a>
-            <a>FAQ</a>
+            <a th:href="@{/board/boardList(name='NOTICE')}">공지</a>
+            <a th:href="@{/board/boardList(name='FAQ')}">FAQ</a>
             <a>Q&A</a>
-            <a>후기</a>
+            <a th:href="@{/board/boardList(name='REVIEW')}">후기</a>
             <a>host</a>
             <a>delivery</a>
         </div>
@@ -146,6 +149,98 @@
         </div>
     </div>
 </div>
+
+<!-- notice, FAQ BoardList -->
+<section id="body" th:fragment="boardList(title)">
+    <!-- category product list -->
+    <h4 class="mt-4 fw-bold text-center" th:text="${title}"></h4>
+    <!-- SubCategory Name List -->
+    <div class="text-center mb-4" th:text="|SunCloth의 ${title}입니다:)|">
+    </div>
+    <div class="d-flex">
+        <div class="me-auto">
+            <p class="ms-1 mt-3 cntText"><b th:text="| 검색 ${10}건 / 총 ${50}건|"></b></p>
+        </div>
+        <div class="d-flex justify-content-end mt-2 searchBox">
+            <div>
+                <select class="form-select" id="blockNum" name="blockNum">
+                    <option value="10">10개씩 출력</option>
+                    <option value="30">30개씩 출력</option>
+                    <option value="50">50개씩 출력</option>
+                </select>
+            </div>
+            <div>
+                <select class="form-select" id="dayType" name="dayType">
+                    <option value="all">전체</option>
+                    <option value="week">일주일</option>
+                    <option value="month">한달</option>
+                    <option value="month3">세달</option>
+                </select>
+            </div>
+            <div>
+                <select class="form-select" aria-label=".form-select-sm example" id="searchType" name="searchType">
+                    <option value="title">제목</option>
+                    <option value="content">내용</option>
+                    <option value="id">작성자</option>
+                </select>
+            </div>
+            <div>
+                <input type="search" class="form-control" placeholder="search">
+            </div>
+            <div>
+                <button type="button" class="btn btn-outline-dark">검색</button>
+            </div>
+        </div>
+    </div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">NO</th>
+            <th scope="col">CONTENTS</th>
+            <th scope="col">NAME</th>
+            <th scope="col" th:if="${title == 'REVIEW'}">HIT</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th scope="row">1</th>
+            <td>맛있다 진짜로</td>
+            <td>김선우</td>
+            <td th:if="${title == 'REVIEW'}">15</td>
+        </tr>
+        </tbody>
+        <!--<tbody>
+        <tr>
+            <td colspan = "4" class="text-center">
+                게시글이 없습니다. 글을 작성해주세요!!
+            </td>
+        </tr>
+        </tbody>-->
+    </table>
+
+
+    <!-- Paging Process -->
+    <ul class="pagination justify-content-center py-4">
+        <li class="page-item disabled">
+            <a class="page-link">Previous</a>
+        </li>
+        <li class="page-item active">
+            <a class="page-link" href="#">1</a>
+        </li>
+        <li class="page-item" aria-current="page">
+            <a class="page-link" href="#">2</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="#">3</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="#">Next</a>
+        </li>
+    </ul>
+</section>
+
+
+
 
 <!-- footer : bootstrap using script -->
 <footer id = "foot" th:fragment="footer">

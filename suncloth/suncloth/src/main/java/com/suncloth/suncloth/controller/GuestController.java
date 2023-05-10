@@ -36,4 +36,13 @@ public class GuestController {
         return "/guest/guest_mileage";
     }
 
+    @GetMapping("/orderList")
+    public String orderList() {
+        return "/guest/guest_orderList";
+    }
+
+    @GetMapping("/productDetail")
+    public String productDetail() {
+        return "/guest/guest_productDetail";
+    }
 }

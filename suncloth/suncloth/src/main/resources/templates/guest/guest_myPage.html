@@ -15,11 +15,11 @@
     <p class="memberInfoText">&lt;저희 쇼핑몰을 이용해주셔서 감사합니다. <b>kim</b>님은 <b>[FAMILY]</b> 회원이십니다.&gt;</p>
 
     <div class="d-flex text-center memberInfo">
-        <div class="flex-fill"><a href = "#"><b>ORDER</b><br>주문내역 조회</a></div>
+        <div class="flex-fill"><a th:href="@{/guest/orderList}"><b>ORDER</b><br>주문내역 조회</a></div>
         <div class="flex-fill"><a href = "#"><b>PROFILE</b><br>회원 정보</a></div>
         <div class="flex-fill"><a th:href = "@{/guest/cartList}"><b>CART LIST</b><br>장바구니</a></div>
         <div class="flex-fill"><a th:href = "@{/guest/mileage}"><b>MILEAGE</b><br>적립금 관리</a></div>
-        <div class="flex-fill"><a href = "#"><b>BOARD</b><br>내 게시물 관리</a></div>
+        <div class="flex-fill"><a th:href = "@{/board/boardList(name='MY BOARD')}"><b>BOARD</b><br>내 게시물 관리</a></div>
     </div>
 
     <div class="border border-top-0">

@@ -1,0 +1,99 @@
+#body{
+    width: 90%;
+    margin: 0 auto;
+}
+
+.mainImg {
+    width: 50%;
+    margin-top: 40px;
+    margin-right: 5%;
+    padding-right: 5%;
+}
+
+.buyingContent {
+    width: 50%;
+    margin-top: 40px;
+    margin-left: 5%;
+}
+
+.checklist {
+    width:100%;
+    margin-top: 20px;
+}
+
+.checklist tr td{
+    font-size: .75em;
+    padding: 5px 0px;
+}
+
+#buyBtn{
+    width:100%;
+    color: white;
+    background: #000000;
+    border: none;
+    padding: 10px;
+    font-size: .8em;
+}
+
+#cartAddBtn, #wishListBtn {
+    width:100%;
+    background: #ffffff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    font-size: .8em;
+}
+
+.instructionDiv p{
+    font-size: .7em;
+    margin: 0;
+}
+
+.detailDiv{
+    margin-top: 50px;
+    text-align: center;
+}
+
+.titles div {
+    margin: 0 10px;
+}
+
+.titles a {
+    text-decoration: none;
+    color: black;
+}
+
+.actionTitle {
+    font-weight: bold;
+    border-bottom: 3px solid #ccc;
+}
+
+.productInfoContent{
+    margin-top: 30px;
+    text-align: center;
+}
+
+.slide {
+    font-size: 0.75em;
+}
+
+#withBuyBtn, #reviewWriteBtn, #qnaWriteBtn{
+    width:120px;
+    padding: 10px 0px;
+    background: #ccc;
+    color: white;
+    border: 1px solid #ccc;
+}
+
+#withCartBtn, #reviewListBtn, #qnaListBtn{
+    width:150px;
+    padding: 10px 0px;
+    background: #fff;
+    border: 1px solid #ccc;
+}
+
+.btnList {
+    margin: 0 auto;
+}
+
+
+
