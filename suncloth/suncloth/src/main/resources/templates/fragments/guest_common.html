@@ -19,8 +19,9 @@
     <link th:href="${title} == 'mypage'? @{/css/mypage.css}" rel="stylesheet"> <!-- myPage page -->
     <link th:href="${title} == 'mileage'? @{/css/mileage.css}" rel="stylesheet"> <!-- mileage page -->
     <link th:href="${title} == 'myBoard'? @{/css/myBoard.css}" rel="stylesheet"> <!-- myBoard page -->
-    <link th:href="${title} == 'order'? @{/css/orderlist.css}" rel="stylesheet"> <!-- orderList page -->
+    <link th:href="${title} == 'orderlist'? @{/css/orderlist.css}" rel="stylesheet"> <!-- orderList page -->
     <link th:href="${title} == 'productDetail'? @{/css/productDetail.css}" rel="stylesheet"> <!-- productDetail page -->
+    <link th:href="${title} == 'orderForm'? @{/css/orderForm.css}" rel="stylesheet"> <!-- orderForm page -->
 </head>
 
 <body>
@@ -240,9 +241,6 @@
         </li>
     </ul>
 </section>
-
-
-
 
 <!-- footer : bootstrap using script -->
 <footer id = "foot" th:fragment="footer">

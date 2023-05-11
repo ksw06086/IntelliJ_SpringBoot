@@ -45,4 +45,9 @@ public class GuestController {
     public String productDetail() {
         return "/guest/guest_productDetail";
     }
+
+    @GetMapping("/orderForm")
+    public String orderForm() {
+        return "/guest/guest_orderForm";
+    }
 }
