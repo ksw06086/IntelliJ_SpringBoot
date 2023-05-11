@@ -72,8 +72,13 @@
     text-align: center;
 }
 
-.slide {
-    font-size: 0.75em;
+.slide * {
+    font-size: 0.9em;
+    text-align: start;
+}
+
+.slide .withCheck * {
+    vertical-align: middle;
 }
 
 #withBuyBtn, #reviewWriteBtn, #qnaWriteBtn{
