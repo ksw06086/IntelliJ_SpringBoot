@@ -59,7 +59,67 @@
     padding: 5px 0 0;
 }
 
-#checkDelBtn, #beforeBtn {
+.deliTable, .messageTable, .totalTable,
+.mileageTable, .paymentTable {
+    width:100%;
+    border-collapse:collapse;
+    border-bottom: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+}
+
+.deliTable, .messageTable, .mileageTable, .paymentTable {
+    margin: 0 0 30px;
+}
+
+.deliTable tr td:nth-child(1),
+.messageTable tr td:nth-child(1),
+.mileageTable tr td:nth-child(1),
+.paymentTable tr td:nth-child(1){
+    border-right: 1px solid #ccc;
+}
+
+.deliTable tr td,
+.messageTable tr td,
+.mileageTable tr td{
+    border-bottom: 1px solid #ccc;
+    padding: 9px 12px;
+    font-size: 0.75em;
+}
+
+.deliTable tr td input,
+.messageTable tr td input {
+    font-size: 0.7em;
+}
+
+.deliTable tr td *,
+.messageTable tr td *,
+.totalTable tr td * {
+    vertical-align: middle;
+}
+
+/* messageTable */
+.phone-SubContent{
+    width: 15%;
+}
+
+/* totalTable */
+.totalTitle td {
+    border-top: 1px solid #ccc;
+    text-align: center;
+    padding:15px 0;
+    font-size:.75em;
+}
+
+.totalContent td {
+    border-top: 1px solid #ccc;
+    text-align: center;
+    padding: 30px 0;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* 버튼 스타일 */
+.buttonStyle {
     box-sizing: border-box;
     padding: 2px 8px;
     border: 1px solid #bbb;
@@ -78,27 +138,91 @@
     transition: all 0.15s ease;
 }
 
-.deliTable {
+#payway{
+    margin: 0px 0px 50px;
     width:100%;
     border-collapse:collapse;
-    border-bottom: 1px solid #ccc;
-    border-top: 1px solid #ccc;
+    border: 1px solid #ccc;
 }
 
-.deliTable tr td:nth-child(1){
-    border-right: 1px solid #ccc;
+#paywaytop > td:nth-child(1){
+    padding:9px 12px;
+    font-weight:bold;
+    font-size:.75em;
+    border-bottom:1px solid #ccc;
+    border-right:1px solid #ccc;
 }
 
-.deliTable tr td {
-    border-bottom: 1px solid #ccc;
-    padding: 9px 12px;
-    font-size: 0.75em;
+#paywaybtm > td:nth-child(1){
+    padding:15px 12px;
+    border-right:1px solid #ccc;
+    vertical-align:top;
 }
 
-.deliTable tr td input {
-    font-size: 0.7em;
+#mu, #card{
+    font-size:.75em;
+    border-collapse:collapse;
+    width:100%;
 }
 
-.deliTable tr td * {
-    vertical-align: middle;
+#mu tr td{
+    padding:15px 12px;
+    border-top:1px solid #ccc;
+}
+
+#mu tr:nth-child(1) td:nth-child(1),
+#mu tr:nth-child(2) td:nth-child(1){
+    border-right:1px solid #ccc;
+}
+
+#card{
+    display:none;
+}
+
+
+#lasttop td{
+    text-align:right;
+    font-size:.75em;
+    padding:9px 6px;
+}
+
+#lastpaychk td:nth-child(1){
+    text-align:center;
+    font-size:.9em;
+    padding:9px 0px;
+}
+
+#lastpaychk td:nth-child(2){
+    text-align: right;
+    font-size: 30px;
+    padding:9px 6px;
+    font-weight:bold;
+}
+
+#chkagree td{
+    font-size:.65em;
+    padding:9px 6px;
+}
+
+#pay{
+    width:100%;
+    padding: 10px 0px;
+    background: #282828;
+    color: white;
+    border: 1px solid #ccc;
+    font-size: .8em;
+}
+
+.lastbtm td{
+    text-align:right;
+    font-size:.8em;
+    padding:9px 6px;
+}
+
+#btm1 td{
+    border-top:1px solid #ccc;
+}
+
+#btm2 td{
+    border-top:1px solid #ccc;
 }
