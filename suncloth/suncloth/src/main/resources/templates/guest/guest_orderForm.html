@@ -5,6 +5,9 @@
   <title>Title</title>
 </head>
 <body>
+<!-- 결제위젯 SDK 추가 -->
+<script src="https://js.tosspayments.com/v1/payment-widget"></script>
+
 <!-- guest page header(guest_common.html) -->
 <header th:replace="fragments/guest_common :: header"></header>
 
@@ -81,10 +84,10 @@
       </tr>
       <tr class = "orderSubText">
         <td colspan = "5" class="text-start">
-          <b>선택상품을 </b><button type = "button" class="buttonStyle" id = "checkDelBtn" onclick = "orderlistDel();">X 삭제하기</button>
+          <b>선택상품을 </b><button type = "button" class="whiteButton" id = "checkDelBtn" onclick = "orderlistDel();">X 삭제하기</button>
         </td>
         <td colspan = "4" class="text-end">
-          <button type = "button" class="buttonStyle" id = "beforeBtn" onclick = "window.history.back();">이전페이지</button>
+          <button type = "button" class="whiteButton" id = "beforeBtn" onclick = "window.history.back();">이전페이지</button>
         </td>
       </tr>
     </table>
@@ -125,7 +128,7 @@
         </label></td>
         <td>
           <input type = "text" id = "addressInput" name = "addressInput">
-          <input type = "button" value = "우편번호" id = "addrBtn" class="buttonStyle" onclick = "addressSearch();"><br>
+          <input type = "button" value = "우편번호" id = "addrBtn" class="whiteButton" onclick = "addressSearch();"><br>
           <input type = "text" id = "subAddressInput" name = "subAddressInput" class="w-50">기본주소<br>
           <input type = "text" id = "detailAddressInput" name = "detailAddressInput" class="w-50">나머지주소
         </td>
@@ -239,49 +242,47 @@
     </table>
 
     <span><b>결제수단</b></span>
-    <table class="paymentTable">
-
-    </table>
-
-    <table id = "payway">
+    <table class="paymentTable border">
       <col>
-      <col style = "width: 22%;">
-      <tr id = "paywaytop">
-        <td>
-          <input type = "radio" name = "howpay" id = "notacc" value = "notacc" checked>
-          무통장 입금&emsp;
-          <input type = "radio" name = "howpay" id = "cardbtn" value = "card">
-          카드 결제
+      <col width="270px">
+      <tr>
+        <!-- 결제방식 선택 -->
+        <td class="paySelect">
+          <input type = "radio" name = "howPay" value = "account" checked>
+          <label>무통장 입금</label>
+          <input type = "radio" name = "howPay" value = "card">
+          <label>카드 결제</label>
         </td>
-        <td rowspan = "2" id = "lastlist">
-          <table>
+        <!-- 결제 최종 정보 -->
+        <td rowspan="2">
+          <table class="w-100">
             <col style = "width:40%;">
             <col>
-            <tr id = "lasttop">
-              <td colspan = "2">
-                <b>무통장 입금</b> 최종결제 금액
-              </td>
-            </tr>
-            <tr id = "lastpaychk">
-              <td>
-                KRW
-              </td>
-              <td>
-                <label class = "total">15000</label>
-              </td>
-            </tr>
-            <tr id = "chkagree">
-              <td colspan = "2">
-                <input type = "checkbox" id = "agree" name = "agreeN" value = "ok">
-                &nbsp;결제정보를 확인하였으며, 구매진행에 동의합니다.
+            <tr>
+              <td colspan = "2" class="text-end fs-75 py-9 px-6">
+                <span class="fw-bold">무통장 입금</span> <span>최종결제 금액</span>
               </td>
             </tr>
             <tr>
-              <td colspan = "2" style = "padding:9px 6px;">
-                <input type = "submit" id = "pay" name = "payN" value = "결제하기" onclick = "javascript: orderform.action = 'orderPro'">
+              <td class="text-center fs-9 py-9">
+                KRW
+              </td>
+              <td class="text-end fs-30px py-9 px-6">
+                <label class = "total">15000</label>
               </td>
             </tr>
-            <tr class = "lastbtm" id = "btm1">
+            <tr>
+              <td colspan = "2" class="fs-65 px-6 py-9">
+                <input type = "checkbox" name = "agree" value = "ok">
+                <label> 결제정보를 확인하였으며, 구매진행에 동의합니다.</label>
+              </td>
+            </tr>
+            <tr>
+              <td colspan = "2" class="py-9 px-6">
+                <input type = "submit" class="blackButton" name = "pay" value = "결제하기" onclick = "javascript: orderform.action = 'orderPro'">
+              </td>
+            </tr>
+            <tr class="savedMoneyInfo">
               <td>
                 <b>총 적립예정금액</b>
               </td>
@@ -289,7 +290,7 @@
                 1500원
               </td>
             </tr>
-            <tr class = "lastbtm" id = "btm2">
+            <tr class="savedMoneyInfo">
               <td>
                 상품별 적립금
               </td>
@@ -297,20 +298,20 @@
                 1500원
               </td>
             </tr>
-            <tr class = "lastbtm">
+            <tr class="savedMoneyInfo">
               <td>
                 회원 적립금
               </td>
               <td>
-                <label class = "memplus"></label>원
+                <label>5000</label>원
               </td>
             </tr>
           </table>
         </td>
       </tr>
-      <tr id = "paywaybtm">
-        <td>
-          <table id = "mu">
+      <tr>
+        <td  class="paySelectInfo">
+          <table class="fs-75 w-100 paySelectAccountInfo">
             <col style = "width:15%;">
             <col>
             <tr>
@@ -326,19 +327,15 @@
               </td>
             </tr>
             <tr>
-              <td></td>
-              <td><img src = "./ascloimage/exclamation-mark.png" width = "10px" height = "10px">
+              <td colspan="2" class="border-end-0"><img src = "./ascloimage/exclamation-mark.png" width = "10px" height = "10px">
                 최소 결제 가능 금액은 결제금액에서 배송비를 제외한 금액입니다.
               </td>
             </tr>
           </table>
 
-          <table id = "card">
-            <col style = "width:20%;">
-            <col>
+          <table class="fs-75 w-100 paySelectCardInfo">
             <tr>
-              <td></td>
-              <td><img src = "./ascloimage/exclamation-mark.png" width = "10px" height = "10px">
+              <td colspan="2"><img src = "./ascloimage/exclamation-mark.png" width = "10px" height = "10px">
                 최소 결제 가능 금액은 결제금액에서 배송비를 제외한 금액입니다.<br>
                 <img src = "./ascloimage/exclamation-mark.png" width = "10px" height = "10px">
                 소액 결제의 경우 PG사 정책에 따라 결제금액 제한이 있을 수 있습니다.
@@ -349,8 +346,66 @@
       </tr>
     </table>
 
+    <fieldset class="border px-2 my-3">
+      <p class="fs-9 ps-2 py-3 border-bottom">무이자 할부 이용안내</p>
+      <p class="fs-8">&nbsp;&nbsp;&nbsp;<img src = "./ascloimage/one.png" width = "10px" height = "10px"> [쇼핑계속하기] 버튼을 누르시면 쇼핑을 계속하실 수 있습니다.<br>
+        &nbsp;&nbsp;&nbsp;<img src = "./ascloimage/two.png" width = "10px" height = "10px"> 장바구니와 관심상품을 이용하여 원하시는 상품만 주문하거나 관심상품으로 등록하실 수 있습니다.<br>
+        &nbsp;&nbsp;&nbsp;<img src = "./ascloimage/three.png" width = "10px" height = "10px"> 파일첨부 옵션은 동일상품을 장바구니에 추가할 경우 마지막에 업로드 한 파일로 교체됩니다.</p>
+    </fieldset>
+
+    <fieldset class="border px-2 my-3">
+      <p class="fs-9 ps-2 py-3 border-bottom">이용안내</p>
+      <p class="fs-9 ps-2">장바구니 이용안내</p>
+      <p class="fs-8">&nbsp;&nbsp;&nbsp;<img src = "./ascloimage/one.png" width = "10px" height = "10px"> [쇼핑계속하기] 버튼을 누르시면 쇼핑을 계속하실 수 있습니다.<br>
+        &nbsp;&nbsp;&nbsp;<img src = "./ascloimage/two.png" width = "10px" height = "10px"> 장바구니와 관심상품을 이용하여 원하시는 상품만 주문하거나 관심상품으로 등록하실 수 있습니다.<br>
+        &nbsp;&nbsp;&nbsp;<img src = "./ascloimage/three.png" width = "10px" height = "10px"> 파일첨부 옵션은 동일상품을 장바구니에 추가할 경우 마지막에 업로드 한 파일로 교체됩니다.</p>
+
+      <p class="fs-9 ps-2">무이자할부 이용안내</p>
+      <p class="fs-8">&nbsp;&nbsp;&nbsp;<img src = "./ascloimage/one.png" width = "10px" height = "10px"> 상품별 무이자할부 혜택을 받으시려면 무이자할부 상품만 선택하여 [주문하기] 버튼을 눌러 주문/결제 하시면 됩니다.<br>
+        &nbsp;&nbsp;&nbsp;<img src = "./ascloimage/two.png" width = "10px" height = "10px"> [전체 상품 주문]버튼을 누르시면 장바구니의 구분없이 선택된 모든 상품에 대한 주문/결제가 이루어집니다.<br>
+        &nbsp;&nbsp;&nbsp;<img src = "./ascloimage/three.png" width = "10px" height = "10px"> 단, 전체 상품을 주문/결제하실 경우, 상품별 무이자할부 혜택을 받으실 수 없습니다.</p>
+    </fieldset>
   </form>
 
+  <!-- 결제위젯, 이용약관 영역 -->
+  <!--<div id="payment-method"></div>
+  <div id="agreement"></div>-->
+  <!-- 결제하기 버튼 -->
+  <!--<button id="payment-button">결제하기</button>-->
+  <script>
+    const clientKey = "test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq"
+    const customerKey = "tHe3_yG6m7Xk2yyN680mf" // 내 상점의 고객을 식별하는 고유한 키
+    const button = document.getElementById("payment-button")
+
+    // ------  결제위젯 초기화 ------
+    // 비회원 결제에는 customerKey 대신 ANONYMOUS를 사용하세요.
+    const paymentWidget = PaymentWidget(clientKey, customerKey) // 회원 결제
+    // const paymentWidget = PaymentWidget(clientKey, PaymentWidget.ANONYMOUS) // 비회원 결제
+
+    // ------  결제위젯 렌더링 ------
+    // 결제위젯이 렌더링될 DOM 요소를 지정하는 CSS 선택자 및 결제 금액을 넣어주세요.
+    // https://docs.tosspayments.com/reference/widget-sdk#renderpaymentmethods선택자-결제-금액
+    paymentWidget.renderPaymentMethods("#payment-method", 15000)
+
+    // ------  이용약관 렌더링 ------
+    // 이용약관이 렌더링될 DOM 요소를 지정하는 CSS 선택자를 넣어주세요.
+    // https://docs.tosspayments.com/reference/widget-sdk#renderagreement선택자
+    paymentWidget.renderAgreement('#agreement')
+
+    // ------ '결제하기' 버튼 누르면 결제창 띄우기 ------
+    // 더 많은 결제 정보 파라미터는 결제위젯 SDK에서 확인하세요.
+    // https://docs.tosspayments.com/reference/widget-sdk#requestpayment결제-정보
+    button.addEventListener("click", function () {
+      paymentWidget.requestPayment({
+        orderId: "ZUQanehfbWoriGaPSkvS8",            // 주문 ID(직접 만들어주세요)
+        orderName: "토스 티셔츠 외 2건",                 // 주문명
+        successUrl: "https://my-store.com/success",  // 결제에 성공하면 이동하는 페이지(직접 만들어주세요)
+        failUrl: "https://my-store.com/fail",        // 결제에 실패하면 이동하는 페이지(직접 만들어주세요)
+        customerEmail: "customer123@gmail.com",
+        customerName: "김토스"
+      })
+    })
+  </script>
 
 </section>
 

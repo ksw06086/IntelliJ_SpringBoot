@@ -18,7 +18,7 @@
             <a class="nav-link active" href="#">주문내역조회</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">환불내역조회</a>
+            <a class="nav-link" href="#">환불계좌변경</a>
         </li>
     </ul>
 
@@ -117,6 +117,48 @@
             <button class="btn btn-outline-secondary">쇼핑계속하기</button>
         </div>
 
+    </form>
+
+</section>
+
+<!-- refund account info -->
+<section>
+    <form>
+        <table>
+            <tr>
+                <th scope="row">
+                    <label for="addressInput" class="ms-2 col-form-label">
+                        <span class="text-danger">*</span> Refund Account
+                    </label>
+                </th>
+                <td>
+                    <div>
+                        <div class="form-floating mx-3 mb-2">
+                            <input type="text" id="accHostInput" name="accHost" class="form-control">
+                            <label for="accHostInput">AccHost</label>
+                        </div>
+                    </div>
+                    <div class="form-floating mx-3 mb-2">
+                        <select class="form-select" id="bankInput" name="bank">
+                            <option selected>==선택==</option>
+                            <option value="기업">기업</option>
+                            <option value="국민">국민</option>
+                            <option value="농협">농협</option>
+                            <option value="우리">우리</option>
+                            <option value="신한">신한</option>
+                            <option value="삼성증권">삼성증권</option>
+                            <option value="새마을금고">새마을금고</option>
+                            <option value="카카오뱅크">카카오뱅크</option>
+                        </select>
+                        <label for="bankInput">Bank</label>
+                    </div>
+                    <div class="form-floating mx-3 mb-2">
+                        <input type="text" id="accNumberInput" name="accNumber" class="form-control">
+                        <label for="accNumberInput">accNumber</label>
+                    </div>
+                </td>
+            </tr>
+        </table>
     </form>
 
 </section>

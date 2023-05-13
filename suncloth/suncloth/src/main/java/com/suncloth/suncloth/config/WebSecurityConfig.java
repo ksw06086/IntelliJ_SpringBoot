@@ -13,13 +13,15 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import javax.sql.DataSource;
 
+// security 적용 및 설정을 위한 클래스
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
-
+    // 데이터베이스 연동 클래스 생성
     @Autowired
     private DataSource dataSource;
-
+    // 페이지별 권한 부여 메소드 : requestMatchers에 표시된 페이지 및 경로는 모든 사용자 사용 가능 그 이외는 로그인된 사용자만 사용 가능
+    // formLogin - 로그인 페이지 지정해주는 것
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -43,6 +45,10 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+
+    // 데이터베이스 내 데이터와 시큐리티 연결하는 메소드
+    // usersByUsernameQuery : 로그인 정보 가져오는 부분
+    // authoritiesByUsernameQuery : 페이지랑 연결시키는 위해 해당 로그인의 이름과 권한명을 가져오는 부분
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth)
             throws Exception {
