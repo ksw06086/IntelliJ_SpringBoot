@@ -130,5 +130,15 @@ nav a {
     resize: none;
 }
 
+/* a tag css */
+.a-tag-css a {
+    text-decoration: none;
+    color: black;
+}
+
+.a-tag-hover a:hover {
+    opacity: 0.5;
+}
+
 /* align */
 .vertical-middle-all * { vertical-align: middle; }
