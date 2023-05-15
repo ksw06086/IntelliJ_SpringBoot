@@ -1,9 +1,8 @@
 .boardView-header th, .boardView-header td {
-    padding: 10px 0;
+    padding: 10px;
 }
 
 .boardView-header td {
-    padding-left: 10px;
     border-top: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
 }
@@ -20,4 +19,20 @@
 .board-beforeAfter td {
     font-size: 0.8em;
     padding: 10px 0 10px 12px;
+}
+
+.replyContents {
+    width: 100%;
+    font-size: .75em;
+    border: 1px solid #ccc;
+    background-color:lightyellow;
+}
+
+.replyContents td {
+    padding: 5px 12px;
+}
+
+.replyContents a {
+    text-decoration: none;
+    color: black;
 }

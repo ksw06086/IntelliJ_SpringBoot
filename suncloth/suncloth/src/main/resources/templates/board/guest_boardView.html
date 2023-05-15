@@ -11,6 +11,32 @@
     <section th:replace="fragments/guest_common :: headName(${name})"></section>
 
     <section class="body">
+        <!-- 리뷰할 상품을 선택해서 올리는 부분(Review Item Select) -->
+        <th:block th:if="${name == 'REVIEW'}">
+            <div id = "prddata" class = "my-15 w-100 fs-75 boardView-header">
+                <table class="w-100">
+                    <col style = "width: 20%;">
+                    <col style = "width: 80%;">
+                    <tr>
+                        <!-- prdImage block(image 클릭시 상품 선택 가능한 팝업 생성) -->
+                        <td rowspan = "2" class="text-center py-10">
+                            <img src = "./ascloimage/jang1.jpg" width = "100px" height = "100px" class="align-middle">
+                        </td>
+                        <!-- prdTitle block -->
+                        <td><img src = "../ascloimage/n.png" width = "10px" height = "10px" class="align-middle"><br>
+                            장원영의 이쁜 티셔츠(3color)<br>
+                            KRW 37,000</td>
+                    </tr>
+                    <tr>
+                        <!-- product detail block(해당 상품의 페이지 보러가기) -->
+                        <td class="pb-15">
+                            <input type = "submit" name = "detailPrd" value = "상품 상세보기" class="fs-9 whiteButton">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </th:block>
+
         <!-- 제목, 작성자 나오게 해주는 header 부분 -->
         <div class = "fs-8 text-start boardView-header">
             <table width = "100%">
@@ -34,12 +60,135 @@
             <p th:text="내용입니다.">${vo.content}</p>
         </div>
 
-        <!-- 게시판 목록으로 이동(boardList Page Move) -->
+        <!-- 버튼 목록 -->
         <div class="text-end mt-10 mb-50">
-            <a href = "notice?num=${num}&number=${number}&pageNum=${pageNum}&choose=${choose}">
+            <!-- 게시판 목록으로 이동(boardList Page Move) -->
+            <a class="text-decoration-none" href = "notice?num=${num}&number=${number}&pageNum=${pageNum}&choose=${choose}">
                 <input type = "submit" name = "list" value = "목록" class="fs-75 whiteButton">
             </a>
+            <!-- 게시판이 review이고 내가 작성한 review일 경우 -->
+            <th:block>
+                <!-- 수정 버튼 -->
+                <a class="text-decoration-none" href = "reviewupdate?num=${num}&number=${number}&pageNum=${pageNum}&choose=${choose}">
+                    <input type = "submit" name = "update" value = "수정"  class="fs-75 whiteButton">
+                </a>
+
+                <!-- 삭제 버튼 -->
+                <a class="text-decoration-none" href = "reviewdelete?onenum=${num}&number=${number}&pageNum=${pageNum}&choose=${choose}">
+                    <input type = "submit" name = "delete" value = "삭제"  class="fs-75 whiteButton">
+                </a>
+            </th:block>
         </div>
+
+        <!-- 댓글작성 block -->
+        <article th:if="${name == 'REVIEW'}">
+            <form action="replyPro" method = "post" name = "replyForm">
+                <input type = "hidden" name = "num" th:value = "${num}">
+                <input type = "hidden" name = "number" th:value = "${number}">
+                <input type = "hidden" name = "pageNum" th:value = "${pageNum}">
+                <input type = "hidden" name = "choose" th:value = "${choose}">
+                <div class = "replyContents">
+                    <table class="w-100">
+                        <tr>
+                            <th class="text-center" colspan = "3">
+                                <!-- 댓글이 있으면 -->
+                                <!--<c:if test="${srhCnt > 0}">-->
+                                    <!-- 처음[◀◀] : ㅁ + 한자키 / 이전블록 [◀] -->
+                                    <!--<c:if test="${startPage > pageBlock}">-->
+                                        <a href = "reviewForm?num=${num}&number=${number}&pageNum=${pageNum}&choose=${choose}">
+                                            [◀◀]</a>
+                                        <a href = "reviewForm?num=${num}&number=${number}&pageNum=${pageNum}&r_pageNum=${startPage - pageBlock}&choose=${choose}">
+                                            [◀]</a>
+                                    <!--</c:if>-->
+
+                                    <!-- 블럭내의 페이지 번호 -->
+                                    <!--<c:forEach var = "i" begin = "${startPage}" end = "${endPage}">-->
+                                        <!-- 현재 페이지 -->
+<!--                                        <c:if test="${i == currentPage}">-->
+                                            <span><b th:text="|[${1}]|">[${i}]</b></span>
+                                        <!--</c:if>-->
+                                        <!--<c:if test="${i != currentPage}">-->
+                                            <span><a href = "reviewForm?num=${num}&number=${number}&pageNum=${pageNum}&r_pageNum=${i}&choose=${choose}" th:text="|[${2}]|">
+                                                [${i}]
+                                            </a></span>
+                                        <!--</c:if>-->
+                                    <!--</c:forEach>-->
+
+                                    <!-- 다음블럭 [▶] / 끝[▶▶] -->
+                                    <!--<c:if test="${pageCount > endPage}">-->
+                                        <a href = "reviewForm?num=${num}&number=${number}&pageNum=${pageNum}&r_pageNum=${startPage + pageBlock}&choose=${choose}">
+                                            [▶]</a>
+                                        <a href = "reviewForm?num=${num}&number=${number}&pageNum=${pageNum}&r_pageNum=${pageCount}&choose=${choose}">
+                                            [▶▶]</a>
+                                    <!--</c:if>-->
+                                <!--</c:if>-->
+                            </th>
+                        </tr>
+                        <!-- 댓글이 있으면 -->
+                        <!--<c:if test="${srhCnt > 0}">-->
+                            <!--<c:forEach var = "list" items = "${list}">-->
+                                <tr>
+                                    <td>
+                                        <!-- 오늘 날짜와 작성 날짜를 yyyy-MM-dd로 변환해주는 block -->
+                                        <!--<c:set var="now" value="<%=new java.util.Date()%>" />
+                                        <c:set var="sysYear"><fmt:formatDate value="${now}" pattern="yyyy-MM-dd" /></c:set>
+                                        <c:set var="boardYear"><fmt:formatDate value="${list.reg_date}" pattern="yyyy-MM-dd" /></c:set>-->
+
+                                        <!-- 오늘 날짜와 작성 날짜가 같으면 댓글 앞에 new 이미지 넣어줌 -->
+                                        <!--<c:if test = "${boardYear == sysYear}">-->
+                                        <img src = "./ascloimage/newicon.png" width = "20px" height = "15px" class="align-middle" alt="">
+                                        <span th:text="|${1} ${'kim'}|" class="align-middle" >${list.num} ${list.writer}</span>
+                                    </td>
+                                    <td colspan = "2" class="text-end">
+                                        <span th:text="|${'2023-05-15'}|">${list.reg_date}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <!-- 상세 페이지 -->
+                                    <td colspan = "2" th:text="|${'너 정말 멋지다'}|">
+                                        ${list.content}
+                                    </td>
+                                    <!-- 댓글 작성한 사람이 나라면 삭제버튼 추가 -->
+                                    <!--<c:if test="${list.writer == sessionScope.memId}">-->
+                                        <td class="text-end">
+                                            <input type = "button" class="whiteButton" name = "replyDel" value = "삭제"
+                                                   onclick = "window.location = 'replydelete?num=${num}&number=${number}&pageNum=${pageNum}&rpageNum=${rpageNum}&choose=${choose}&onenum=${list.num}'">
+                                        </td>
+                                </tr>
+                            <!--</c:forEach>-->
+                        <!--</c:if>-->
+                        <!-- 댓글이 없으면 없음을 출력해줌 -->
+                        <!--<c:if test="${srhCnt <= 0}">-->
+                            <tr>
+                                <td colspan = "3" class="text-center">
+                                    댓글이 없습니다. 첫 댓글이 되어주세요!!
+                                </td>
+                            </tr>
+                        <!--</c:if>-->
+                    </table>
+
+                    <!-- 댓글 달기위한 입력 폼 -->
+                    <table class="w-100 mt-30 mb-1">
+                        <tr>
+                            <td><b><label for="content">댓글달기</label></b></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><label for="userPwd">비밀번호: </label></td>
+                            <td><input type = "password" id = "userPwd" name = "password"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan = "2">
+                                <textarea id="replyContent" rows="3" cols="80" name = "content" class="resize-none w-100 align-middle"></textarea>
+                            </td>
+                            <td class="text-end"><input type = "submit" class="whiteMSizeButton w-100 h-100" name = "ok" value = "확인"></td>
+                        </tr>
+                    </table>
+                </div>
+            </form>
+        </article>
 
         <!-- 이전글, 다음글 이동 부분 테이블(before&after Board Move) -->
         <div class = "board-beforeAfter">
