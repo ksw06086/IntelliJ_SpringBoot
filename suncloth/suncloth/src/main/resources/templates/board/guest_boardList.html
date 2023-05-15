@@ -8,6 +8,9 @@
     <!-- guest page header(guest_common.html) -->
     <header th:replace="fragments/guest_common :: header"></header>
 
+    <!-- Title Name -->
+    <section th:replace="fragments/guest_common :: headName(${name})"></section>
+
     <!-- BoardList -->
     <section th:replace="fragments/guest_common :: boardList(${name})"></section>
 

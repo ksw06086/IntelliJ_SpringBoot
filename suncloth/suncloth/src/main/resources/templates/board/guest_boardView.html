@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/guest_common :: head('boardView')">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <!-- guest page header(guest_common.html) -->
+    <header th:replace="fragments/guest_common :: header"></header>
+
+    <section th:replace="fragments/guest_common :: headName(${name})"></section>
+
+    <section class="body">
+        <!-- 제목, 작성자 나오게 해주는 header 부분 -->
+        <div class = "fs-8 text-start boardView-header">
+            <table width = "100%">
+                <col style = "width: 15%;">
+                <col style = "width: 85%;">
+                <tr>
+                    <td>제목</td>
+                    <td th:text="${'멋있는 제목'}">${vo.subject}</td>
+                </tr>
+
+                <tr>
+                    <td>작성자</td>
+                    <td><b th:text="${'kim'}">${vo.id}</b></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- 게시물의 내용(board contents) -->
+        <div class="text-center fs-8 py-20 mt-30 mb-20 border-bottom-3-ccc">
+            <img src="" alt="이미지 사진">
+            <p th:text="내용입니다.">${vo.content}</p>
+        </div>
+
+        <!-- 게시판 목록으로 이동(boardList Page Move) -->
+        <div class="text-end mt-10 mb-50">
+            <a href = "notice?num=${num}&number=${number}&pageNum=${pageNum}&choose=${choose}">
+                <input type = "submit" name = "list" value = "목록" class="fs-75 whiteButton">
+            </a>
+        </div>
+
+        <!-- 이전글, 다음글 이동 부분 테이블(before&after Board Move) -->
+        <div class = "board-beforeAfter">
+            <table class="table table-bordered">
+                <col style = "width: 15%;">
+                <col style = "width: 85%;">
+                <!-- 이전글 -->
+                <!--<c:if test="${vo.fwsubject != null}">-->
+                    <tr>
+                        <td><img src = "ascloimage/up.png" width = "12px" height = "12px">이전글</td>
+                        <td><a href = "noticeForm?num=${vo.fwnum}&number=${number-1}&pageNum=${pageNum}&choose=${choose}" th:text="${'재미있다.'}">${vo.fwsubject}</a></td>
+                    </tr>
+                <!-- 다음글 -->
+                <!--<c:if test="${vo.nextsubject != null}">-->
+                    <tr>
+                        <td><img src = "ascloimage/down.png" width = "12px" height = "12px">다음글</td>
+                        <td><a href = "noticeForm?num=${vo.nextnum}&number=${number+1}&pageNum=${pageNum}&choose=${choose}" th:text="${'재미없는 글'}">${vo.nextsubject}</a></td>
+                    </tr>
+            </table>
+        </div>
+    </section>
+
+    <!-- footer List & bootstrap using script -->
+    <footer th:replace="fragments/guest_common :: footer"></footer>
+</body>
+</html>

@@ -17,6 +17,7 @@
     <link th:href="${title} == 'register_finish'? @{/css/register_finish.css}" rel="stylesheet"> <!-- register finish page -->
     <link th:href="${title} == 'cart'? @{/css/cartlist.css}" rel="stylesheet"> <!-- cartList page -->
     <link th:href="${title} == 'board'? @{/css/board.css}" rel="stylesheet"> <!-- boardList page -->
+    <link th:href="${title} == 'boardView'? @{/css/boardView.css}" rel="stylesheet"> <!-- boardView page -->
     <link th:href="${title} == 'mypage'? @{/css/mypage.css}" rel="stylesheet"> <!-- myPage page -->
     <link th:href="${title} == 'mileage'? @{/css/mileage.css}" rel="stylesheet"> <!-- mileage page -->
     <link th:href="${title} == 'myBoard'? @{/css/myBoard.css}" rel="stylesheet"> <!-- myBoard page -->
@@ -153,15 +154,23 @@
     </div>
 </div>
 
+<!-- Title Name -->
+<section class="body"  th:fragment="headName(title)">
+    <div class="text-end fs-8 color-ccc">
+        <p th:text="|home > ${title}|"></p>
+    </div>
+
+    <div class="text-center">
+        <p><b class="border-bottom-3-ccc" th:text="|${title}|"></b></p>
+    </div>
+
+    <div class="mt-15 text-center fs-75 color-gray" th:if="${title == 'NOTICE'}">
+        <p><b>애즈클로의 공지사항입니다.:)</b></p>
+    </div>
+</section>
+
 <!-- notice, FAQ BoardList -->
-<section id="body" th:fragment="boardList(title)">
-    <th:block th:if="${title != 'productBoard'}">
-        <!-- category product list -->
-        <h4 class="mt-4 fw-bold text-center" th:text="${title}"></h4>
-        <!-- SubCategory Name List -->
-        <div class="text-center mb-4" th:text="|SunCloth의 ${title}입니다:)|">
-        </div>
-    </th:block>
+<section class="body" th:fragment="boardList(title)">
     <div class="d-flex">
         <div class="me-auto">
             <p class="ms-1 mt-3 cntText"><b th:text="| 검색 ${10}건 / 총 ${50}건|"></b></p>
@@ -209,7 +218,7 @@
         <tbody>
         <tr>
             <th scope="row">1</th>
-            <td>맛있다 진짜로</td>
+            <td><a class="text-black" th:href="@{/board/boardView(name=${title})}">맛있다 진짜로</a></td>
             <td>김선우</td>
             <td th:if="${title == 'REVIEW'}">15</td>
         </tr>

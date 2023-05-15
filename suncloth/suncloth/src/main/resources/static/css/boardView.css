@@ -1,0 +1,23 @@
+.boardView-header th, .boardView-header td {
+    padding: 10px 0;
+}
+
+.boardView-header td {
+    padding-left: 10px;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+}
+
+.board-beforeAfter {
+    margin: 50px 0 120px;
+    width: 100%;
+}
+
+.board-beforeAfter table {
+    width: 100%;
+}
+
+.board-beforeAfter td {
+    font-size: 0.8em;
+    padding: 10px 0 10px 12px;
+}
