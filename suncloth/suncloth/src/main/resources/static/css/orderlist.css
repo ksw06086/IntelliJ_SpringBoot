@@ -61,3 +61,41 @@
     font-size: 1em;
     margin: 1px 0px;
 }
+
+/* 환불계좌 변경 목록 */
+.refundInfoTable {
+    width:100%;
+    border-top: 1px solid #ccc;
+    border-collapse: collapse;
+    font-size: .7em;
+    margin: 15px 15px;
+}
+
+.refundInfoTable td {
+    border-bottom: 1px solid #ccc;
+    padding: 8px 0 8px 8px;
+}
+.refundInfoTable td:first-child{
+    border-right: 1px solid #ccc;
+}
+
+
+
+
+
+.refundUpdateBtn {
+    width:100px;
+    color: white;
+    background: #000000;
+    border: none;
+    padding: 10px;
+    font-size: .8em;
+}
+
+.exitBtn{
+    width:100px;
+    padding: 10px 0px;
+    background: #fff;
+    border: 1px solid #ccc;
+    font-size: .8em;
+}
