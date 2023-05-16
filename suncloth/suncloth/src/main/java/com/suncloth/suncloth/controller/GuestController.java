@@ -50,4 +50,9 @@ public class GuestController {
     public String orderForm() {
         return "/guest/guest_orderForm";
     }
+
+    @GetMapping("/findRoad")
+    public String findRoad() {
+        return "/guest/guest_findRoad";
+    }
 }
