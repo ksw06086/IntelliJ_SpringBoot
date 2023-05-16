@@ -7,27 +7,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/board")
-public class BoardController {
-    @GetMapping("/boardList")
-    public String boardList(Model model
+@RequestMapping("/popup")
+public class PopupController {
+    @GetMapping("/payDetail")
+    public String payDetail(Model model
             , @RequestParam(required = false) String name) {
         model.addAttribute("name", name);
-        return "/board/guest_boardList";
+        return "/popup/guest_payDetail";
     }
 
-    @GetMapping("/boardView")
-    public String boardView(Model model
+    @GetMapping("/refundBankChange")
+    public String refundBankChange(Model model
             , @RequestParam(required = false) String name) {
         model.addAttribute("name", name);
-        return "/board/guest_boardView";
+        return "/popup/guest_refundBankChange";
     }
 
-    @GetMapping("/boardWrite")
-    public String boardWrite(Model model
+    @GetMapping("/payListRecive")
+    public String payListRecive(Model model
             , @RequestParam(required = false) String name) {
         model.addAttribute("name", name);
-        return "/board/guest_boardWrite";
+        return "/popup/guest_payListRecive";
     }
 
 }

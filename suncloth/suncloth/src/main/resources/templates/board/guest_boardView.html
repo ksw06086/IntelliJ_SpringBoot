@@ -10,10 +10,56 @@
 
     <section th:replace="fragments/guest_common :: headName(${name})"></section>
 
+    <!-- QnA 비번이 걸려있는 경우 비번 인증하는 부분 보여줌 : 내가 아니고 QnA일 때만-->
+    <section class="body" th:if="${name == 'Q&A'}">
+        <form name="QnADoor" action="BoardView" method="post" class="mt-30 mb-50"
+        onsubmit="return inputCheck();">
+            <input type = "hidden" name = "num" value = "${num}">
+            <input type = "hidden" name = "number" value = "${number}">
+            <input type = "hidden" name = "pageNum" value = "${pageNum}">
+            <input type = "hidden" name = "choose" value = "${choose}">
+            <fieldset class="py-10 mt-10 mx-auto w-50 a-tag-css text-center border-all-1-ccc">
+                <table class="body">
+                    <col style = "width: 40%;">
+                    <col style = "width: 60%;">
+                    <tr>
+                        <td colspan = "2" class="fs-75 color-gray">
+                            이 글은 비밀글입니다. <b>비밀번호를 입력해 주세요.</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan = "2" class="fs-75 color-gray">
+                            관리자는 확인버튼만 누르시면 됩니다.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan = "2"><br></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="qnaPwd" class="fw-bold fs-75">비밀번호</label>
+                        </td>
+                        <td><input type = "password" id="qnaPwd" name = "password" class="w-98 py-5px"></td>
+                    </tr>
+
+                    <tr>
+                        <td colspan = "2">
+                            <a href = "QnA?num=${num}&number=${number}&pageNum=${pageNum}&choose=${choose}">
+                                <input type = "button" class="fs-75 whiteBaseButton w-49 py-10 mt-10" id = "list" value = "목록" >
+                            </a>
+                            <input type = "submit" class="fs-75 grayButton w-49 py-10 mt-10" id = "ok" value = "확인">
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+        </form>
+    </section>
+
+    <!-- 게시판 Body 부분 -->
     <section class="body">
         <!-- 리뷰할 상품을 선택해서 올리는 부분(Review Item Select) -->
-        <th:block th:if="${name == 'REVIEW'}">
-            <div id = "prddata" class = "my-15 w-100 fs-75 boardView-header">
+        <th:block th:if="${name == 'REVIEW' || name == 'Q&A'}">
+            <div id = "prdData" class = "my-15 w-100 fs-75 border-y-1-ccc boardView-header">
                 <table class="w-100">
                     <col style = "width: 20%;">
                     <col style = "width: 80%;">
@@ -38,10 +84,14 @@
         </th:block>
 
         <!-- 제목, 작성자 나오게 해주는 header 부분 -->
-        <div class = "fs-8 text-start boardView-header">
-            <table width = "100%">
+        <div class = "fs-8 text-start border-y-1-ccc boardView-header">
+            <table class="w-100">
                 <col style = "width: 15%;">
                 <col style = "width: 85%;">
+                <tr th:if="${name == 'Q&A'}">
+                    <td>문의구분</td>
+                    <td th:text="${'상품문의'}">${vo.state}</td>
+                </tr>
                 <tr>
                     <td>제목</td>
                     <td th:text="${'멋있는 제목'}">${vo.subject}</td>
@@ -56,28 +106,37 @@
 
         <!-- 게시물의 내용(board contents) -->
         <div class="text-center fs-8 py-20 mt-30 mb-20 border-bottom-3-ccc">
+            <!--<c:if test="${vo.file1 != null}">-->
             <img src="" alt="이미지 사진">
             <p th:text="내용입니다.">${vo.content}</p>
         </div>
 
         <!-- 버튼 목록 -->
-        <div class="text-end mt-10 mb-50">
+        <div class="text-end mt-10 mb-50 a-tag-css">
             <!-- 게시판 목록으로 이동(boardList Page Move) -->
-            <a class="text-decoration-none" href = "notice?num=${num}&number=${number}&pageNum=${pageNum}&choose=${choose}">
+            <a href = "notice?num=${num}&number=${number}&pageNum=${pageNum}&choose=${choose}">
                 <input type = "submit" name = "list" value = "목록" class="fs-75 whiteButton">
             </a>
-            <!-- 게시판이 review이고 내가 작성한 review일 경우 -->
+            <!-- 게시판이 review 또는 Q&A이고 내가 작성한 게시물일 경우 -->
             <th:block>
                 <!-- 수정 버튼 -->
-                <a class="text-decoration-none" href = "reviewupdate?num=${num}&number=${number}&pageNum=${pageNum}&choose=${choose}">
+                <a href = "reviewupdate?num=${num}&number=${number}&pageNum=${pageNum}&choose=${choose}">
                     <input type = "submit" name = "update" value = "수정"  class="fs-75 whiteButton">
                 </a>
 
                 <!-- 삭제 버튼 -->
-                <a class="text-decoration-none" href = "reviewdelete?onenum=${num}&number=${number}&pageNum=${pageNum}&choose=${choose}">
+                <a href = "reviewdelete?onenum=${num}&number=${number}&pageNum=${pageNum}&choose=${choose}">
                     <input type = "submit" name = "delete" value = "삭제"  class="fs-75 whiteButton">
                 </a>
             </th:block>
+            <!-- QnAView에 관리자가 들어왔을 때 답글달기 버튼 보이게 해줌 -->
+            <th:block>
+                <!-- 답글달기 버튼 -->
+                <a href = "h_QnAwrite?num=${num}&number=${number}&pageNum=${pageNum}&choose=${choose}">
+                    <input type = "button" name = "answer" value = "답글달기" class="fs-75 whiteButton">
+                </a>
+            </th:block>
+
         </div>
 
         <!-- 댓글작성 block -->

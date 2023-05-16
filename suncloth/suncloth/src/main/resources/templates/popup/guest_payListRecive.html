@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/guest_common :: head('popup')">
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+<header class="bg-secondary text-white fs-8 py-10 px-20 w-100">
+  <b>현금영수증 신청양식 작성</b>
+</header>
+
+<form name = "myForm" action = "" method = "post">
+  <table class="w-100 border-top-1-ccc fs-75 mx-15 my-15 td-border-bottom-1-ccc td-py8 td-px8 tdChild1-border-right-1-ccc">
+    <col style = "width:30%;">
+    <col style = "width:70%;">
+    <tr>
+      <td>구분</td>
+      <td>
+        <input type = "radio" value = "one" name = "member" checked> 개인
+        <input type = "radio" value = "company" name = "member"> 사업자
+      </td>
+    </tr>
+
+    <tr>
+      <td>핸드폰 번호</td>
+      <td>
+        <select class="py-1" id="baseHPInput" name="baseHP">
+          <option value = "010">010</option>
+          <option value = "011">011</option>
+          <option value = "016">016</option>
+          <option value = "017">017</option>
+          <option value = "018">018</option>
+          <option value = "019">019</option>
+        </select>
+        - <input type = "text" id = "secondHPInput" name = "secondHP" class="py-1">
+        - <input type = "text" id = "thirdHPInput" name = "thirdHP" class="py-1">
+      </td>
+    </tr>
+
+    <tr class="d-none">
+      <td><label for="companyName">사업자명</label></td>
+      <td><input type = "text" id="companyName" name = "companyName" class="py-1">
+      </td>
+    </tr>
+  </table>
+
+  <div class="text-center mt-30 mb-50">
+    <input type = "submit" class="blackBaseButton py-10 px-10 w-25" value = "현금영수증 신청">
+  </div>
+
+</form>
+
+</body>
+</html>

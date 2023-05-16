@@ -11,8 +11,37 @@
     <!-- Title Name -->
     <section th:replace="fragments/guest_common :: headName(${name})"></section>
 
+    <!-- BoardMenu -->
+    <th:block th:if="${name != 'MY BOARD'}">
+        <section th:replace="fragments/guest_common :: boardMenu"></section>
+    </th:block>
     <!-- BoardList -->
-    <section th:replace="fragments/guest_common :: boardList(${name})"></section>
+    <th:block th:if="${name != 'MY BOARD'}">
+        <section th:replace="fragments/guest_common :: boardList(${name})"></section>
+    </th:block>
+
+    <!-- My BoardList -->
+    <section th:if="${name == 'MY BOARD'}">
+        <!-- 내 게시판에서 Q&A, REVIEW 선택 탭 -->
+        <ul class="nav nav-tabs nav-fill mb-3 body">
+            <li class="nav-item">
+                <a class="nav-link active" href="#">Q&A</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">REVIEW</a>
+            </li>
+        </ul>
+
+        <!-- My Q&A BoardList -->
+        <div>
+            <section th:replace="fragments/guest_common :: boardList('Q&A')"></section>
+        </div>
+
+        <!-- My Review BoardList -->
+        <div class="d-none">
+            <section th:replace="fragments/guest_common :: boardList('REVIEW')"></section>
+        </div>
+    </section>
 
     <!-- footer List & bootstrap using script -->
     <footer th:replace="fragments/guest_common :: footer"></footer>

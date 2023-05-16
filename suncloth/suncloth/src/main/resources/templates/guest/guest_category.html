@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/guest_common :: head('main')">
+<head th:replace="fragments/guest_common :: head('search')">
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
@@ -8,10 +8,10 @@
     <!-- guest page header(guest_common.html) -->
     <header th:replace="fragments/guest_common :: header"></header>
 
-    <!-- category product list -->
-    <h4 class="sub-title mt-4"><p class="text-center"><b th:text="|- ${category} -|"></b></p></h4>
-    <!-- SubCategory Name List -->
-    <div class="d-flex justify-content-center mb-4">
+    <!-- 카테고리 이름(TitleName Block) -->
+    <section th:replace="fragments/guest_common :: headName(${category})"></section>
+    <!-- 카테고리의 세부 목록(SubCategory Name List) -->
+    <div th:if="${category != 'search'}" class="d-flex justify-content-center mb-4 fs-8">
         <div class="mx-2">Sock</div>
         <div class="mx-2">Watch</div>
         <div class="mx-2">Muffler/Scarf</div>
@@ -23,12 +23,13 @@
         <div class="mx-2">Ring</div>
     </div>
 
+    <!-- 상품 이미지 슬라이드로 보여줌(Product Image Slide Block) -->
     <!-- with product List(단순 반복문) -->
     <!--${#numbers.sequence(from,to)}, ${#numbers.sequence(from,to,step)}-->
     <!--<th:block th:each="num : ${#numbers.sequence(1,5)}">
         <div th:text="${num}"></div>
     </th:block>-->
-    <div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel" th:fragment="imagelistslide">
+    <div th:if="${category != 'search'}" id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel" th:fragment="imagelistslide">
         <div class="carousel-indicators">
             <button th:each="num1 : ${#numbers.sequence(1,3)}" type="button" data-bs-target="#carouselExampleDark" th:data-bs-slide-to="${num1 - 1}" th:classappend="${num1 == 1}?'active'"></button>
         </div>
@@ -49,7 +50,46 @@
         </div>
     </div>
 
-    <!-- Total Cnt & Sort List -->
+    <!-- category=search: category가 검색일 때 검색할 수 있는 Block -->
+    <section class="body" th:if="${category == 'search'}">
+        <form name = "search" method = "post">
+            <div id = "searchPart">
+                <table class="mx-auto mt-30">
+                    <col style = "width:25%;">
+                    <col style = "width:60%;">
+                    <col style = "width:15%;">
+                    <tr>
+                        <td>
+                            <select id = "searchType" name = "srhType" class="form-select">
+                                <option value = "0">상품명</option>
+                                <option value = "1">상품번호</option>
+                            </select>
+                            <input type = "hidden" name = "searchType" value = "0">
+                        </td>
+                        <td><input type = "search" id = "searchText" name = "searchText"
+                                   value = "${searchtext}" class="form-control"></td>
+                        <td><a onclick = "javascript: search.action = 'searchlist'">
+                            <img src = "https://cdn-icons-png.flaticon.com/128/954/954591.png"
+                                 width = "25px" height = "25px" class="align-middle ms-2">
+                        </a></td>
+                    </tr>
+                </table>
+            </div>
+        </form>
+    </section>
+    <!-- category=search: 검색 후 결과가 없을 때 -->
+    <div class="body text-center pt-4" th:if="${category == 'search'}">
+        <p>
+            <b>검색결과가 없습니다.</b><br>
+            <b>정확한 검색어인지 확인하시고 다시 검색해 주세요.</b><br>
+            <br>
+            검색어/제외검색어의 입력이 정확한지 확인해 보세요.<br>
+            두 단어 이상의 검색어인 경우, 띄어쓰기를 확인해 보세요.<br>
+            검색옵션을 다시 확인해 보세요.
+        </p>
+    </div>
+
+    <!-- 총 갯수 & 정렬 방법(Total Cnt & Sort List) -->
     <p class="sub-title ms-5 mt-3 text-start"><b th:text="| Total : ${10} items|"></b></p>
     <div class="d-flex ms-5 mb-4 justify-content-start">
         <div>신상품</div><div class="mx-2">|</div>
@@ -58,7 +98,7 @@
         <div>높은가격</div>
     </div>
 
-    <!-- product List -->
+    <!-- 상품리스트(product List) -->
     <div class="d-flex justify-content-center" th:each="num : ${#numbers.sequence(1,3)}">
         <div class="card border-0 p-1" style="width: 23%;" th:each="num : ${#numbers.sequence(1,4)}">
             <a th:href="@{/guest/productDetail}">

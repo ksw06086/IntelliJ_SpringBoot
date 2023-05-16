@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/guest_common :: head('popup')">
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+<header class="bg-secondary text-white fs-8 py-10 px-20 w-100">
+  <b>총 주문금액 상세내역</b>
+</header>
+
+<form name = "myForm" action = "" method = "post" id = "accountChange">
+  <table class="td-px5 td-py10 w-90 fs-9 my-10 mx-20 tdChild2-text-end">
+    <tr class="text-end">
+      <td colspan = "2" class="border-bottom-1-ccc">
+        <b>KRW 0</b>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        · 상품금액
+      </td>
+      <td>
+        KRW 0
+      </td>
+    </tr>
+    <tr>
+      <td>
+        · 배송비
+      </td>
+      <td>
+        KRW 0
+      </td>
+    </tr>
+    <tr>
+      <td>
+        · 지역별 배송비
+      </td>
+      <td>
+        KRW 0
+      </td>
+    </tr>
+  </table>
+
+</form>
+
+</body>
+</html>

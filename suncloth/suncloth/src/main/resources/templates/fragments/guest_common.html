@@ -18,6 +18,7 @@
     <link th:href="${title} == 'cart'? @{/css/cartlist.css}" rel="stylesheet"> <!-- cartList page -->
     <link th:href="${title} == 'board'? @{/css/board.css}" rel="stylesheet"> <!-- boardList page -->
     <link th:href="${title} == 'boardView'? @{/css/boardView.css}" rel="stylesheet"> <!-- boardView page -->
+    <link th:href="${title} == 'boardWrite'? @{/css/boardWrite.css}" rel="stylesheet"> <!-- boardWrite page -->
     <link th:href="${title} == 'mypage'? @{/css/mypage.css}" rel="stylesheet"> <!-- myPage page -->
     <link th:href="${title} == 'mileage'? @{/css/mileage.css}" rel="stylesheet"> <!-- mileage page -->
     <link th:href="${title} == 'myBoard'? @{/css/myBoard.css}" rel="stylesheet"> <!-- myBoard page -->
@@ -40,7 +41,7 @@
             <div class="input-group mb-3">
                 <input type="search" class="form-control" placeholder="search" aria-label="Recipient's username"
                        aria-describedby="button-addon2">
-                <button class="btn btn-outline-secondary" type="button" id="button-addon2">검색</button>
+                <a th:href="@{/guest/category(category=${'search'})}" class="btn btn-outline-secondary" type="button" id="button-addon2">검색</a>
             </div>
         </div>
     </div>
@@ -169,10 +170,8 @@
     </div>
 </section>
 
-<!-- notice, FAQ, Q&A, REVIEW BoardList -->
-<section class="body" th:fragment="boardList(title)">
-
-    <!-- 게시판 메뉴(Board Menu) Block -->
+<!-- 게시판 메뉴(Board Menu) Block -->
+<section class="body" th:fragment="boardMenu">
     <div class="boardMenu">
         <table>
             <tr>
@@ -198,9 +197,12 @@
             </tr>
         </table>
     </div>
+</section>
 
+<!-- notice, FAQ, Q&A, REVIEW BoardList -->
+<section class="body" th:fragment="boardList(title)">
     <!-- Q&A일 경우 어느 카테고리로 질문했는지? 선택 -->
-    <div class="d-flex mt-5 mb-5 fs-75 justify-content-center">
+    <div th:if="${title == 'Q&A'}" class="d-flex mt-5 mb-5 fs-75 justify-content-center">
         <div>상품문의</div><div class="mx-2">|</div>
         <div>배송문의</div><div class="mx-2">|</div>
         <div>입금확인문의</div><div class="mx-2">|</div>
@@ -311,8 +313,8 @@
             <input type="search" class="fs-75 align-middle py-5px" placeholder="search">
             <button type="button" class="whiteButton fs-75 align-middle py-5px">검색</button>
             <input type = "hidden" id = "memId" th:value="${'kim'}" value = "${sessionScope.memId}"><!-- 작성자 아이디 -->
-            <input type = "button" id = "write" name = "write" class="whiteButton fs-75 py-5px" value = "글쓰기"
-                   th:if="${title == 'REVIEW' || title == 'Q&A'}" onclick = "reviewwriteChk(${choose}, ${pageNum});">
+            <a th:href="@{/board/boardWrite(name=${title})}"><input type = "button" id = "write" name = "write" class="whiteButton fs-75 py-5px" value = "글쓰기"
+                   th:if="${title == 'REVIEW' || title == 'Q&A'}"></a><!-- onclick = "reviewwriteChk(${choose}, ${pageNum});" -->
         </div>
     </div>
 </section>

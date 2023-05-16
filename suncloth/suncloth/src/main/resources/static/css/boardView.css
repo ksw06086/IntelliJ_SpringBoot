@@ -1,10 +1,10 @@
-.boardView-header th, .boardView-header td {
+.boardView-header td {
     padding: 10px;
+    border-top:1px solid rgba(204, 204, 204 ,0.3);
 }
 
-.boardView-header td {
-    border-top: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
+.boardView-header tr:nth-child(2) td{
+    border-top:1px solid #ccc;
 }
 
 .board-beforeAfter {

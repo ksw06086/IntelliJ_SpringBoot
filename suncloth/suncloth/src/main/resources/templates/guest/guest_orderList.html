@@ -126,7 +126,7 @@
     <form name = "refundForm" action="" method = "post" onsubmit="return refundCheck();">
         <table class="refundInfoTable">
             <tr>
-                <td><label for="addressInput">예금주</label></td>
+                <td><label for="accHostInput">예금주</label></td>
                 <td>
                     <input type="text" id="accHostInput" name="accHost">
                     예금주명은 주문자명과 동일해야 합니다.
@@ -158,14 +158,13 @@
                 <td><label for="pwdInput">
                     비밀번호 확인<span class="text-danger">*</span>
                 </label></td>
-                <td><input type="password" id="pwdInput" name="password"<br>
+                <td><input type="password" id="pwdInput" name="password"><br>
                     등록된 비밀번호를 확인합니다.</td>
             </tr>
         </table>
 
         <div class="text-center mt-3 mb-1">
             <input type = "submit" class="refundUpdateBtn" value = "변경">
-            <input th:if="${popup != null}" type = "button" class="exitBtn" value = "닫기">
         </div>
     </form>
 </section>

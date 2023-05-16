@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/guest_common :: head('boardWrite')">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <!-- guest page header(guest_common.html) -->
+    <header th:replace="fragments/guest_common :: header"></header>
+
+    <section th:replace="fragments/guest_common :: headName(${name})"></section>
+
+    <!-- 게시판 Body 부분 -->
+    <section class="body">
+        <form action = "boardPro" method = "post" name = "boardWriteForm" enctype="multipart/form-data">
+            <input type = "hidden" name = "choose" value = "${choose}">
+            <input type = "hidden" name = "pageNum" value = "${pageNum}">
+            <input type = "hidden" name = "num" value = "${num}">
+            <input type = "hidden" name = "ref" value = "${ref}">
+            <input type = "hidden" name = "ref_step" value = "${ref_step}">
+            <input type = "hidden" name = "ref_level" value = "${ref_level}">
+
+            <!-- 리뷰할 상품을 선택해서 올리는 부분(Review Item Select) -->
+            <div class = "my-15 w-100 fs-75 border-y-1-ccc">
+                <table class="w-100">
+                    <col style = "width: 20%;">
+                    <col style = "width: 80%;">
+                    <tr>
+                        <!-- prdImage block(image 클릭시 상품 선택 가능한 팝업 생성) -->
+                        <td class="text-center py-10">
+                            <div id = "image" class="bg-secondary-subtle wh-100px mx-auto">
+                                No image
+                            </div>
+                        </td>
+                        <td>
+                            <input type = "button" id = "detailPrd" name = "detailPrd"
+                                   value = "상품정보선택" class="fs-9 p-5px whiteBaseButton">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- 게시물의 내용(board contents) -->
+            <div class = "fs-8 text-start border-y-1-ccc boardWrite-content">
+                <table class="w-100">
+                    <col style = "width: 15%;">
+                    <col style = "width: 85%;">
+                    <tr>
+                        <td class="border-right-1-ccc">
+                        <label for="title">
+                            제목
+                        </label>
+                        </td>
+                        <td>
+                            <select id = "Qtype" name = "Qtype"
+                                    th:if="${name == 'Q&A'}" class="py-1 fs-9 w-15 align-middle">
+                                <option value = "상품문의">상품문의</option>
+                                <option value = "배송문의">배송문의</option>
+                                <option value = "입금확인문의">입금확인문의</option>
+                                <option value = "주문/변경/취소/환불문의">주문/변경/취소/환불문의</option>
+                                <option value = "기타문의">기타문의</option>
+                            </select>
+                            <input type = "text" id = "title" name = "title" class="w-35 align-middle">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="2">
+                            <textarea rows="20" cols="95" name="content" class="w-100 resize-vertical border-0" th:if="${name == 'REVIEW'}">
+※리뷰작성 시 최대 적립금 2,000원 지급!(50자 이상 리뷰 작성시)
+(일반리뷰 500원 / 상품포토리뷰 1000 / 상품착용포토리뷰(키,몸무게,구매사이즈(컬러) '작성필수') 2,000원)
+
+키(cm):
+몸무게(kg):
+구매사이즈(컬러):
+상품리뷰:
+                            </textarea>
+                            <textarea rows="20" cols="95" name="content" class="w-100 resize-vertical border-0" th:if="${name == 'Q&A'}"></textarea>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td  class="border-right-1-ccc">첨부파일1</td>
+                        <td>
+                            <input type = "file" id = "file1" name = "file1">
+                        </td>
+                    </tr>
+                    <th:block th:if="${name == 'Q&A'}">
+                        <tr>
+                            <td class="border-right-1-ccc">비밀번호</td>
+                            <td>
+                                <input type = "password" id = "userPwd" name = "password"
+                                       class="w-25" disabled>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="border-right-1-ccc">비밀글설정</td>
+                            <td><input type = "radio" id = "open" name = "textType" value = "open" checked>
+                                <label for = "open">공개글</label>
+                                <input type = "radio" id = "close" name = "textType" value = "close">
+                                <label for = "close">비밀글</label>
+                            </td>
+                        </tr>
+                    </th:block>
+                </table>
+            </div>
+
+            <!-- 버튼 목록 -->
+            <div class="text-end mt-10 mb-50 a-tag-css">
+                <!-- 게시판 목록으로 이동(boardList Page Move) -->
+                <a href = "notice?num=${num}&number=${number}&pageNum=${pageNum}&choose=${choose}">
+                    <input type = "submit" name = "list" value = "목록" class="fs-75 whiteButton">
+                </a>
+                <input type = "button" name = "cancel" value = "취소" class="fs-75 whiteButton"
+                       onclick = "window.location = 'review?num=${num}&number=${number}&choose=${choose}'">
+                <input type = "submit" id = "input" name = "input" value = "등록" class="fs-75 whiteButton">
+            </div>
+
+        </form>
+    </section>
+
+    <!-- footer List & bootstrap using script -->
+    <footer th:replace="fragments/guest_common :: footer"></footer>
+</body>
+</html>
