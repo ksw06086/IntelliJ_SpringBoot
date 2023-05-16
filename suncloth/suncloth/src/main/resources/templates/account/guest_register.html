@@ -8,10 +8,17 @@
 <!-- guest page header(guest_common.html) -->
 <header th:replace="fragments/guest_common :: header"></header>
 
-<div class="mx-3 mt-5 mb-4"><h3>Register Customers</h3></div>
+<!-- TitleName Block(제목 부분) -->
+<section th:replace="fragments/guest_common :: headName(${name})"></section>
 
-<form id="formInfo" class="row g-3" novalidate th:action="@{/account/register_finish}" method="post">
-    <table class="table caption-top text-start">
+<!-- 수정페이지일 경우 회원에게 감사인사하기 -->
+<div th:if="${name == 'PROFILE'}">
+    <p><span class="text-secondary" th:text="${'kim'}">${vo.name}</span>님 저희 쇼핑몰을 이용해주셔서 감사합니다.</p>
+</div>
+
+<!-- 회원가입을 위한 정보 블럭(Register Form) -->
+<form class="body row g-3" novalidate th:action="@{/account/register_finish}" method="post">
+    <table class="table caption-top text-start vertical-middle-all">
         <caption class="text-secondary ms-4"><h5><b>&lt;기본정보&gt;</b></h5></caption>
         <colgroup>
             <col width="20%">
@@ -27,7 +34,8 @@
             </th>
             <td>
                 <div class="mx-3" id="IDForm">
-                    <input type="text" id="idInput" name="username" class="form-control" th:oninput="idCheck(this.value)">
+                    <input type="text" id="idInput" name="username" class="form-control"
+                           th:value="${name=='PROFILE'}? 'kim'" th:readonly="${name=='PROFILE'}? 'true'" th:oninput="idCheck(this.value)">
                     <div id="IDdiv"></div>
                 </div>
             </td>
@@ -68,7 +76,8 @@
             </th>
             <td>
                 <div class="mx-3">
-                    <input type="text" id="userNameInput" name="name" class="form-control">
+                    <input type="text" id="userNameInput" name="name" class="form-control"
+                           th:value="${name=='PROFILE'}? 'kim'">
                 </div>
             </td>
         </tr>
@@ -82,16 +91,19 @@
             <td>
                 <div>
                     <div class="mx-3 mb-2 d-flex">
-                        <input type="text" id="addressInput" name="address" class="form-control w-25">
+                        <input type="text" id="addressInput" name="address"
+                               th:value="${name=='PROFILE'}? '14451'" class="form-control w-25">
                         <button type="button" class="btn btn-outline-secondary" th:onclick="addressSearch()">우편번호</button>
                     </div>
                 </div>
                 <div class="form-floating mx-3 mb-2">
-                    <input type="text" id="subAddressInput" name="subAddress" class="form-control">
+                    <input type="text" id="subAddressInput" name="subAddress"
+                           th:value="${name=='PROFILE'}? '서울시 강남구'" class="form-control">
                     <label for="subAddressInput">SubAddress</label>
                 </div>
                 <div class="form-floating mx-3 mb-2">
-                    <input type="text" id="detailAddressInput" name="detailAddress" class="form-control">
+                    <input type="text" id="detailAddressInput" name="detailAddress"
+                           th:value="${name=='PROFILE'}? '선우아파트 901호'" class="form-control">
                     <label for="detailAddressInput">DetailAddress</label>
                 </div>
             </td>
@@ -106,15 +118,16 @@
             <td>
                 <div class="mx-3 d-flex">
                     <select class="form-select w-25" id="baseHPInput" name="baseHP" aria-label="Default select example">
-                        <option selected>선택</option>
-                        <option value="010">010</option>
+                        <option value="010" th:selected="${name=='PROFILE'}? true">010</option>
                         <option value="011">011</option>
                         <option value="012">012</option>
                     </select>
                     <span>&nbsp;-&nbsp;</span>
-                    <input type="text" id="secondHPInput" name="secondHP" class="form-control w-50">
+                    <input type="text" id="secondHPInput" name="secondHP"
+                           th:value="${name=='PROFILE'}? '1234'" class="form-control w-50">
                     <span>&nbsp;-&nbsp;</span>
-                    <input type="text" id="thirdHPInput" name="thirdHP" class="form-control w-50">
+                    <input type="text" id="thirdHPInput" name="thirdHP"
+                           th:value="${name=='PROFILE'}? '5678'" class="form-control w-50">
                     <button type="button" class="btn btn-outline-secondary w-25">인증</button>
                 </div>
             </td>
@@ -142,9 +155,11 @@
             </th>
             <td>
                 <div class="mx-3 d-flex">
-                    <input type="text" id="idNameInput" name="idName" class="form-control">
+                    <input type="text" id="idNameInput" name="idName"
+                           th:value="${name=='PROFILE'}? 'kim'" class="form-control">
                     <span>&nbsp;@&nbsp;</span>
-                    <input type="text" id="urlCodeInput" name="urlCode" class="form-control">
+                    <input type="text" id="urlCodeInput" name="urlCode"
+                           th:value="${name=='PROFILE'}? 'naver.com'" class="form-control">
                     <select class="form-select" id="urlSelect" name="urlSelect" aria-label="Default select example">
                         <option selected>직접입력</option>
                         <option value="naver.com">naver.com</option>
@@ -156,11 +171,21 @@
                 </div>
             </td>
         </tr>
+
+        <!-- 가입일(Register Date) -->
+        <tr th:if="${name == 'PROFILE'}">
+            <th>
+                <label for="idNameInput" class="ms-2 col-form-label">
+                    Register Date
+                </label>
+            </th>
+            <td><span th:text="${'2021-05-06'}" class="ms-3">${vo.reg_date}</span></td>
+        </tr>
         </tbody>
     </table>
 
     <!-- 추가정보 -->
-    <table class="table caption-top text-start mt-4">
+    <table class="table caption-top text-start mt-4 vertical-middle-all">
         <caption class="text-secondary ms-4"><h5><b>&lt;추가정보&gt;</b></h5></caption>
         <colgroup>
             <col width="20%">
@@ -170,17 +195,19 @@
         <!-- BirthDay -->
         <tr class="border-top">
             <th scope="row">
-                <label class="ms-4 col-form-label">BirthDay</label>
+                <label class="ms-2 col-form-label"> BirthDay</label>
             </th>
             <td>
                 <div class="mx-3 d-flex">
-                    <input type="date" id="birthDayInput" name="birthDay" class="form-control w-50 me-2">
-                    <div class="form-check form-check-inline align-self-center">
-                        <input class="form-check-input" type="radio" name="birthTypes" id="birthType1" value="yang">
+                    <input type="date" id="birthDayInput" name="birthDay"
+                           th:value="${name == 'PROFILE'}? '2021-05-15'" class="form-control w-50 me-2">
+                    <div class="ms-3 form-check-inline align-self-center">
+                        <input type="radio" name="birthTypes"
+                               id="birthType1" value="yang" th:checked="${name == 'PROFILE'}? true">
                         <label class="" for="birthType1">양력</label>
                     </div>
-                    <div class="form-check form-check-inline align-self-center">
-                        <input class="form-check-input" type="radio" name="birthTypes" id="birthType2" value="umm">
+                    <div class="form-check-inline align-self-center">
+                        <input type="radio" name="birthTypes" id="birthType2" value="umm">
                         <label class="" for="birthType2">음력</label>
                     </div>
                 </div>
@@ -193,7 +220,7 @@
                     <span class="text-danger">*</span> Refund Account
                 </label>
             </th>
-            <td>
+            <td th:if="${name=='JOIN US'}">
                 <div>
                     <div class="form-floating mx-3 mb-2">
                         <input type="text" id="accHostInput" name="accHost" class="form-control">
@@ -219,67 +246,85 @@
                     <label for="accNumberInput">accNumber</label>
                 </div>
             </td>
+            <td th:if="${name == 'PROFILE'}">
+                <span th:text="|[${'기업'}] ${'1002-156-123456'} / 예금주 : ${'kim'}|" class="ms-3">[${vo.bank}] ${vo.acc} / 예금주: ${vo.acchost}</span>
+                <input type = "button" class="whiteButton" value = "환불계좌변경" name = "refundAccountChange" onclick = "modifyacc();">
+            </td>
         </tr>
         </tbody>
     </table>
 
-    <h5 class="text-start text-secondary mt-4 ms-4 mb-3"><b>&lt;약관동의&gt;</b></h5>
-    <!-- using Check Info & agree Chk -->
-    <div class="form-floating">
-        <textarea class="form-control" id="useInfo" readonly>
-First heading
-This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted. It's repeated throughout the component example. We keep adding some more example copy here to emphasize the scrolling and highlighting.
-Second heading
-This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted. It's repeated throughout the component example. We keep adding some more example copy here to emphasize the scrolling and highlighting.
-Third heading
-This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted. It's repeated throughout the component example. We keep adding some more example copy here to emphasize the scrolling and highlighting.
-Four heading
-This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted. It's repeated throughout the component example. We keep adding some more example copy here to emphasize the scrolling and highlighting.
-Five heading
-This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted. It's repeated throughout the component example. We keep adding some more example copy here to emphasize the scrolling and highlighting.
-        </textarea>
-        <label for="useInfo">Using Info</label>
-    </div>
-    <div class="my-3">
-        <div class="d-flex flex-row-reverse">
-            <input class="form-check-input" type="checkbox" id="useAgree" name="agrees">
-            <label class="form-check-label" for="useAgree"> 동의함 </label>
-            <span class="text-danger me-1">*</span>
+    <!-- 약관동의 구간(agree Block) -->
+    <article th:if="${name == 'JOIN US'}">
+        <h5 class="text-start text-secondary mt-4 ms-4 mb-3"><b>&lt;약관동의&gt;</b></h5>
+        <!-- using Check Info & agree Chk -->
+        <div class="form-floating">
+            <textarea class="form-control" id="useInfo" readonly>
+    First heading
+    This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted. It's repeated throughout the component example. We keep adding some more example copy here to emphasize the scrolling and highlighting.
+    Second heading
+    This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted. It's repeated throughout the component example. We keep adding some more example copy here to emphasize the scrolling and highlighting.
+    Third heading
+    This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted. It's repeated throughout the component example. We keep adding some more example copy here to emphasize the scrolling and highlighting.
+    Four heading
+    This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted. It's repeated throughout the component example. We keep adding some more example copy here to emphasize the scrolling and highlighting.
+    Five heading
+    This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted. It's repeated throughout the component example. We keep adding some more example copy here to emphasize the scrolling and highlighting.
+            </textarea>
+            <label for="useInfo">Using Info</label>
         </div>
-    </div>
+        <div class="my-3">
+            <div class="d-flex flex-row-reverse">
+                <input class="form-check-input" type="checkbox" id="useAgree" name="agrees">
+                <label class="form-check-label" for="useAgree"> 동의함 </label>
+                <span class="text-danger me-1">*</span>
+            </div>
+        </div>
 
-    <!-- UserData Check & Agree Chk -->
-    <div class="form-floating">
-        <textarea class="form-control" id="dataInfo" readonly>
-First heading
-This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted. It's repeated throughout the component example. We keep adding some more example copy here to emphasize the scrolling and highlighting.
-Second heading
-This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted. It's repeated throughout the component example. We keep adding some more example copy here to emphasize the scrolling and highlighting.
-Third heading
-This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted. It's repeated throughout the component example. We keep adding some more example copy here to emphasize the scrolling and highlighting.
-Four heading
-This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted. It's repeated throughout the component example. We keep adding some more example copy here to emphasize the scrolling and highlighting.
-Five heading
-This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted. It's repeated throughout the component example. We keep adding some more example copy here to emphasize the scrolling and highlighting.
-        </textarea>
-        <label for="dataInfo">UserData Info</label>
-    </div>
-    <div class="my-3">
-        <div class="d-flex flex-row-reverse">
-            <input class="form-check-input" type="checkbox" id="dataAgree" name="agrees">
-            <label class="form-check-label" for="dataAgree"> 동의함 </label>
-            <span class="text-danger me-1">*</span>
+        <!-- UserData Check & Agree Chk -->
+        <div class="form-floating">
+            <textarea class="form-control" id="dataInfo" readonly>
+    First heading
+    This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted. It's repeated throughout the component example. We keep adding some more example copy here to emphasize the scrolling and highlighting.
+    Second heading
+    This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted. It's repeated throughout the component example. We keep adding some more example copy here to emphasize the scrolling and highlighting.
+    Third heading
+    This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted. It's repeated throughout the component example. We keep adding some more example copy here to emphasize the scrolling and highlighting.
+    Four heading
+    This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted. It's repeated throughout the component example. We keep adding some more example copy here to emphasize the scrolling and highlighting.
+    Five heading
+    This is some placeholder content for the scrollspy page. Note that as you scroll down the page, the appropriate navigation link is highlighted. It's repeated throughout the component example. We keep adding some more example copy here to emphasize the scrolling and highlighting.
+            </textarea>
+            <label for="dataInfo">UserData Info</label>
         </div>
-    </div>
-    <div class="mt-4 mb-3">
-        <div>
-            <input class="form-check-input" type="checkbox" id="allAgree" name="allAgree">
-            <label class="form-check-label" for="allAgree"> 전체 동의함 </label>
+        <div class="my-3">
+            <div class="d-flex flex-row-reverse">
+                <input class="form-check-input" type="checkbox" id="dataAgree" name="agrees">
+                <label class="form-check-label" for="dataAgree"> 동의함 </label>
+                <span class="text-danger me-1">*</span>
+            </div>
         </div>
-    </div>
+        <div class="mt-4 mb-3">
+            <div>
+                <input class="form-check-input" type="checkbox" id="allAgree" name="allAgree">
+                <label class="form-check-label" for="allAgree"> 전체 동의함 </label>
+            </div>
+        </div>
+    </article>
 
-    <div class="p-2">
+    <!-- 버튼 목록(Buttons) -->
+    <div class="p-2" th:if="${name == 'JOIN US'}">
         <button type="submit" class="btn btn-outline-dark w-100">회원가입</button>
+    </div>
+    <div class="text-center mt-30 mb-50 position-relative"
+         th:if="${name == 'PROFILE'}">
+        <div class="position-absolute top-50 start-50 translate-middle">
+            <input type = "submit" class="blackBaseButton px-10 py-10" value = "회원정보수정">
+            <input type = "button" class="whiteBaseButton py-10 px-10 fs-8" value = "취소" onclick = "window.history.back();">
+        </div>
+        <div class="position-absolute top-50 end-0 translate-middle-y">
+            <input type = "button" class="whiteBaseButton py-10 px-10 fs-8 " value = "회원탈퇴" onclick = "deletePro();">
+        </div>
     </div>
 </form>
 

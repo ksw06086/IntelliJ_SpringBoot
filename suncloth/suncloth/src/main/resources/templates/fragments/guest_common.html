@@ -58,7 +58,7 @@
             <!-- 로그인 안되어 있을 때 -->
             <a th:href="@{/account/login}"
                sec:authorize="!isAuthenticated()">로그인</a>
-            <a th:href="@{/account/register}"
+            <a th:href="@{/account/register(name='JOIN US')}"
                sec:authorize="!isAuthenticated()">회원가입</a>
             <!-- 로그인 되어 있을 때 -->
             <span sec:authorize="isAuthenticated()">

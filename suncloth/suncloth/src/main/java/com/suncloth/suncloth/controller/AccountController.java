@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/account")
@@ -22,7 +23,9 @@ public class AccountController {
     }
 
     @GetMapping("/register")
-    public String register() {
+    public String register(Model model
+            , @RequestParam(required = false) String name) {
+        model.addAttribute("name", name);
         return "account/guest_register";
     }
 
