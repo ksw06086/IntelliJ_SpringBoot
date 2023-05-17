@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/host_common :: head('main')">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body class="hostBody">
+    <!-- host page header(host_common.html) -->
+    <header th:replace="fragments/host_common :: header"></header>
+
+    <!-- host page navi -->
+    <nav th:replace="fragments/host_common :: navi"></nav>
+
+    <!-- 오늘 매출 현황(Today Sale Block) -->
+    <div id="title" class="bg-white my-25 w-92 py-15 px-15 mx-auto">
+        <table class="tdChild2-text-end w-100">
+            <tr>
+                <td>
+                    <b>오늘의 쇼핑몰</b>&emsp;<b class="text-secondary" th:text="|${2023}년 ${5}월 ${17}일|">${year[0]}년 ${month[0]}월 ${day[0]}일</b>
+                </td>
+                <td>
+                    (이번달 총 주문건수: <b th:text="${50}">${monthorederCnttotal}</b>건/이번달 총 매출금액:<b th:text="${1600000}">${monthorederrealpricetotal}</b>원)
+                </td>
+            <tr>
+        </table>
+        <table class="text-end tdChild1-text-start w-100">
+            <tr>
+                <td></td>
+                <td>오늘주문</td>
+                <td>오늘매출</td>
+                <td>상품문의</td>
+                <td>신규회원</td>
+                <td>오늘 방문자</td>
+            </tr>
+            <tr>
+                <td><b>주문완료</b></td>
+                <td><b th:text="${3}" class="text-green">${dayorederCnttotal}</b> 건</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><b>취소완료</b></td>
+                <td><b th:text="${3}" class="text-green">${daycancelCnttotal}</b> 건</td>
+                <td><b th:text="${3}" class="text-green">${todayorederrealprice}</b> 건</td>
+                <td><b th:text="${3}" class="text-blue">${todayQnACnt}</b> 건</td>
+                <td><b th:text="${3}" class="text-violet">${todaynewmemberCnt}</b> 명</td>
+                <td><b th:text="${3}" class="text-red">${todayclicktotal}</b> 명</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="bg-white mx-auto my-25 px-15 py-15 w-92">
+        <!-- Title Text -->
+        <div class="d-flex">
+            <div class="me-auto"><b>이번주 운영 현황</b></div>
+            <div><b th:text="|${2023}년 ${5}월 ${17}일 ~ ${2023}년 ${5}월 ${17}일|">
+                ${year[1]}년 ${month[6]}월 ${day[6]}일 ~ ${year[0]}년 ${month[0]}월 ${day[0]}일
+            </b></div>
+        </div>
+
+        <table class="table-thGray-tdOddGray w-100" th:with="saleTotal=0">
+            <col style = "width:15%;">
+            <col style = "width:10%;">
+            <col style = "width:10%;">
+            <col style = "width:10%;">
+            <col style = "width:10%;">
+            <col style = "width:10%;">
+            <col style = "width:10%;">
+            <col style = "width:10%;">
+            <col style = "width:15%;">
+            <tr>
+                <th>설정</th>
+                <th th:each="num : ${#numbers.sequence(6, 0)}"
+                    th:text="|${#dates.createToday().month + 1}/${#dates.createToday().date - num}|">
+                    ${month[0]}/${day[0]}
+                </th>
+                <th>이번주 합계</th>
+            </tr>
+            <tr>
+                <td>매출액(단위:원)</td>
+                <td th:each="num : ${#numbers.sequence(0, 6)}"
+                    th:text="|${15000}|">
+                    ${orederpricetotal[0]}
+                </td>
+                <td><b>[[${15000*7}]]</b></td>
+            </tr>
+            <tr>
+                <td>결제완료(단위:건)</td>
+                <td th:each="num : ${#numbers.sequence(0, 6)}"
+                    th:text="|${15}|">
+                    ${payendCnt[6]}
+                </td>
+                <td><b>[[${15*7}]]</b></td>
+            </tr>
+            <tr>
+                <td>배송준비</td>
+                <td th:each="num : ${#numbers.sequence(0, 6)}"
+                    th:text="|${15}|">
+                    ${delistartCnt[6]}
+                </td>
+                <td><b>[[${15*7}]]</b></td>
+            </tr>
+            <tr>
+                <td>배송중</td>
+                <td th:each="num : ${#numbers.sequence(0, 6)}"
+                    th:text="|${15}|">
+                    ${delingCnt[6]}
+                </td>
+                <td><b>[[${15*7}]]</b></td>
+            </tr>
+            <tr>
+                <td>배송완료</td>
+                <td th:each="num : ${#numbers.sequence(0, 6)}"
+                    th:text="|${15}|">
+                    ${deliEndCnt[6]}
+                </td>
+                <td><b>[[${15*7}]]</b></td>
+            </tr>
+            <tr>
+                <td>취소,환불</td>
+                <td th:each="num : ${#numbers.sequence(0, 6)}"
+                    th:text="|${15}|">
+                    ${cancelCnt[7]}
+                </td>
+                <td><b>[[${15*7}]]</b></td>
+            </tr>
+            <tr>
+                <td>상품후기</td>
+                <td th:each="num : ${#numbers.sequence(0, 6)}"
+                    th:text="|${15}|">
+                    ${reviewCnt[7]}
+                </td>
+                <td><b>[[${15*7}]]</b></td>
+            </tr>
+        </table>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<!-- thymeleaf와 security 속성을 사용하기 위해 추가해주여야 하는 부분 -->
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head(title)">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${title}">Hello, Spring Boot!</title>
+  <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/navbar-fixed/">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+
+  <!-- host html css input -->
+  <link th:href="@{/css/common_css.css}" rel="stylesheet"> <!-- 클래스 변수설정 css -->
+  <link th:href="${title} == 'main'? @{/css/host_main.css}" rel="stylesheet"> <!-- host_main page -->
+</head>
+
+<body>
+
+<!-- header menu -->
+<header class="bg-black a-tag-css" th:fragment="header">
+  <table class="fs-8 td-py10 w-100">
+    <col style = "width:20%;">
+    <col>
+    <col>
+    <tr>
+      <td class="text-center text-secondary">
+        안녕하세요. 관리자님
+      </td>
+      <td class="text-white">
+        관리자메뉴
+        <!-- 검색부분 -->
+        <label class="bg-white">
+          <input type = "search" id = "searchText" name = "searchText"
+                 class="border-0 align-middle">
+          <button class="btn searchBtn align-middle"></button>
+        </label>
+      </td>
+      <td  class="text-end pe-3">
+        <a href = "mymain" class="text-white">내 쇼핑몰 가기</a>&emsp;
+        <a href = "logout" class="text-white">로그아웃</a>
+      </td>
+    </tr>
+  </table>
+</header>
+
+<!-- navBar menu -->
+<nav class="border-bottom-1-ccc bg-white" th:fragment="navi">
+  <table class="text-center td-py8 tdChild1-fs-40 a-tag-css w-100">
+    <tr>
+      <col style = "width:20%;">
+      <col style = "width:8%;">
+      <col style = "width:8%;">
+      <col style = "width:8%;">
+      <col style = "width:8%;">
+      <col style = "width:8%;">
+      <col style = "width:8%;">
+      <col style = "width:8%;">
+      <td><a href = "hostmain"><b>suncloth</b></a></td>
+      <td><a href = "hostmain">홈</a></td>
+      <td><a href = "h_product">상품</a></td>
+      <td><a href = "h_order">주문</a></td>
+      <td><a href = "h_member">회원</a></td>
+      <td><a href = "boardView">운영</a></td>
+      <td><a href = "h_clicktotal">통계</a></td>
+    </tr>
+  </table>
+</nav>
+
+
+
+
+
+
+
+
+<!-- 현재 날짜 출력 정보 -->
+<th:block>
+  <span th:text="${#calendars.createNow()}"></span>
+  <!--출력결과 : java.util.GregorianCalendar[time=1684303143507,areFieldsSet=true,
+  areAllFieldsSet=true,lenient=true,
+  zone=sun.util.calendar.ZoneInfo[id="GMT+09:00",offset=32400000,dstSavings=0,useDaylight=false,transitions=0,lastRule=null],
+  firstDayOfWeek=1,minimalDaysInFirstWeek=1,ERA=1,
+  YEAR=2023,MONTH=4,WEEK_OF_YEAR=20,WEEK_OF_MONTH=3,
+  DAY_OF_MONTH=17,DAY_OF_YEAR=137,DAY_OF_WEEK=4,
+  DAY_OF_WEEK_IN_MONTH=3,AM_PM=1,HOUR=2,HOUR_OF_DAY=14,MINUTE=59,
+  SECOND=3,MILLISECOND=507,ZONE_OFFSET=32400000,DST_OFFSET=0]-->
+
+  <span th:text="${#calendars.format(#calendars.createNow())}"></span>
+  <!-- 출력값 : 2023년 5월 17일 오후 3시 4분 1초 GMT+09:00 -->
+  <span th:text="${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd')}"></span>
+  <!-- 출력값 : 2023-05-17-->
+  <span th:text="${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd HH:mm:ss')}"></span>
+  <!-- 출력값 : 2023-05-17 15:04:01-->
+  <span th:text="${#calendars.format(#calendars.createNow(), 'yyyy년 MM월 dd일')}"></span>
+  <!-- 출력값 : 2023년 05월 17일-->
+</th:block>
+
+<!-- 숫자 관련 : #number -->
+<!-- 출력값 : 12,356,448 -->
+<h2 th:text="${#numbers.formatInteger(12356448, 3, 'COMMA')}"></h2>
+
+<!-- 문자 관련 : #string -->
+<!-- 출력값 : s -> 진한 s -->
+<span th:utext="${#strings.replace(title, 's', '<b>s</b>')}"></span>
+
+<!-- listSplit()함수를 이용해서 title변수의 값을 리스트로 처리하고 출력 -->
+<span th:each="str:${#strings.listSplit(title, ' ')}">[[${str}]]</span>
+
+</body>
+</html>

@@ -28,7 +28,7 @@ public class HomeController {
             // 권한명에 따른 처리 로직 작성
             if (roleName.equals("ROLE_ADMIN")) {
                 // ADMIN 권한에 해당하는 동작 수행
-                return "main";
+                return "host_main";
             } else if (roleName.equals("ROLE_USER")) {
                 // USER 권한에 해당하는 동작 수행
                 return "main";
@@ -37,5 +37,10 @@ public class HomeController {
 
         // 기본 페이지 반환 (권한이 없는 경우 등)
         return "main";
+    }
+
+    @GetMapping("/hostMain")
+    public String hostMain() {
+        return "host_main";
     }
 }

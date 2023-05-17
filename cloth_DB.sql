@@ -28,11 +28,14 @@ create table user_tbl(
     constraint uk_username unique(username)
 );
 
+update user_tbl
+set enabled = 2
+where id = 81;
 INSERT into user_tbl(username, password, enabled)
 values ('kim', '1234', 1);
 INSERT into role_tbl(name)
 values ('ROLE_ADMIN');
-select * from user_tbl;
+select * from role_tbl;
 delete from user_tbl;
 commit;
 /** role Å×ÀÌºí **/
