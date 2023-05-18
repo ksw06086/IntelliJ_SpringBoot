@@ -5,41 +5,146 @@
     <title>Title</title>
 </head>
 <body class="hostBody">
-    <!-- host page header(host_common.html) -->
-    <header th:replace="fragments/host_common :: header"></header>
+<!-- host page header(host_common.html) -->
+<header th:replace="fragments/host_common :: header"></header>
 
-    <!-- host page navi -->
-    <nav th:replace="fragments/host_common :: navi"></nav>
+<!-- host page navi -->
+<nav th:replace="fragments/host_common :: navi"></nav>
 
-    <!-- 본문 내용(Body Block) -->
-    <div class="d-flex">
-        <!-- Sidebar Block -->
-        <div class="w-15"><aside th:replace="fragments/host_common :: sidebar"></aside></div>
-        <div class="flex-fill">
-            <div class="position-relative text-center w-100 my-15 vertical-middle-all">
-                <p class="fs-15 p-0 m-0"><b>판매상품관리</b></p>
-                <p class="position-absolute m-0 top-0 end-0 pe-3">
-                    <input type = "submit" value = "상품등록" class="blueBaseBtn px-10 py-10">
-                </p>
-            </div>
-
-            <div class="w-98 mx-auto bg-white border-top border-bottom border-dark">
-                카테고리
-                <select id = "onepart" name = "opart" onchange = "select_category();">
-                    <option value = "">1차 카테고리</option>
-                    <!-- 1차카테고리가 있으면 option 추가 -->
-                    <!--<th:block th:if="${bigsrhCnt > 0}">
-                        <option th:each="list:${biglist}" value = "${list.bigcode}">${list.bigname}</option>
-                    </th:block>-->
-                </select>
-                <select id = "twopart" name = "tpart"> <!-- 일단 아우터것만 이거는 jQuery로 조건써서 갖다넣을려고함 -->
-                    <option value = "">2차 카테고리</option>
-                </select>
-            </div>
-        </div>
+<!-- 본문 내용(Body Block) -->
+<div class="d-flex">
+    <!-- Sidebar Block -->
+    <div style="width: 250px;">
+        <aside th:replace="fragments/host_common :: sidebar"></aside>
     </div>
+    <div class="flex-fill">
+        <div class="position-relative text-center w-100 my-15 vertical-middle-all">
+            <p class="fs-15 p-0 m-0"><b>판매상품관리</b></p>
+            <p class="position-absolute m-0 top-0 end-0 pe-3">
+                <input type="submit" value="상품등록" class="blueBaseBtn px-10 py-10">
+            </p>
+        </div>
 
-    <!-- using Javascript, Bootstrap, JQuery -->
-    <footer th:replace="fragments/host_common :: footer"></footer>
+        <!--  검색 선택 부분(Search Select Box) -->
+        <form action="h_productselect" method="post" name="searchForm">
+            <table class="w-95 mx-auto bg-white border-top border-bottom border-dark td-border-bottom-1-ccc td-py10 td-px8 fs-8 tdChild1-bg-lightGray tdChild1-fw-bold vertical-middle-all">
+                <col style="width:15%;">
+                <col>
+
+                <!-- 카테고리 선택 Block -->
+                <tr>
+                    <td>카테고리</td>
+                    <td>
+                        <select id="mainCategory" name="mainCategory" onchange="select_category();">
+                            <option value="">1차 카테고리</option>
+                            <!-- 1차카테고리가 있으면 option 추가 -->
+                            <!--<th:block th:if="${bigsrhCnt > 0}">
+                                <option th:each="list:${biglist}" value = "${list.bigcode}">${list.bigname}</option>
+                            </th:block>-->
+                        </select>
+                        <select id="subCategory" name="subCategory"> <!-- 일단 아우터것만 이거는 jQuery로 조건써서 갖다넣을려고함 -->
+                            <option value="">2차 카테고리</option>
+                        </select>
+                    </td>
+                </tr>
+
+                <!-- 브랜드 선택 Block -->
+                <tr>
+                    <td>브랜드</td>
+                    <td>
+                        <select id="brand" class="w-15">
+                            <option value="">전체</option>
+                            <!-- 브랜드가 있으면 option 추가 -->
+                            <!--<th:block th:if="${brandsrhCnt > 0}">
+                                <option th:each="list:${brandlist}" value = "${list.num}">${list.name}</option>
+                            </th:block>-->
+                        </select>
+                    </td>
+                </tr>
+
+                <!-- 기간 선택 Block -->
+                <tr>
+                    <td>기간</td>
+                    <td>
+                        <!-- 어느 날짜를 기준으로 검색할 것인지 체크 -->
+                        <input type="date" id="firstDay" name="firstDay"> -
+                        <input type="date" id="lastDay" name="lastDay">
+
+                        <!-- 버튼 클릭시 위에 date input 값이 변하게 됨 -->
+                        <input type="hidden" name="dayNum" value="0">
+                        <span class="p-0 ms-2">
+                            <input type="radio" name="dayType" id="today" value="today" onclick="today();"
+                                   class="d-none">
+                            <label for="today" class="border border-black py-1 px-2">오늘</label>
+                            <input type="radio" name="dayType" id="week" value="week" onclick="week();"
+                                   class="d-none">
+                            <label for="week" class="border border-black py-1 px-2">1주일</label>
+                            <input type="radio" name="dayType" id="month1" value="month1" onclick="month1();"
+                                   class="d-none">
+                            <label for="month1" class="border border-black py-1 px-2">1개월</label>
+                            <input type="radio" name="dayType" id="month3" value="month3" onclick="month3();"
+                                   class="d-none">
+                            <label for="month3" class="border border-black py-1 px-2">3개월</label>
+                            <input type="radio" name="dayType" id="month6" value="month6" onclick="month6();"
+                                   class="d-none">
+                            <label for="month6" class="border border-black py-1 px-2">6개월</label>
+                        </span>
+                    </td>
+                </tr>
+
+                <!-- 검색할 상품 가격 선택 Block -->
+                <tr>
+                    <td>상품가격</td>
+                    <td>
+                        <input type="text" id="minPrice" name="minPrice">원
+                        ~ <input type="text" id="maxPrice" name="maxPrice">원
+                    </td>
+                </tr>
+
+                <!-- 상품 판매상태 선택 Block -->
+                <tr>
+                    <td>판매상태</td>
+                    <td>
+                        <input type="checkbox" name="state" id="sale" value="sale">
+                        <label for="sale">판매중</label>&emsp;
+                        <input type="checkbox" name="state" id="notStock" value="notStock">
+                        <label for="notStock">품절</label>&emsp;
+                        <input type="checkbox" name="state" id="saleReady" value="saleReady">
+                        <label for="saleReady">판매대기</label>&emsp;
+                        <input type="checkbox" name="state" id="saleStop" value="saleStop">
+                        <label for="saleStop">판매중지</label>&emsp;
+                        <input type="checkbox" name="state" id="all" value="all">
+                        <label for="all">전체</label>
+                    </td>
+                </tr>
+
+                <!-- 검색할 Text 입력 Block -->
+                <tr>
+                    <td>검색어</td>
+                    <td>
+                        <select id="type" name="srhType" class="px-2 py-1">
+                            <option value="0">상품명</option>
+                            <option value="1">상품번호</option>
+                        </select>
+                        <input type="hidden" name="searchType" value="0">
+                        <input type="search" id="srch" name="srch">
+                    </td>
+                </tr>
+            </table>
+
+            <!-- 버튼 리스트(Button List Block) -->
+            <div class="w-100 text-center mt-10 mb-20">
+                <input type = "submit" value = "검색" class="blackBaseButton w-15 py-10 border-0 ">
+            </div>
+        </form>
+
+        <!-- 상품 검색 결과 목록(SearchResult Product List) -->
+        <section th:replace="fragments/host_common :: boardList('product')"></section>
+
+    </div>
+</div>
+
+<!-- using Javascript, Bootstrap, JQuery -->
+<footer th:replace="fragments/host_common :: footer"></footer>
 </body>
 </html>

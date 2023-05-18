@@ -39,6 +39,13 @@ public class HomeController {
         return "main";
     }
 
+    // 사용자 메인 페이지
+    @GetMapping("/userMain")
+    public String userMain() {
+        return "main";
+    }
+
+    // 관리자 메인 페이지
     @GetMapping("/hostMain")
     public String hostMain() {
         return "host_main";
