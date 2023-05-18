@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/host_common :: head('main')">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body class="hostBody">
+    <!-- host page header(host_common.html) -->
+    <header th:replace="fragments/host_common :: header"></header>
+
+    <!-- host page navi -->
+    <nav th:replace="fragments/host_common :: navi"></nav>
+
+    <!-- 본문 내용(Body Block) -->
+    <div class="d-flex">
+        <!-- Sidebar Block -->
+        <div class="w-15"><aside th:replace="fragments/host_common :: sidebar"></aside></div>
+        <div class="flex-fill">
+            <div class="position-relative text-center w-100 my-15 vertical-middle-all">
+                <p class="fs-15 p-0 m-0"><b>판매상품관리</b></p>
+                <p class="position-absolute m-0 top-0 end-0 pe-3">
+                    <input type = "submit" value = "상품등록" class="blueBaseBtn px-10 py-10">
+                </p>
+            </div>
+
+            <div class="w-98 mx-auto bg-white border-top border-bottom border-dark">
+                카테고리
+                <select id = "onepart" name = "opart" onchange = "select_category();">
+                    <option value = "">1차 카테고리</option>
+                    <!-- 1차카테고리가 있으면 option 추가 -->
+                    <!--<th:block th:if="${bigsrhCnt > 0}">
+                        <option th:each="list:${biglist}" value = "${list.bigcode}">${list.bigname}</option>
+                    </th:block>-->
+                </select>
+                <select id = "twopart" name = "tpart"> <!-- 일단 아우터것만 이거는 jQuery로 조건써서 갖다넣을려고함 -->
+                    <option value = "">2차 카테고리</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- using Javascript, Bootstrap, JQuery -->
+    <footer th:replace="fragments/host_common :: footer"></footer>
+</body>
+</html>
