@@ -14,13 +14,13 @@
 <!-- 본문 내용(Body Block) -->
 <div class="d-flex">
     <!-- Sidebar Block -->
-    <div style="width: 250px;">
+    <div class="flex-fill" style="width:130px;">
         <aside th:replace="fragments/host_common :: sidebar"></aside>
     </div>
     <div class="flex-fill">
-        <div class="position-relative text-center w-100 my-15 vertical-middle-all">
+        <div class="position-relative text-center w-95 mx-auto my-15 vertical-middle-all">
             <p class="fs-15 p-0 m-0"><b>판매상품관리</b></p>
-            <p class="position-absolute m-0 top-0 end-0 pe-3">
+            <p class="position-absolute m-0 top-0 end-0">
                 <input type="submit" value="상품등록" class="blueBaseBtn px-10 py-10">
             </p>
         </div>
@@ -140,7 +140,6 @@
 
         <!-- 상품 검색 결과 목록(SearchResult Product List) -->
         <section th:replace="fragments/host_common :: boardList('product')"></section>
-
     </div>
 </div>
 

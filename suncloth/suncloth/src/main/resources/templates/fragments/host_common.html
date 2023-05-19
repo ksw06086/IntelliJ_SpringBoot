@@ -54,6 +54,7 @@
     <div class="flex-fill"><a href = "h_member">회원</a></div>
     <div class="flex-fill"><a href = "boardView">운영</a></div>
     <div class="flex-fill"><a href = "h_clicktotal">통계</a></div>
+    <div class="flex-fill"></div>
   </div>
 </nav>
 
@@ -61,7 +62,7 @@
 <aside class="bg-white border-right-1-ccc align-top p-0 h-100" th:fragment="sidebar">
   <div id = "left" class="w-100 p-0 m-0 a-tag-css">
     <!-- 상품 Category일 경우의 sidebar 목록 -->
-    <table id = "menu" class="w-100 border-0 m-0 p-0 td-py10 td-px12 td-border-bottom-1-ccc fs-8">
+    <table id = "menu" class="w-100 border-0 m-0 p-0 td-py10 td-px15 td-border-bottom-1-ccc fs-8">
       <tr class="border-bottom-3-ccc">
         <td><b>·상품</b></td>
       </tr>
@@ -137,7 +138,7 @@
 </aside>
 
 <!-- Product, List -->
-<section class="w-97 mx-auto bg-white" th:fragment="boardList(title)">
+<section class="w-95 mx-auto bg-white mb-50 pb-15" th:fragment="boardList(title)">
 <form action = "h_productdeletePro" method = "post" name = "completeForm">
   <input type = "hidden" name = "pageNum" value = "${pageNum}">
 
@@ -164,7 +165,7 @@
         <option value = "before">답변 전 글보기</option>
         <option value = "finish">답변 완료 글보기</option>
       </select>-->
-      <select id="blockNum" name="blockNum" class="py-1 px-1" onchange = "blockchange();">
+      <select id="blockNum" name="blockNum" class="py-1 px-1 fs-8" onchange = "blockchange();">
         <option value="10">10개씩 출력</option>
         <option value="30">30개씩 출력</option>
         <option value="50">50개씩 출력</option>
@@ -173,7 +174,7 @@
   </div>
 
   <!-- 게시판 목록 Block -->
-  <table class="table text-center fs-75 w-98 mx-auto bg-white border-bottom-1-ccc border-top-1-ccc td-border-bottom-1-ccc">
+  <table class="table text-center fs-75 w-98 mx-auto bg-white border-bottom-1-ccc border-top-1-ccc td-border-bottom-1-ccc vertical-middle-all a-tag-css">
     <thead>
       <tr class="fw-bold border-0 td-py25 td-px15">
         <td>
@@ -190,24 +191,49 @@
       </tr>
     </thead>
     <tbody>
-      <tr class = "text-center td-py10 td-px15">
-
-
-      </tr>
-    </tbody>
-    <!--<tbody>
-    <tr>
-        <td colspan = "4" class="text-center">
-            게시글이 없습니다. 글을 작성해주세요!!
+    <!--<th:block th:if="${srhCnt > 0}">-->
+      <tr class = "text-center td-py10 td-px15"><!--th:each="list:${list}"-->
+        <td><input type = "checkbox" name = "prdChecks" value = "${list.num}"></td>
+        <td> <!-- th:if="${list.mainfile != null}" -->
+          <img src="https://cdn-icons-png.flaticon.com/128/2957/2957307.png"
+               width = "50px" height = "60px">
         </td>
-    </tr>
-    </tbody>-->
+        <td>${number}(${list.num})
+          <!--<c:set var = "number" value = "${number-1}"/>-->
+        </td>
+        <!-- 상세 페이지 -->
+        <td th:text="${'outer'}">
+          ${list.mediumpartname}
+        </td>
+        <td class="text-start">
+          <a href = "h_productForm?num=${list.num}&number=${number+1}&pageNum=${pageNum}"
+          th:text="|누군가가 훔쳐갈 수도 있는 아름다운 여름 옷|">
+            ${list.name}
+          </a></td>
+        <td><b th:text="|KRW 15000|">KRW ${list.saleprice}</b></td>
+        <td th:text="|1500|">${list.deliprice}</td>
+        <td th:text="${#dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm')}">${list.reg_date}</td>
+        <td><input type = "button" value = "color/size 추가" name = "csInput" class="whiteButton"
+                   onclick = "window.location = 'h_csinput?num=${list.num}&pageNum=${pageNum}'"></td>
+      </tr>
+    <!--</th:block>-->
+      <!--<tr class = "text-center td-py10 td-px15">
+        <td colspan = "10">
+          게시글이 없습니다. 글을 작성해주세요!!
+        </td>
+      </tr>-->
+    </tbody>
   </table>
 
-  <!-- Paging 및 검색 Block -->
-  <div class="d-flex mb-5">
+  <!-- Paging 및 삭제 Block -->
+  <div class="position-relative w-98 pt-10 mx-auto">
+    <!-- 삭제 버튼 Block -->
+    <div class="position-absolute top-0 left-0">
+      <input type = "submit" value = "삭제" class="blackButton px-15">
+    </div>
+
     <!-- Paging Process -->
-    <div class="align-self-center">
+    <div>
       <ul class="pagination justify-content-center my-0">
         <li class="page-item disabled">
           <a class="page-link">&lt;</a>
@@ -226,21 +252,6 @@
         </li>
       </ul>
     </div>
-
-    <!-- 검색(Search) Block -->
-    <div class="ms-auto align-self-center">
-      <select class="fs-75 align-middle py-6" id="searchType" name="searchType">
-        <option value="title">제목</option>
-        <option value="productName" th:if="${title == 'REVIEW' || title == 'Q&A'}">상품명</option>
-        <option value="content">내용</option>
-        <option value="id">작성자</option>
-      </select>
-      <input type="search" class="fs-75 align-middle py-5px" placeholder="search">
-      <button type="button" class="whiteButton fs-75 align-middle py-5px">검색</button>
-      <input type = "hidden" id = "memId" th:value="${'kim'}" value = "${sessionScope.memId}"><!-- 작성자 아이디 -->
-      <a th:href="@{/board/boardWrite(name=${title})}"><input type = "button" id = "write" name = "write" class="whiteButton fs-75 py-5px" value = "글쓰기"
-                                                              th:if="${title == 'REVIEW' || title == 'Q&A'}"></a><!-- onclick = "reviewwriteChk(${choose}, ${pageNum});" -->
-    </div>
   </div>
 </form>
 </section>
@@ -250,8 +261,6 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
 </footer>
-
-
 
 
 <!-- 현재 날짜 출력 정보 -->
