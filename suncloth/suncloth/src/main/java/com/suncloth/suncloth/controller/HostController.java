@@ -10,7 +10,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/host")
 public class HostController {
     @GetMapping("/productList")
-    public String findRoad() {
+    public String productList() {
         return "/host/host_productList";
+    }
+
+    @GetMapping("/productInput")
+    public String productInput() {
+        return "/host/host_productInput";
     }
 }

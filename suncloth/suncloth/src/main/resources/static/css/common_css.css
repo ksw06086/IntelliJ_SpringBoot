@@ -196,6 +196,8 @@
 .td-px15 td{ padding-right: 15px; padding-left: 15px; }
 .td-px30 td{ padding-right: 30px; padding-left: 30px; }
 .td-pt12 td{ padding-top: 12px; }
+.td-py15 td{ padding-top: 15px; padding-bottom: 15px; }
+.td-px10 td{ padding-right: 12px; padding-left: 10px; }
 .td-border-bottom-1-ccc td { border-bottom: 1px solid #ccc; }
 .tdChild1-border-right-1-ccc td:nth-child(1){ border-right: 1px solid #ccc; }
 .tdChild1-fs-37 td:nth-child(1) { font-size: 37px; }
