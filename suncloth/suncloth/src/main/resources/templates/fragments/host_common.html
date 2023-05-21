@@ -206,8 +206,8 @@
           ${list.mediumpartname}
         </td>
         <td class="text-start">
-          <a href = "h_productForm?num=${list.num}&number=${number+1}&pageNum=${pageNum}"
-          th:text="|누군가가 훔쳐갈 수도 있는 아름다운 여름 옷|">
+          <a th:href="@{/host/productView(name='text')}"
+          th:text="|누군가가 훔쳐갈 수도 있는 아름다운 여름 옷|"> <!--href = "h_productForm?num=${list.num}&number=${number+1}&pageNum=${pageNum}"-->
             ${list.name}
           </a></td>
         <td><b th:text="|KRW 15000|">KRW ${list.saleprice}</b></td>

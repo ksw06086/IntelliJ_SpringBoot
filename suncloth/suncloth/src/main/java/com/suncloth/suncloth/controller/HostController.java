@@ -18,4 +18,11 @@ public class HostController {
     public String productInput() {
         return "/host/host_productInput";
     }
+
+    @GetMapping("/productView")
+    public String productView(Model model
+            , @RequestParam(required = false) String name) {
+        model.addAttribute("name", name);
+        return "/host/host_productView";
+    }
 }
