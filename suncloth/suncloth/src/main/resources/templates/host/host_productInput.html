@@ -14,7 +14,7 @@
 <!-- 본문 내용(Body Block) -->
 <div class="d-flex">
     <!-- Sidebar Block -->
-    <div class="flex-fill" style="width:130px;">
+    <div style="width:300px;">
         <aside th:replace="fragments/host_common :: sidebar"></aside>
     </div>
     <div class="flex-fill">
@@ -26,12 +26,14 @@
             </p>
         </div>
 
-        <div class="bg-white w-95 mx-auto">
+        <div class="bg-white w-95 mx-auto mb-20 pb-15">
+            <!-- 상품 기본 정보 Title Block -->
             <div class="w-97 mx-auto bg-white px-10 py-15">
                 <b>·상품기본정보</b>
             </div>
 
-            <table class="w-97 mx-auto bg-white border-top-1-ccc border-bottom-1-ccc td-py15 td-px10 fs-8 td-border-bottom-1-ccc tdChild1-fw-bold tdChild1-bg-lightGray">
+            <!-- 상품 기본 정보 Input Block -->
+            <table class="w-97 mx-auto bg-white border-top-1-ccc border-bottom-1-ccc td-py15 td-px10 fs-8 td-border-bottom-1-ccc tdChild1-fw-bold tdChild1-bg-lightGray vertical-middle-all">
                 <col style = "width:20%">
                 <col>
                 <!-- mainImage 추가 -->
@@ -75,6 +77,7 @@
                         <input type = "button" class = "whiteButton" name = "mediumPro" value = "추가"
                                onclick = "mediumpartPro();">
                         <select name = "mediumPartDel"> <!-- 일단 아우터것만 이거는 jQuery로 조건써서 갖다넣을려고함 -->
+                            <option value = "">2차 카테고리</option>
                             <!-- 가져올 sub 카테고리가 있으면 -->
                             <!--<th:block th:if="${mediumsrhCnt > 0}">
                                 <option th:each="list:${mediumList}" value = "${list.mediumcode}">${list.mediumname}</option>
@@ -98,6 +101,7 @@
                             </th:block>-->
                         </select>
                         <select name = "subPart"> <!-- 일단 아우터것만 이거는 jQuery로 조건써서 갖다넣을려고함 -->
+                            <option value = "">2차 카테고리</option>
                             <!-- 가져올 sub 카테고리가 있으면 -->
                             <!--<th:block th:if="${mediumsrhCnt > 0}">
                                 <option th:each="list:${mediumList}" value = "${list.mediumcode}">${list.mediumname}</option>
@@ -144,7 +148,7 @@
                         <input type = "radio" name = "icon" id = "hot" value = "hot">
                         <label for = "hot">hot</label>&emsp;
                         <input type = "radio" name = "icon" id = "minPrice" value = "minPrice">
-                        <label for = "minPrice">최저가</label><br>
+                        <label for = "minPrice">최저가</label>&emsp;
                         <input type = "radio" name = "icon" id = "best" value = "best">
                         <label for = "best">best</label>
                     </td>
@@ -163,98 +167,112 @@
                 </tr>
             </table>
 
+            <!-- 상품 판매 정보 Title Block -->
             <div class="w-97 mx-auto bg-white px-10 py-15">
                 <b>·상품 판매정보</b>
             </div>
 
-            <table id = "bottom">
+            <!-- 상품 판매 정보 Input Block -->
+            <table class="w-97 mx-auto bg-white border-top-1-ccc border-bottom-1-ccc td-py15 td-px10 td-border-bottom-1-ccc fs-8 vertical-middle-all">
                 <col style = "width:15%">
                 <col>
                 <col style = "width:15%">
                 <col>
                 <tr>
-                    <td>판매가격 *</td>
-                    <td><input type = "text" id = "saleprice" name = "saleprice">원
+                    <td class="fw-bold bg-EAECEE">
+                        <label for="salePrice">판매가격 *</label></td>
+                    <td>
+                        <input type = "text" id="salePrice" name = "salePrice">원
                     </td>
-                    <td>매입가격 *</td>
-                    <td><input type = "text" id = "buyprice" name = "buyprice">원
+                    <td class="fw-bold bg-EAECEE">
+                        <label for="buyPrice">매입가격 *</label></td>
+                    <td>
+                        <input type = "text" id="buyPrice" name = "buyPrice">원
                     </td>
                 </tr>
             </table>
 
-            <table id = "delitop">
-                <tr>
-                    <td>
-                        <b>·배송관련</b>
-                    </td>
-                </tr>
-            </table>
-            <table id = "deli">
+            <!-- 배송 관련 정보 Title Block -->
+            <div class="w-97 mx-auto bg-white px-10 py-15">
+                <b>·배송관련</b>
+            </div>
+
+            <!-- 배송 관련 정보 Input Block -->
+            <table class="w-97 mx-auto bg-white border-top-1-ccc border-bottom-1-ccc td-px10 td-py15 td-border-bottom-1-ccc fs-8 tdChild1-bg-lightGray tdChild1-fw-bold vertical-middle-all">
                 <col style = "width:20%;">
                 <col>
+
+                <!-- 예상배송소요일 설정 -->
                 <tr>
-                    <td>예상배송소요일 *</td>
-                    <td><input type = "text" id = "delidate" name = "delidate">일
+                    <td><label for="deliDate">예상배송소요일 *</label></td>
+                    <td><input type = "text" id = "deliDate" name = "deliDate">일
                     </td>
                 </tr>
 
+                <!-- 배송비 설정 -->
                 <tr>
                     <td>배송비 설정</td>
                     <td>
-                        <input type = "radio" name = "delipay" id = "basepay" value = "basepay">
-                        <label for = "basepay">기본 배송비</label><br>
-                        <input type = "radio" name = "delipay" id = "free" value = "free">
+                        <input type = "radio" name = "deliPay" id = "basePay" value = "basepay">
+                        <label for = "basePay">기본 배송비</label><br>
+                        <input type = "radio" name = "deliPay" id = "free" value = "free">
                         <label for = "free">무료</label><br>
-                        <input type = "radio" name = "delipay" id = "plusdelipay" value = "pluspay">
-                        <label for = "plusdelipay">유료</label>
-                        <input type = "text" id = "pluspay" name = "deliprice">원
+                        <input type = "radio" name = "deliPay" id = "plusDeliPay" value = "pluspay">
+                        <label for = "plusDeliPay">유료</label>
+                        <input type = "text" id = "plusPay" name = "deliPrice">원
                     </td>
                 </tr>
             </table>
 
-            <table id = "subtop">
-                <tr>
-                    <td>
-                        <b>·상품 상세 설명</b>
-                    </td>
-                </tr>
-            </table>
+            <!-- 상품 상세 설명 Title Block -->
+            <div class="w-97 mx-auto bg-white px-10 py-15">
+                <b>·상품 상세 설명</b>
+            </div>
 
-            <table id = "sub">
+            <!-- 상품 상세 설명 Title Block -->
+            <table class="w-97 mx-auto bg-white border-bottom-1-ccc border-top-1-ccc td-py15 td-px10 td-border-bottom-1-ccc fs-8 tdChild1-bg-lightGray tdChild1-fw-bold tdChild1-border-right-1-ccc vertical-middle-all">
                 <col style = "width: 15%;">
                 <col>
+                <!-- 상품 설명 Box -->
                 <tr>
                     <td colspan = "2">
-			    			<textarea class = "Box" rows="30" cols="80" name = "content"
-                                      style="resize: vertical; width:100%; border:none;"></textarea></td>
+                        <textarea rows="20" cols="95" name="content" class="w-100 resize-vertical border-0" ></textarea>
+                    </td>
+                </tr>
+
+                <!-- 상품 이미지 file 추가 -->
+                <tr>
+                    <td>첨부파일1</td>
+                    <td><input type = "file" name = "file1"></td>
                 </tr>
                 <tr>
-                    <td style = "border-right:1px solid #ccc;">첨부파일1</td>
-                    <td><input type = "file" id = "attachfile1" name = "file1"></td>
+                    <td>첨부파일2</td>
+                    <td><input type = "file" name = "file2"></td>
                 </tr>
                 <tr>
-                    <td style = "border-right:1px solid #ccc;">첨부파일2</td>
-                    <td><input type = "file" id = "attachfile2" name = "file2"></td>
+                    <td>첨부파일3</td>
+                    <td><input type = "file" name = "file3"></td>
                 </tr>
                 <tr>
-                    <td style = "border-right:1px solid #ccc;">첨부파일3</td>
-                    <td><input type = "file" id = "attachfile3" name = "file3"></td>
+                    <td>첨부파일4</td>
+                    <td><input type = "file" name = "file4"></td>
                 </tr>
                 <tr>
-                    <td style = "border-right:1px solid #ccc;">첨부파일4</td>
-                    <td><input type = "file" id = "attachfile4" name = "file4"></td>
+                    <td>첨부파일5</td>
+                    <td><input type = "file" name = "file5"></td>
                 </tr>
+
+                <!-- With Item 선택하기 -->
                 <tr>
-                    <td style = "border-right:1px solid #ccc;">첨부파일5</td>
-                    <td><input type = "file" id = "attachfile5" name = "file5"></td>
-                </tr>
-                <tr>
-                    <td style = "text-align:center; padding: 10px 0px;">
-                        <input type = "hidden" name = "withitem" value = "">
-                        <div id = "image" style = "background-color:#ccc; width: 100px; height: 100px; line-height:100px; margin:0px auto;">
-                            No image</div></td>
-                    <td><input type = "button" id = "detailprd"
-                               onclick = "withproductChk();" name = "detailprdN" value = "상품정보선택" style = "vertical-align:middle; font-size: .9em;">
+                    <td class="text-center py-10">
+                        <input type = "hidden" name = "withItem" value = "">
+                        <div id = "image" class="bg-secondary-subtle wh-100px mx-auto">
+                            No image
+                        </div>
+                    </td>
+                    <td>
+                        <input type = "button" id = "detailPrd" name = "detailPrd" value = "상품정보선택"
+                               class="fs-9 p-5px whiteBaseButton" onclick = "withproductChk();" >
                     </td>
                 </tr>
             </table>
