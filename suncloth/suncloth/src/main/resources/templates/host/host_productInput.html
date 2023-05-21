@@ -27,153 +27,146 @@
         </div>
 
         <div class="bg-white w-95 mx-auto">
-            <div class="w-97 mx-auto bg-white td-px8 td-py10">
+            <div class="w-97 mx-auto bg-white px-10 py-15">
                 <b>·상품기본정보</b>
             </div>
 
-            <table class="w-97 mx-auto bg-white border-top-1-ccc border-bottom-1-ccc td-py15 td-px10">
+            <table class="w-97 mx-auto bg-white border-top-1-ccc border-bottom-1-ccc td-py15 td-px10 fs-8 td-border-bottom-1-ccc tdChild1-fw-bold tdChild1-bg-lightGray">
                 <col style = "width:20%">
                 <col>
+                <!-- mainImage 추가 -->
                 <tr>
-                    <td style = "border-right:1px solid #ccc;">메인 이미지1</td>
+                    <td class="border-right-1-ccc">메인 이미지1</td>
                     <td>
-                        <input type = "file" id = "attachfile1" name = "mainfile">
+                        <input type = "file" name = "mainFile">
                     </td>
                 </tr>
+                <!-- mainCategory 추가/삭제 -->
                 <tr>
                     <td>1차 카테고리 추가</td>
                     <td>
-                        <input type = "text" id = "prdname" name = "bigpart">
-                        <input type = "button" class = "Pro" name = "bigPro" value = "추가"
+                        <input type = "text" name = "bigPart">
+                        <input type = "button" class = "whiteButton " name = "bigPro" value = "추가"
                                onclick = "bigpartPro();">
-                        <select id = "onepart" name = "bigpartdel">
+                        <select name = "bigPartDel">
                             <option value = "">1차 카테고리</option>
-                            <!-- 게시글이 있으면 -->
-                            <c:if test="${bigsrhCnt > 0}">
-                                <c:forEach var = "list" items = "${biglist}">
-                                    <option value = "${list.bigcode}">${list.bigname}</option>
-                                </c:forEach>
-                            </c:if>
-                            <!-- 게시글이 없으면 -->
-                            <c:if test="${bigsrhCnt <= 0}">
-                            </c:if>
+                            <option value = "asclo">asclo</option>
+                            <!-- 가져올 카테고리가 있으면 -->
+                            <!--<th:block th:if="${bigsrhCnt > 0}">
+                                <option th:each="list:${bigList}" value = "${list.bigcode}">${list.bigname}</option>
+                            </th:block>-->
                         </select>
-                        <input type = "button" class = "Pro" name = "bigPro" value = "삭제"
+                        <input type = "button" class = "whiteButton" name = "bigDel" value = "삭제"
                                onclick = "bigpartdelPro();">
                     </td>
                 </tr>
+                <!-- subCategory 추가/삭제 -->
                 <tr>
                     <td>2차 카테고리 추가</td>
                     <td>
-                        <select id = "onepart1" name = "subbigpart" onchange = "select_inputcategory2();">
+                        <select name = "subBigPart" onchange = "select_inputcategory2();">
                             <option value = "">1차 카테고리</option>
-                            <!-- 게시글이 있으면 -->
-                            <c:if test="${bigsrhCnt > 0}">
-                                <c:forEach var = "list" items = "${biglist}">
-                                    <option value = "${list.bigcode}">${list.bigname}</option>
-                                </c:forEach>
-                            </c:if>
-                            <!-- 게시글이 없으면 -->
-                            <c:if test="${bigsrhCnt <= 0}">
-                            </c:if>
+                            <!-- 가져올 카테고리가 있으면 -->
+                            <!--<th:block th:if="${bigsrhCnt > 0}">
+                                <option th:each="list:${bigList}" value = "${list.bigcode}">${list.bigname}</option>
+                            </th:block>-->
                         </select>
-                        <input type = "text" id = "prdname" name = "mediumpart">
-                        <input type = "button" class = "Pro" name = "mediumPro" value = "추가"
+                        <input type = "text" name = "mediumPart">
+                        <input type = "button" class = "whiteButton" name = "mediumPro" value = "추가"
                                onclick = "mediumpartPro();">
-                        <select id = "twopart1" name = "tpartdel"> <!-- 일단 아우터것만 이거는 jQuery로 조건써서 갖다넣을려고함 -->
-
+                        <select name = "mediumPartDel"> <!-- 일단 아우터것만 이거는 jQuery로 조건써서 갖다넣을려고함 -->
+                            <!-- 가져올 sub 카테고리가 있으면 -->
+                            <!--<th:block th:if="${mediumsrhCnt > 0}">
+                                <option th:each="list:${mediumList}" value = "${list.mediumcode}">${list.mediumname}</option>
+                            </th:block>-->
                         </select>
-                        <input type = "button" class = "Pro" name = "mediumdelPro" value = "삭제"
+                        <input type = "button" class = "whiteButton" name = "mediumDelPro" value = "삭제"
                                onclick = "mediumpartdelPro();">
                     </td>
                 </tr>
 
+                <!-- 등록할 상품의 main/subCategory 선택 -->
                 <tr>
                     <td>상품 카테고리*</td>
                     <td>
-                        <select id = "onepart2" onchange = "select_inputcategory();" name = "opart">
+                        <select onchange = "select_inputcategory();" name = "mainPart">
                             <option value = "">1차 카테고리</option>
-                            <!-- 게시글이 있으면 -->
-                            <c:if test="${bigsrhCnt > 0}">
-                                <c:forEach var = "list" items = "${biglist}">
-                                    <option value = "${list.bigcode}">${list.bigname}</option>
-                                </c:forEach>
-                            </c:if>
-                            <!-- 게시글이 없으면 -->
-                            <c:if test="${bigsrhCnt <= 0}">
-                            </c:if>
+                            <option value = "asclo">asclo</option>
+                            <!-- 가져올 카테고리가 있으면 -->
+                            <!--<th:block th:if="${bigsrhCnt > 0}">
+                                <option th:each="list:${bigList}" value = "${list.bigcode}">${list.bigname}</option>
+                            </th:block>-->
                         </select>
-                        <select id = "twopart2" name = "tpart"> <!-- 일단 아우터것만 이거는 jQuery로 조건써서 갖다넣을려고함 -->
-
-                        </select>*
+                        <select name = "subPart"> <!-- 일단 아우터것만 이거는 jQuery로 조건써서 갖다넣을려고함 -->
+                            <!-- 가져올 sub 카테고리가 있으면 -->
+                            <!--<th:block th:if="${mediumsrhCnt > 0}">
+                                <option th:each="list:${mediumList}" value = "${list.mediumcode}">${list.mediumname}</option>
+                            </th:block>-->
+                        </select>
                     </td>
                 </tr>
-
+                <!-- 등록할 상품의 name 작성 -->
                 <tr>
-                    <td>상품명 *</td>
-                    <td><input type = "text" id = "prdname" name = "name">
+                    <td><label for="prdName">상품명 *</label></td>
+                    <td>
+                        <input type = "text" id="prdName" name = "prdName">
                     </td>
                 </tr>
-
+                <!-- 등록할 상품의 tax/notTax 선택 -->
                 <tr>
                     <td>과세/비과세</td>
                     <td>
                         <input type = "radio" name = "tex" id = "tax" value = "과세" checked>
                         <label for = "tax">과세</label>&emsp;
-                        <input type = "radio" name = "tex" id = "nottax" value = "비과세">
-                        <label for = "nottax">비과세</label>
+                        <input type = "radio" name = "tex" id = "notTax" value = "비과세">
+                        <label for = "notTax">비과세</label>
                     </td>
                 </tr>
 
+                <!-- 등록할 상품의 tax/notTax 선택 -->
                 <tr>
                     <td>브랜드</td>
                     <td>
-                        <select id = "brand" name = "brands">
+                        <select name = "brand">
                             <option value = "">브랜드 선택</option>
-                            <!-- 게시글이 있으면 -->
-                            <c:if test="${brandsrhCnt > 0}">
-                                <c:forEach var = "list" items = "${brandlist}">
-                                    <option value = "${list.num}">${list.name}</option>
-                                </c:forEach>
-                            </c:if>
-                            <!-- 게시글이 없으면 -->
-                            <c:if test="${brandsrhCnt <= 0}">
-                            </c:if>
+                            <!-- 가져올 브랜드가 있으면 -->
+                            <!--<th:block th:if="${brandsrhCnt > 0}">
+                                <option th:each="list:${brandList}" value = "${list.num}">${list.name}</option>
+                            </th:block>-->
                         </select>
                     </td>
                 </tr>
 
+                <!-- 등록할 상품의 icon 선택 -->
                 <tr>
                     <td>아이콘</td>
                     <td>
                         <input type = "radio" name = "icon" id = "hot" value = "hot">
                         <label for = "hot">hot</label>&emsp;
-                        <input type = "radio" name = "icon" id = "minprice" value = "minprice">
-                        <label for = "minprice">최저가</label><br>
+                        <input type = "radio" name = "icon" id = "minPrice" value = "minPrice">
+                        <label for = "minPrice">최저가</label><br>
                         <input type = "radio" name = "icon" id = "best" value = "best">
                         <label for = "best">best</label>
                     </td>
                 </tr>
 
+                <!-- 등록할 상품의 적립금 선택 -->
                 <tr>
                     <td>적립금</td>
                     <td>
-                        <input type = "radio" name = "plus" id = "notplust" value = "notplus">
-                        <label for = "notplust">없음</label>&emsp;
+                        <input type = "radio" name = "plus" id = "notPlus" value = "notPlus">
+                        <label for = "notPlus">없음</label>&emsp;
                         <input type = "radio" name = "plus" id = "plus" value = "plus">
                         <label for = "plus">적립금</label>&emsp;
-                        <input type = "text" id = "maxcount" name = "pluspay">원
+                        <input type = "text" name = "plusPay">원
                     </td>
                 </tr>
             </table>
 
-            <table id = "btmtop">
-                <tr>
-                    <td>
-                        <b>·상품 판매정보</b>
-                    </td>
-                </tr>
-            </table>
+            <div class="w-97 mx-auto bg-white px-10 py-15">
+                <b>·상품 판매정보</b>
+            </div>
+
             <table id = "bottom">
                 <col style = "width:15%">
                 <col>
