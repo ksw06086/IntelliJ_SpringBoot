@@ -30,4 +30,11 @@ public class PopupController {
         return "/popup/guest_payListRecive";
     }
 
+    @GetMapping("/withItemsSelect")
+    public String withItemsSelect(Model model
+            , @RequestParam(required = false) String name) {
+        model.addAttribute("name", name);
+        return "/popup/withItemsSelect";
+    }
+
 }
