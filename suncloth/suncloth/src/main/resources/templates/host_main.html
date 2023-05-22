@@ -94,7 +94,7 @@
                 <td>배송준비</td>
                 <td th:each="num : ${#numbers.sequence(0, 6)}"
                     th:text="|${15}|">
-                    ${delistartCnt[6]}
+                    ${deliReadyCnt[6]}
                 </td>
                 <td><b>[[${15*7}]]</b></td>
             </tr>
@@ -103,7 +103,7 @@
                 <td>배송중</td>
                 <td th:each="num : ${#numbers.sequence(0, 6)}"
                     th:text="|${15}|">
-                    ${delingCnt[6]}
+                    ${deliIngCnt[6]}
                 </td>
                 <td><b>[[${15*7}]]</b></td>
             </tr>

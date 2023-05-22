@@ -50,7 +50,7 @@
     <div class="flex-fill fs-40px"><b>suncloth</b></div>
     <div class="flex-fill"><a th:href = "@{/hostMain}">홈</a></div>
     <div class="flex-fill"><a th:href = "@{/host/productList}">상품</a></div>
-    <div class="flex-fill"><a href = "h_order">주문</a></div>
+    <div class="flex-fill"><a th:href = "@{/host/orderList}">주문</a></div>
     <div class="flex-fill"><a href = "h_member">회원</a></div>
     <div class="flex-fill"><a href = "boardView">운영</a></div>
     <div class="flex-fill"><a href = "h_clicktotal">통계</a></div>
@@ -59,100 +59,36 @@
 </nav>
 
 <!-- Left menu -->
-<aside class="bg-white border-right-1-ccc align-top p-0 h-100" th:fragment="sidebar">
+<aside class="bg-white border-right-1-ccc align-top p-0 h-100" th:fragment="sidebar(name)">
   <div id = "left" class="w-100 p-0 m-0 a-tag-css">
     <!-- 상품 Category일 경우의 sidebar 목록 -->
-    <table id = "menu" class="w-100 border-0 m-0 p-0 td-py10 td-px15 td-border-bottom-1-ccc fs-8">
+    <table th:if="${name == 'product'}" id = "prdMenu" class="w-100 border-0 m-0 p-0 td-py10 td-px15 td-border-bottom-1-ccc fs-8">
       <tr class="border-bottom-3-ccc">
         <td><b>·상품</b></td>
       </tr>
       <tr>
-        <td>&emsp;<a href = "h_product">판매상품관리</a></td>
+        <td>&emsp;<a th:href="@{/host/productList}">판매상품관리</a></td>
       </tr>
       <tr>
-        <td>&emsp;<a href = "h_brand">브랜드관리</a></td>
+        <td>&emsp;<a th:href="@{/host/brandList}">브랜드관리</a></td>
       </tr>
     </table>
 
+    <!-- 주문 Category일 경우의 sidebar 목록 -->
+    <table th:if="${name == 'order'}" id = "orderMenu" class="w-100 border-0 m-0 p-0 td-py10 td-px15 td-border-bottom-1-ccc fs-8">
+      <tr class="border-bottom-3-ccc">
+        <td><b>·주문</b></td>
+      </tr>
+      <tr>
+        <td>&emsp;<a th:href="@{/host/orderList}">주문관리</a></td>
+      </tr>
+    </table>
   </div>
-  <!--<div class="flex-shrink-0 p-3 bg-white border-right-1-ccc align-top" style="width: 280px;">
-    <a href="/" class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom">
-      <span class="fs-5 fw-semibold">메뉴</span>
-    </a>
-    <ul class="list-unstyled ps-0">
-      <li class="mb-1">
-        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
-          상품
-        </button>
-        <div class="collapse show" id="home-collapse">
-          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-            <li><a th:href="@{/host/productList}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">판매상품관리</a></li>
-            <li><a th:href="@{#}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">브랜드관리</a></li>
-          </ul>
-        </div>
-      </li>
-      <li class="mb-1">
-        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
-          Dashboard
-        </button>
-        <div class="collapse" id="dashboard-collapse">
-          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Overview</a></li>
-            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Weekly</a></li>
-            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Monthly</a></li>
-            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Annually</a></li>
-          </ul>
-        </div>
-      </li>
-      <li class="mb-1">
-        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
-          Orders
-        </button>
-        <div class="collapse" id="orders-collapse">
-          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">New</a></li>
-            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Processed</a></li>
-            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Shipped</a></li>
-            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Returned</a></li>
-          </ul>
-        </div>
-      </li>
-      <li class="border-top my-3"></li>
-      <li class="mb-1">
-        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
-          Account
-        </button>
-        <div class="collapse" id="account-collapse">
-          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-            <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">New...</a></li>
-            <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Profile</a></li>
-            <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Settings</a></li>
-            <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Sign out</a></li>
-          </ul>
-        </div>
-      </li>
-    </ul>
-  </div>
-
-  <div class="b-example-divider b-example-vr"></div>-->
 </aside>
 
-<!-- Product, List -->
-<section class="w-95 mx-auto bg-white mb-50 pb-15" th:fragment="boardList(title)">
-<form action = "h_productdeletePro" method = "post" name = "completeForm">
-  <input type = "hidden" name = "pageNum" value = "${pageNum}">
-
-  <!-- Q&A일 경우 어느 카테고리로 질문했는지? 선택 -->
-  <!--<div th:if="${title == 'Q&A'}" class="d-flex mt-5 mb-5 fs-75 justify-content-center">
-    <div>상품문의</div><div class="mx-2">|</div>
-    <div>배송문의</div><div class="mx-2">|</div>
-    <div>입금확인문의</div><div class="mx-2">|</div>
-    <div>주문/변경/취소/환불문의</div><div class="mx-2">|</div>
-    <div>기타문의</div>
-  </div>-->
-
-  <!-- 게시판 개수 출력 / 출력할 개수 선택 Block -->
-  <div class="d-flex">
+<!-- **** List Block **** -->
+<!-- Product, Brand List Top : 게시판 개수 출력 / 출력할 개수 선택 Block -->
+<div class="d-flex" th:fragment="boardTopList">
       <!-- 현재 가져온 게시판이 총 몇개이고 그 중 몇개가 한페이지에 출력이 되어있는지 확인 -->
     <div class="me-auto pt-20 px-15 pb-12">
       <b th:text="| 검색 ${10}건 / 총 ${50}건 |"></b>
@@ -171,64 +107,12 @@
         <option value="50">50개씩 출력</option>
       </select>
     </div>
-  </div>
-
-  <!-- 게시판 목록 Block -->
-  <table class="table text-center fs-75 w-98 mx-auto bg-white border-bottom-1-ccc border-top-1-ccc td-border-bottom-1-ccc vertical-middle-all a-tag-css">
-    <thead>
-      <tr class="fw-bold border-0 td-py25 td-px15">
-        <td>
-          <input type = "checkbox" name = "prdCheck" id = "prdCheckAll"  value = "전체선택">
-        </td>
-        <td>이미지</td>
-        <td>번호</td>
-        <td>카테고리</td>
-        <td>상품명</td>
-        <td>판매가</td>
-        <td>배송비</td>
-        <td>등록일</td>
-        <td>판매상태</td>
-      </tr>
-    </thead>
-    <tbody>
-    <!--<th:block th:if="${srhCnt > 0}">-->
-      <tr class = "text-center td-py10 td-px15"><!--th:each="list:${list}"-->
-        <td><input type = "checkbox" name = "prdChecks" value = "${list.num}"></td>
-        <td> <!-- th:if="${list.mainfile != null}" -->
-          <img src="https://cdn-icons-png.flaticon.com/128/2957/2957307.png"
-               width = "50px" height = "60px">
-        </td>
-        <td>${number}(${list.num})
-          <!--<c:set var = "number" value = "${number-1}"/>-->
-        </td>
-        <!-- 상세 페이지 -->
-        <td th:text="${'outer'}">
-          ${list.mediumpartname}
-        </td>
-        <td class="text-start">
-          <a th:href="@{/host/productView(name='text')}"
-          th:text="|누군가가 훔쳐갈 수도 있는 아름다운 여름 옷|"> <!--href = "h_productForm?num=${list.num}&number=${number+1}&pageNum=${pageNum}"-->
-            ${list.name}
-          </a></td>
-        <td><b th:text="|KRW 15000|">KRW ${list.saleprice}</b></td>
-        <td th:text="|1500|">${list.deliprice}</td>
-        <td th:text="${#dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm')}">${list.reg_date}</td>
-        <td><input type = "button" value = "color/size 추가" name = "csInput" class="whiteButton"
-                   onclick = "window.location = 'h_csinput?num=${list.num}&pageNum=${pageNum}'"></td>
-      </tr>
-    <!--</th:block>-->
-      <!--<tr class = "text-center td-py10 td-px15">
-        <td colspan = "10">
-          게시글이 없습니다. 글을 작성해주세요!!
-        </td>
-      </tr>-->
-    </tbody>
-  </table>
-
-  <!-- Paging 및 삭제 Block -->
-  <div class="position-relative w-98 pt-10 mx-auto">
+</div>
+<!-- Product, Brand List Bottom : Paging 및 삭제 Block -->
+<div class="position-relative w-98 pt-10 mx-auto" th:fragment="boardBottomList(name)">
     <!-- 삭제 버튼 Block -->
-    <div class="position-absolute top-0 left-0">
+    <div class="position-absolute top-0 left-0"
+    th:if="${name != 'order'}">
       <input type = "submit" value = "삭제" class="blackButton px-15">
     </div>
 
@@ -253,8 +137,7 @@
       </ul>
     </div>
   </div>
-</form>
-</section>
+
 
 <!-- footer : bootstrap using script -->
 <footer id = "foot" th:fragment="footer">

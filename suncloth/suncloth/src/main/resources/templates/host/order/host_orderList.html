@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/host_common :: head('main')">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body class="hostBody">
+<!-- host page header(host_common.html) -->
+<header th:replace="fragments/host_common :: header"></header>
+
+<!-- host page navi -->
+<nav th:replace="fragments/host_common :: navi"></nav>
+
+<!-- 본문 내용(Body Block) -->
+<div class="d-flex">
+    <!-- Sidebar Block -->
+    <div style="width:300px;">
+        <aside th:replace="fragments/host_common :: sidebar('order')"></aside>
+    </div>
+    <div class="flex-fill">
+        <div class="position-relative text-center w-95 mx-auto my-15 vertical-middle-all">
+            <p class="fs-15 p-0 m-0"><b>주문관리</b></p>
+        </div>
+
+        <!--  검색 선택 부분(Search Select Box) -->
+        <form action="h_orderselect" method="post" name="searchForm">
+            <table class="w-95 mx-auto bg-white border-top border-bottom border-dark td-border-bottom-1-ccc td-py10 td-px8 fs-8 tdChild1-bg-lightGray tdChild1-fw-bold vertical-middle-all">
+                <col style="width:15%;">
+                <col>
+
+                <!-- 등록일 선택 Block -->
+                <tr>
+                    <td>등록일</td>
+                    <td>
+                        <!-- 어느 날짜를 기준으로 검색할 것인지 체크 -->
+                        <input type="date" id="firstDay" name="firstDay"> -
+                        <input type="date" id="lastDay" name="lastDay">
+
+                        <!-- 버튼 클릭시 위에 date input 값이 변하게 됨 -->
+                        <input type="hidden" name="dayNum" value="0">
+                        <span class="p-0 ms-2">
+                            <input type="radio" name="dayType" id="today" value="today" onclick="today();"
+                                   class="d-none">
+                            <label for="today" class="border border-black py-1 px-2">오늘</label>
+                            <input type="radio" name="dayType" id="week" value="week" onclick="week();"
+                                   class="d-none">
+                            <label for="week" class="border border-black py-1 px-2">1주일</label>
+                            <input type="radio" name="dayType" id="month1" value="month1" onclick="month1();"
+                                   class="d-none">
+                            <label for="month1" class="border border-black py-1 px-2">1개월</label>
+                            <input type="radio" name="dayType" id="month3" value="month3" onclick="month3();"
+                                   class="d-none">
+                            <label for="month3" class="border border-black py-1 px-2">3개월</label>
+                            <input type="radio" name="dayType" id="month6" value="month6" onclick="month6();"
+                                   class="d-none">
+                            <label for="month6" class="border border-black py-1 px-2">6개월</label>
+                        </span>
+                    </td>
+                </tr>
+
+                <!-- 주문상태 선택 Block -->
+                <tr>
+                    <td>주문상태</td>
+                    <td>
+                        <input type="checkbox" name="state" id="depositBefore" value="입금전">
+                        <label for="depositBefore">입금전</label>&emsp;
+                        <input type="checkbox" name="state" id="deliReady" value="배송준비중">
+                        <label for="deliReady">배송준비중</label>&emsp;
+                        <input type="checkbox" name="state" id="deliIng" value="배송중">
+                        <label for="deliIng">배송중</label>&emsp;
+                        <input type="checkbox" name="state" id="deliEnd" value="배송완료">
+                        <label for="deliEnd">배송완료</label>&emsp;
+                        <input type="checkbox" name="state" id="refundReady" value="환불신청">
+                        <label for="refundReady">환불신청</label>
+                        <input type="checkbox" name="state" id="refundEnd" value="환불확인">
+                        <label for="refundEnd">환불확인</label>
+                        <input type="checkbox" name="state" id="orderCancel" value="주문취소">
+                        <label for="orderCancel">주문취소</label>
+                    </td>
+                </tr>
+
+                <!-- 결제수단 선택 Block -->
+                <tr>
+                    <td>결제수단</td>
+                    <td>
+                        <input type="checkbox" name="payment" id="card" value="신용카드">
+                        <label for="card">신용카드</label>&emsp;
+                        <input type="checkbox" name="payment" id="account" value="관리자통장">
+                        <label for="account">관리자 통장</label>
+                    </td>
+                </tr>
+
+                <!-- 검색할 Text 입력 Block -->
+                <tr>
+                    <td>검색어</td>
+                    <td>
+                        <select id="type" name="srhType" class="px-2 py-1">
+                            <option value="1">주문자</option>
+                            <option value="1">입금자</option>
+                            <option value="1">아이디</option>
+                            <option value="1">상품명</option>
+                        </select>
+                        <input type="hidden" name="searchType" value="0">
+                        <input type="search" id="srch" name="srch">
+                    </td>
+                </tr>
+            </table>
+
+            <!-- 버튼 리스트(Button List Block) -->
+            <div class="w-100 text-center mt-10 mb-20">
+                <input type = "submit" value = "검색" class="blackBaseButton w-15 py-10 border-0 ">
+            </div>
+        </form>
+
+        <!-- 상품 검색 결과 목록(SearchResult Product List) -->
+        <section class="w-95 mx-auto bg-white mb-50 pb-15" >
+            <form action = "h_productdeletePro" method = "post" name = "completeForm">
+                <input type = "hidden" name = "pageNum" value = "${pageNum}">
+
+                <!-- OrderList Top Menu -->
+                <div th:replace="fragments/host_common :: boardTopList"></div>
+
+                <!-- 주문 목록 Block -->
+                <table class="table text-center fs-75 w-98 mx-auto bg-white border-bottom-1-ccc border-top-1-ccc td-border-bottom-1-ccc vertical-middle-all a-tag-css">
+                    <thead>
+                    <tr class="fw-bold border-0 td-py25 td-px15">
+                        <td>번호</td>
+                        <td>주문일시</td>
+                        <td>상품명</td>
+                        <td>주문자</td>
+                        <td>결제수단</td>
+                        <td>결제금액</td>
+                        <td>판매상태</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!--<th:block th:if="${srhCnt > 0}">-->
+                    <tr class = "text-center td-py10 td-px15"><!--th:each="list:${list}"-->
+                        <td>${number}(${list.num})
+                            <!--<c:set var = "number" value = "${number-1}"/>-->
+                        </td>
+                        <td th:text="${#dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm')}">${list.reg_date}</td>
+                        <td class="text-start">
+                            <a th:href="@{/host/productView(name='text')}"
+                               th:text="|누군가가 훔쳐갈 수도 있는 아름다운 여름 옷|"> <!--href = "h_productForm?num=${list.num}&number=${number+1}&pageNum=${pageNum}"-->
+                                ${list.name}
+                            </a></td>
+                        <td><b th:text="|kim|">KRW ${list.gid}</b></td>
+                        <td><b th:text="|신용카드|">${list.pay_option}</b></td>
+                        <td th:text="|150000|">${list.realPrice}</td>
+                        <td th:text="|판매중|">${list.state}
+                        <select id = "orderState" name = "state" style = "padding: 5px; font-size: .9em;" onchange = "ordergo('${list.num}', '${list.gid}', '${list.prdnum}', this.value);">
+                            <option value = "">=== 상태 선택 ===</option>
+                            <th:block th:if="${list.state == '입금전'}">
+                                <option value = "배송준비중">배송준비중</option>
+                            </th:block>
+                            <th:block th:if="${list.state == '입금전' or list.state == '배송준비중'}">
+                                <option value = "배송중">배송중</option>
+                            </th:block>
+                            <th:block th:if="${list.state == '배송준비중' or list.state == '배송중'}">
+                                <option value = "배송완료">배송완료</option>
+                            </th:block>
+                            <th:block th:if="${list.state == '환불신청'}">
+                                <option value = "환불확인">환불확인</option>
+                            </th:block>
+                        </select>
+                        </td>
+                    </tr>
+                    <!--</th:block>-->
+                    <!--<tr class = "text-center td-py10 td-px15">
+                      <td colspan = "10">
+                        게시글이 없습니다. 글을 작성해주세요!!
+                      </td>
+                    </tr>-->
+                    </tbody>
+                </table>
+
+                <!-- OrderList Bottom Menu -->
+                <div th:replace="fragments/host_common :: boardBottomList(name='order')"></div>
+            </form>
+        </section>
+    </div>
+</div>
+
+<!-- using Javascript, Bootstrap, JQuery -->
+<footer th:replace="fragments/host_common :: footer"></footer>
+</body>
+</html>

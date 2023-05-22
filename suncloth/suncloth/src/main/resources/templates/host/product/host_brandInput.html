@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/host_common :: head('brandInput')">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body class="hostBody h-100">
+<!-- host page header(host_common.html) -->
+<header th:replace="fragments/host_common :: header"></header>
+
+<!-- host page navi -->
+<nav th:replace="fragments/host_common :: navi"></nav>
+
+<!-- 본문 내용(Body Block) -->
+<div class="d-flex h-100">
+    <!-- Sidebar Block -->
+    <div style="width:300px;">
+        <aside th:replace="fragments/host_common :: sidebar('product')"></aside>
+    </div>
+    <div class="flex-fill">
+        <form method="post" name="productForm" enctype="multipart/form-data">
+        <div class="position-relative text-center w-95 mx-auto my-15 vertical-middle-all">
+            <p class="fs-15 p-0 m-0"><b>브랜드관리</b></p>
+            <p class="position-absolute m-0 top-0 end-0">
+                <input th:if="${name == 'input'}" type="submit" value="등록" class="blueBaseBtn px-10 py-10"
+                       onclick = "javascript: productForm.action = 'h_brandPro'">
+                <input th:if="${name == 'update'}" type="submit" value="수정" class="blueBaseBtn px-10 py-10"
+                       onclick = "javascript: productForm.action = 'h_brandUpdatePro'">
+            </p>
+        </div>
+
+        <div class="bg-white w-95 mx-auto mb-20 pb-15">
+            <!-- 브랜드 정보 Title Block -->
+            <div class="w-97 mx-auto bg-white px-10 py-15">
+                <b>·브랜드정보</b>
+            </div>
+
+            <!-- 브랜드 정보 Input Block -->
+            <table class="w-97 mx-auto bg-white border-top-1-ccc border-bottom-1-ccc td-py15 td-px10 fs-8 td-border-bottom-1-ccc tdChild1-fw-bold tdChild1-bg-lightGray vertical-middle-all">
+                <col style = "width:20%">
+                <col>
+                <!-- 등록할 브랜드 : 번호 -->
+                <tr>
+                    <td>브랜드번호 *</td>
+                    <td th:text="|1|">[[${num}]]</td>
+                </tr>
+                <!-- 등록할 브랜드 : 이름 -->
+                <tr>
+                    <td><label for="brandName">브랜드명 *</label></td>
+                    <td>
+                        <input type = "text" id="brandName" name = "brandName">
+                    </td>
+                </tr>
+                <!-- 등록할 브랜드 : 전화번호 -->
+                <tr>
+                    <td>브랜드 전화번호</td>
+                    <td>
+                        <select id = "telPhone" name = "telPhone">
+                            <option value = "010">010</option>
+                            <option value = "011">011</option>
+                            <option value = "016">016</option>
+                            <option value = "017">017</option>
+                            <option value = "018">018</option>
+                            <option value = "019">019</option>
+                        </select>
+                        - <input type = "text" id = "telPhoneSecond" name = "telPhoneSecond">
+                        - <input type = "text" id = "telPhoneThird" name = "telPhoneThird">
+                    </td>
+                </tr>
+            </table>
+        </div>
+        </form>
+    </div>
+</div>
+
+<!-- using Javascript, Bootstrap, JQuery -->
+<footer th:replace="fragments/host_common :: footer"></footer>
+</body>
+</html>
