@@ -130,7 +130,7 @@
                 </a>
             </th:block>
             <!-- QnAView에 관리자가 들어왔을 때 답글달기 버튼 보이게 해줌 -->
-            <th:block th:if="${name == 'REVIEW(HOST)'}">
+            <th:block th:if="${name == 'Q&A(HOST)'}">
                 <!-- 답글달기 버튼 -->
                 <!--<a href = "h_QnAwrite?num=${num}&number=${number}&pageNum=${pageNum}&choose=${choose}">-->
                 <a th:href="@{/host/boardInput(name = 'Q&A')}">
