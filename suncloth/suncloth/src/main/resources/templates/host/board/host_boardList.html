@@ -62,7 +62,7 @@
                         </span>
                     </td>
                 </tr>
-
+                <!-- 게시글의 판매상태(분류) : FAQ -->
                 <tr th:if="${name == 'FAQ'}">
                     <td>판매상태</td>
                     <td>
@@ -82,6 +82,22 @@
                         <label for = "other">기타</label>
                     </td>
                 </tr>
+                <!-- 게시글의 질문유형 : Q&A -->
+                <tr th:if="${name == 'Q&A'}">
+                    <td>질문유형</td>
+                    <td>
+                        <input type = "checkbox" name = "Qtype" id = "prd" value = "상품문의">
+                        <label for = "prd">상품문의</label>&emsp;
+                        <input type = "checkbox" name = "Qtype" id = "deli" value = "배송문의">
+                        <label for = "deli">배송문의</label>&emsp;
+                        <input type = "checkbox" name = "Qtype" id = "paychk" value = "입금확인문의">
+                        <label for = "paychk">입금확인문의</label>&emsp;
+                        <input type = "checkbox" name = "Qtype" id = "refund" value = "주문/변경/취소/환불문의">
+                        <label for = "refund">주문/변경/취소/환불문의</label>&emsp;
+                        <input type = "checkbox" name = "Qtype" id = "ather" value = "기타문의">
+                        <label for = "ather">기타문의</label>
+                    </td>
+                </tr>
 
                 <!-- 검색할 Text 입력 Block -->
                 <tr>
@@ -91,6 +107,7 @@
                             <option value="0">전체</option>
                             <option value="1">제목</option>
                             <option value="2">내용</option>
+                            <option value="3" th:if="${name == 'Q&A'}">작성자</option>
                         </select>
                         <input type="hidden" name="searchType" value="0">
                         <input type="search" id="srch" name="srch">
@@ -129,10 +146,12 @@
                         </td>
                         <td>번호</td>
                         <td th:if="${name == 'FAQ'}">분류</td>
+                        <td th:if="${name == 'Q&A'}">질문유형</td>
                         <!--<td>이미지</td>-->
                         <td>제목</td>
                         <td>작성자</td>
-                        <td>등록일</td>
+                        <td>작성일</td>
+                        <td th:if="${name == 'Q&A'}">답변상태</td>
                     </tr>
                     </thead>
                     <tbody>
@@ -145,13 +164,25 @@
                         </td>-->
                         <td>${number}(${list.num})</td><!--<c:set var = "number" value = "${number-1}"/>-->
                         <td th:if="${name == 'FAQ'}" th:text="|회원등급|">${list.state}</td>
+                        <td th:if="${name == 'Q&A'}" th:text="|상품문의|">${list.state}</td>
                         <td class="text-start">
-                            <a th:href="@{/host/boardView(name=${name})}"
+                            <!-- Q&A일 경우에 사용자글과 관리자답글(이미지 추가) 구분짓기 -->
+                            <a th:if="${name == 'Q&A'}" th:text="|오늘 이 옷 너무 예뻐요|"
+                               th:href="${#authentication.getName()} == 'host' ? @{/host/boardView(name=${name})} : @{/board/boardView(name='REVIEW(HOST)')}">
+                                <!--href = "h_productForm?num=${list.num}&number=${number+1}&pageNum=${pageNum}"-->
+                                <th:block th:if="${list.ref_level > 0}">
+                                    &nbsp;<img src = "${project}ascloimage/re.png" width = "20" height = "15">
+                                </th:block> <!-- 답글인 경우 이미지 출력 -->
+                                ${list.subject}
+                            </a>
+                            <!-- Q&A가 아닐 경우 이거 출력 -->
+                            <a th:if="${name != 'Q&A'}" th:href="@{/host/boardView(name=${name})}"
                                th:text="|오늘 이 옷 너무 예뻐요|"> <!--href = "h_productForm?num=${list.num}&number=${number+1}&pageNum=${pageNum}"-->
                                 ${list.subject}
                             </a></td>
                         <td th:text="${'kim'}">${list.id}</td>
                         <td th:text="${#dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm')}">${list.reg_date}</td>
+                        <td th:if="${name == 'Q&A'}" th:text="|답변완료|">${list.writeState}</td>
                     </tr>
                     <!--</th:block>-->
                     <!--<tr class = "text-center td-py10 td-px15">
@@ -163,7 +194,7 @@
                 </table>
 
                 <!-- BoardList Bottom Menu -->
-                <div th:replace="fragments/host_common :: boardBottomList(name='product')"></div>
+                <div th:replace="fragments/host_common :: boardBottomList(name='board')"></div>
             </form>
         </section>
     </div>

@@ -29,5 +29,4 @@ public class BoardController {
         model.addAttribute("name", name);
         return "/board/guest_boardWrite";
     }
-
 }
