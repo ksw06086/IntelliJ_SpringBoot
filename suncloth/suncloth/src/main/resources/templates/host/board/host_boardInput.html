@@ -42,6 +42,26 @@
                     <td>작성자</td>
                     <td th:text="|관리자(host)|">관리자(${sessionScope.memId})</td>
                 </tr>
+                <!-- 게시글의 분류 : FAQ -->
+                <tr th:if="${name == 'FAQ'}">
+                    <td>판매상태</td>
+                    <td>
+                        <input type = "radio" name = "state" id = "memberrank" value = "회원등급" checked>
+                        <label for = "memberrank">회원 등급</label>&emsp;
+                        <input type = "radio" name = "state" id = "prdinput" value = "상품등록">
+                        <label for = "prdinput">상품 등록</label>&emsp;
+                        <input type = "radio" name = "state" id = "order_pay" value = "주문/결제">
+                        <label for = "order_pay">주문/결제</label>&emsp;
+                        <input type = "radio" name = "state" id = "deli" value = "배송">
+                        <label for = "deli">배송</label>&emsp;
+                        <input type = "radio" name = "state" id = "refund" value = "환불">
+                        <label for = "refund">환불</label>&emsp;
+                        <input type = "radio" name = "state" id = "pluspay" value = "적립금">
+                        <label for = "pluspay">적립금</label>&emsp;
+                        <input type = "radio" name = "state" id = "other" value = "기타">
+                        <label for = "other">기타</label>
+                    </td>
+                </tr>
                 <!-- 게시글의 제목 -->
                 <tr>
                     <td><label for="subject">제목</label></td>
@@ -58,7 +78,8 @@
                     </td>
                 </tr>
 
-                <!-- 상품 이미지 file 추가 -->
+                <!-- 상품 이미지 file 추가 : notice -->
+                <th:block th:if="${name == 'NOTICE'}">
                 <tr>
                     <td>첨부파일1</td>
                     <td><input type = "file" name = "file1"></td>
@@ -79,6 +100,7 @@
                     <td>첨부파일5</td>
                     <td><input type = "file" name = "file5"></td>
                 </tr>
+                </th:block>
             </table>
         </div>
         </form>

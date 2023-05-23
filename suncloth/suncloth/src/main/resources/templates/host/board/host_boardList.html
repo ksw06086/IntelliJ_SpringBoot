@@ -20,7 +20,7 @@
     <div class="flex-fill">
         <div class="position-relative text-center w-95 mx-auto my-15 vertical-middle-all">
             <p class="fs-15 p-0 m-0"><b>[[${name}]] 게시판 리스트</b></p>
-            <p class="position-absolute m-0 top-0 end-0" th:if="${name == 'NOTICE'}">
+            <p class="position-absolute m-0 top-0 end-0" th:if="${name == 'NOTICE' || name == 'FAQ'}">
                 <button type="button" class="blueBaseBtn px-10 py-10">
                     <a class="text-white text-decoration-none" th:href="@{/host/boardInput(name=${name})}">게시글등록</a>
                 </button>
@@ -60,6 +60,26 @@
                                    class="d-none">
                             <label for="month6" class="border border-black py-1 px-2">6개월</label>
                         </span>
+                    </td>
+                </tr>
+
+                <tr th:if="${name == 'FAQ'}">
+                    <td>판매상태</td>
+                    <td>
+                        <input type = "checkbox" name = "state" id = "memberrank" value = "회원등급">
+                        <label for = "memberrank">회원 등급</label>&emsp;
+                        <input type = "checkbox" name = "state" id = "prdinput" value = "상품등록">
+                        <label for = "prdinput">상품 등록</label>&emsp;
+                        <input type = "checkbox" name = "state" id = "order_pay" value = "주문/결제">
+                        <label for = "order_pay">주문/결제</label>&emsp;
+                        <input type = "checkbox" name = "state" id = "deli" value = "배송">
+                        <label for = "deli">배송</label>&emsp;
+                        <input type = "checkbox" name = "state" id = "refund" value = "환불">
+                        <label for = "refund">환불</label>&emsp;
+                        <input type = "checkbox" name = "state" id = "pluspay" value = "적립금">
+                        <label for = "pluspay">적립금</label>&emsp;
+                        <input type = "checkbox" name = "state" id = "other" value = "기타">
+                        <label for = "other">기타</label>
                     </td>
                 </tr>
 
@@ -108,6 +128,7 @@
                             <input type = "checkbox" name = "prdCheck" id = "prdCheckAll"  value = "전체선택">
                         </td>
                         <td>번호</td>
+                        <td th:if="${name == 'FAQ'}">분류</td>
                         <!--<td>이미지</td>-->
                         <td>제목</td>
                         <td>작성자</td>
@@ -123,6 +144,7 @@
                                  width = "50px" height = "60px">
                         </td>-->
                         <td>${number}(${list.num})</td><!--<c:set var = "number" value = "${number-1}"/>-->
+                        <td th:if="${name == 'FAQ'}" th:text="|회원등급|">${list.state}</td>
                         <td class="text-start">
                             <a th:href="@{/host/boardView(name=${name})}"
                                th:text="|오늘 이 옷 너무 예뻐요|"> <!--href = "h_productForm?num=${list.num}&number=${number+1}&pageNum=${pageNum}"-->
