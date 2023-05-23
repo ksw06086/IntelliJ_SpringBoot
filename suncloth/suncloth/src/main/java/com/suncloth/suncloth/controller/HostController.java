@@ -96,4 +96,16 @@ public class HostController {
     public String clickTotal() {
         return "/host/total/host_clickTotal";
     }
+
+    // 신규회원 분석
+    @GetMapping("/newMemberTotal")
+    public String newMemberTotal() {
+        return "/host/total/host_newMemberTotal";
+    }
+
+    // 회원 적립금 분석
+    @GetMapping("/memberPlusPay")
+    public String memberPlusPay() {
+        return "/host/total/host_memberPlusPay";
+    }
 }

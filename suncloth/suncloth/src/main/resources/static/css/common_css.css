@@ -199,6 +199,8 @@
 .td-px30 td{ padding-right: 30px; padding-left: 30px; }
 .td-pt12 td{ padding-top: 12px; }
 .td-border-bottom-1-ccc td { border-bottom: 1px solid #ccc; }
+.td-border-top-1-ccc td { border-top: 1px solid #ccc; }
+.td-border-all-1-ccc td { border: 1px solid #ccc; border-collapse: collapse; }
 .tdChild1-border-right-1-ccc td:nth-child(1){ border-right: 1px solid #ccc; }
 .tdChild1-fs-37 td:nth-child(1) { font-size: 37px; }
 .tdChild1-text-start td:nth-child(1){ text-align:left; }

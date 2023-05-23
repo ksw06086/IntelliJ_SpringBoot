@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/host_common :: head('clickTotal')">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body class="hostBody">
+<!-- host page header(host_common.html) -->
+<header th:replace="fragments/host_common :: header"></header>
+
+<!-- host page navi -->
+<nav th:replace="fragments/host_common :: navi"></nav>
+
+<!-- 본문 내용(Body Block) -->
+<div class="d-flex">
+    <!-- Sidebar Block -->
+    <div style="width:300px;">
+        <aside th:replace="fragments/host_common :: sidebar('total')"></aside>
+    </div>
+    <div class="flex-fill">
+        <div class="position-relative text-center w-95 mx-auto my-15 vertical-middle-all">
+            <p class="fs-15 p-0 m-0"><b>신규 회원 분석</b></p>
+        </div>
+
+        <!--  검색 선택 부분(Search Select Box) -->
+        <form action="h_productselect" method="post" name="searchForm">
+            <table class="w-95 mx-auto bg-white border-top border-bottom border-dark td-py10 td-px8 fs-8 tdChild1-bg-lightGray tdChild1-fw-bold vertical-middle-all">
+                <col style="width:15%;">
+                <col>
+
+                <!-- 기간 검색 Block -->
+                <tr>
+                    <td>기간검색</td>
+                    <td>
+                        <select id = "year" name = "year" style = "padding:2px; vertical-align:middle;">
+                            <option value = "2025">2025년</option>
+                            <option value = "2024">2024년</option>
+                            <option value = "2023">2023년</option>
+                            <option value = "2022">2022년</option>
+                            <option value = "2021">2021년</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </form>
+
+        <!-- 방문자 분석 결과 목록(SearchResult ClickTotal List) -->
+        <div class="mt-15">
+            <!-- 월별 접속자 현황 Title Block -->
+            <div class="w-95 mx-auto bg-white px-10 py-15">
+                <b>·월별 접속자 현황</b>
+            </div>
+        </div>
+
+        <!-- 월별 접속자 현황 차트 Block -->
+        <div class="w-95 mx-auto bg-white" style = "display: -webkit-box;">
+            <div class="mx-auto" id = "firstChat"></div>
+        </div>
+
+        <div class="mx-auto w-95 bg-white py-15 px-10 mt-10 mb-20">
+            <table class="text-center fs-75 w-100 bg-EAECEE border-top-1-ccc border-bottom-1-ccc td-border-bottom-1-ccc">
+                <col style = "width:50%;">
+                <col style = "width:50%;">
+                <tr class="fw-bold border-0 td-px15 td-py10">
+                    <td>월별</td>
+                    <td>신규가입자 수</td>
+                </tr>
+                <tr class = "bg-white td-px15 td-py10" th:each="num : ${#numbers.sequence(0, 11)}">
+                    <td>[[${num + 1}]]월</td>
+                    <td th:text="|${num}|">${newtotal[num]}</td>
+                </tr>
+                <tr class = "bg-black text-white td-px15 td-py10">
+                    <td>합계</td>
+                    <td th:text="|15000|">${newtotal[0] + newtotal[1] + newtotal[2] + newtotal[3] + newtotal[4] + newtotal[5]
+                        + newtotal[6] + newtotal[7] + newtotal[8] + newtotal[9] + newtotal[10] + newtotal[11]}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Chat API 사용 부분 -->
+<script type="text/javascript">
+    google.charts.setOnLoadCallback(drawChartFirst);
+
+    var firstChart_options = {
+        title: '월별 방문자 분석',
+        width : 1050,
+        height : 400,
+        bar : {
+            groupWidth : '50%'
+        },
+        legend : {
+            position : 'bottom'
+        }
+    }
+
+    function drawChartFirst() {
+        var data = google.visualization.arrayToDataTable([
+            ['Element', '방문자 수'],
+            ['1월', 5],
+            ['2월', 2],
+            ['3월', 3],
+            ['4월', 1],
+            ['5월', 9],
+            ['6월', 3],
+            ['7월', 1],
+            ['8월', 15],
+            ['9월', 9],
+            ['10월', 2],
+            ['11월', 15],
+            ['12월', 11], /*${new12}*/
+        ]);
+
+        var firstChart = new google.visualization.ColumnChart(document.getElementById('firstChat'));
+        firstChart.draw(data, firstChart_options);
+    }
+</script>
+
+<!-- using Javascript, Bootstrap, JQuery -->
+<footer th:replace="fragments/host_common :: footer"></footer>
+</body>
+</html>

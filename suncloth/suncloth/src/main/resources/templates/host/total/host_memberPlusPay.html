@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/host_common :: head('main')">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body class="hostBody">
+<!-- host page header(host_common.html) -->
+<header th:replace="fragments/host_common :: header"></header>
+
+<!-- host page navi -->
+<nav th:replace="fragments/host_common :: navi"></nav>
+
+<!-- 본문 내용(Body Block) -->
+<div class="d-flex">
+    <!-- Sidebar Block -->
+    <div style="width:300px;">
+        <aside th:replace="fragments/host_common :: sidebar('total')"></aside>
+    </div>
+    <div class="flex-fill">
+        <div class="position-relative text-center w-95 mx-auto my-15 vertical-middle-all">
+            <p class="fs-15 p-0 m-0"><b>회원 적립금 분석</b></p>
+        </div>
+
+        <!--  검색 선택 부분(Search Select Box) -->
+        <form action="h_productselect" method="post" name="searchForm">
+            <table class="w-95 mx-auto bg-white border-top border-bottom border-dark td-border-bottom-1-ccc td-py10 td-px8 fs-8 tdChild1-bg-lightGray tdChild1-fw-bold vertical-middle-all">
+                <col style="width:15%;">
+                <col>
+
+                <!-- 검색할 Text 입력 Block -->
+                <tr>
+                    <td>검색어</td>
+                    <td>
+                        <select id="type" name="srhType" class="px-2 py-1">
+                            <option value="0">전체</option>
+                            <option value="1">이름</option>
+                            <option value="2">아이디</option>
+                        </select>
+                        <input type="hidden" name="searchType" value="0">
+                        <input type="search" id="srch" name="srch">
+                    </td>
+                </tr>
+            </table>
+
+            <!-- 버튼 리스트(Button List Block) -->
+            <div class="w-100 text-center mt-10 mb-20">
+                <input type = "submit" value = "검색" class="blackBaseButton w-15 py-10 border-0 ">
+            </div>
+        </form>
+
+        <!-- 전체회원 적립금 분석결과(All Member PlusPay Analyze) -->
+        <div class="bg-white w-95 mx-auto mb-20 pb-15">
+            <!-- 전체회원 적립금 분석결과 Title Block -->
+            <div class="w-97 mx-auto bg-white px-10 py-15">
+                <b>·전체회원 적립금 분석결과</b>
+            </div>
+
+            <!-- 전체회원 적립금 분석결과 Block -->
+            <!--<c:set var = "cntsum" value = "0"/> 총 건수 -->
+            <!--<c:set var = "useplussum" value = "0"/> 총 사용 금액-->
+            <!--<c:set var = "myplussum" value = "0"/> 총 잔여 금액 -->
+            <table class="text-center fs-75 w-97 mx-auto border-bottom-1-ccc border-top-1-ccc td-border-all-1-ccc">
+                <col style = "width:33.3%;">
+                <col style = "width:33.3%;">
+                <col>
+                <tr class="bg-EAECEE fw-bold td-py10 td-px15">
+                    <td colspan = "2">총 사용 적립금</td>
+                    <td>총 잔여 적립금</td>
+                </tr>
+                <tr class="bg-EAECEE fw-bold td-py10 td-px15">
+                    <td>건수</td>
+                    <td>금액</td>
+                    <td>금액</td>
+                </tr>
+                <tr class=" td-py10 td-px15">
+                    <td>${cntsum}</td>
+                    <td>${useplussum}원</td>
+                    <td>${myplussum}원</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- 회원 적립금 분석결과(Member PlusPay Analyze) -->
+        <div class="bg-white w-95 mx-auto mb-20 pb-15">
+            <!-- 회원 적립금 분석결과 Title Block -->
+            <div class="w-97 mx-auto bg-white px-10 py-15">
+                <b>·회원 적립금 분석결과</b>
+            </div>
+            <!-- 회원 적립금 분석결과 Block -->
+            <table class="text-center fs-75 w-97 mx-auto border-bottom-1-ccc border-top-1-ccc td-border-all-1-ccc">
+                <col style = "width:16%;">
+                <col style = "width:16%;">
+                <col style = "width:16%;">
+                <col style = "width:16%;">
+                <col style = "width:16%;">
+                <col>
+                <tr class="bg-EAECEE fw-bold td-py10 td-px15">
+                    <td rowspan = "2">순위</td> <!-- 10위 까지만 -->
+                    <td rowspan = "2">이름</td>
+                    <td rowspan = "2">아이디</td>
+                    <td colspan = "2">총 사용 적립금</td>
+                    <td>총 잔여 적립금</td>
+                </tr>
+                <tr class="bg-EAECEE fw-bold td-py10 td-px15">
+                    <td>건수</td>
+                    <td>금액</td>
+                    <td>금액</td>
+                </tr>
+                <!--<th:block th:if="${list != null}"></th:block>-->
+                <tr class="td-py10 td-px15"><!--th:each="list:${list}"-->
+                    <td th:text="|1|">${number}</td> <!--<c:set var = "number" value = "${number+1}"/>-->
+                    <td th:text="|김선우|">${list.gname}</td>
+                    <td th:text="|kim|">${list.gid}</td>
+                    <td th:text="|15|">${list.cnt}</td>
+                    <td th:text="|35000|">${list.useplus}</td>
+                    <td th:text="|20000|">${list.myplus}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- using Javascript, Bootstrap, JQuery -->
+<footer th:replace="fragments/host_common :: footer"></footer>
+</body>
+</html>
