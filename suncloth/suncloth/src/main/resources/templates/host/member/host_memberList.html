@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/host_common :: head('member')">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body class="hostBody">
+<!-- host page header(host_common.html) -->
+<header th:replace="fragments/host_common :: header"></header>
+
+<!-- host page navi -->
+<nav th:replace="fragments/host_common :: navi"></nav>
+
+<!-- 본문 내용(Body Block) -->
+<div class="d-flex">
+    <!-- Sidebar Block -->
+    <div style="width:300px;">
+        <aside th:replace="fragments/host_common :: sidebar('member')"></aside>
+    </div>
+    <div class="flex-fill">
+        <div class="position-relative text-center w-95 mx-auto my-15 vertical-middle-all">
+            <p class="fs-15 p-0 m-0"><b>회원관리</b></p>
+        </div>
+
+        <!--  검색 선택 부분(Search Select Box) -->
+        <form action="h_productselect" method="post" name="searchForm">
+            <table class="w-95 mx-auto bg-white border-top border-bottom border-dark td-border-bottom-1-ccc td-py10 td-px8 fs-8 tdChild1-bg-lightGray tdChild1-fw-bold vertical-middle-all">
+                <col style="width:15%;">
+                <col>
+
+                <!-- 가입일 선택 Block -->
+                <tr>
+                    <td>가입일</td>
+                    <td>
+                        <!-- 어느 날짜를 기준으로 검색할 것인지 체크 -->
+                        <input type="date" id="firstDay" name="firstDay"> -
+                        <input type="date" id="lastDay" name="lastDay">
+
+                        <!-- 버튼 클릭시 위에 date input 값이 변하게 됨 -->
+                        <input type="hidden" name="dayNum" value="0">
+                        <span class="p-0 ms-2">
+                            <input type="radio" name="dayType" id="today" value="today" onclick="today();"
+                                   class="d-none">
+                            <label for="today" class="border border-black py-1 px-2">오늘</label>
+                            <input type="radio" name="dayType" id="week" value="week" onclick="week();"
+                                   class="d-none">
+                            <label for="week" class="border border-black py-1 px-2">1주일</label>
+                            <input type="radio" name="dayType" id="month1" value="month1" onclick="month1();"
+                                   class="d-none">
+                            <label for="month1" class="border border-black py-1 px-2">1개월</label>
+                            <input type="radio" name="dayType" id="month3" value="month3" onclick="month3();"
+                                   class="d-none">
+                            <label for="month3" class="border border-black py-1 px-2">3개월</label>
+                            <input type="radio" name="dayType" id="month6" value="month6" onclick="month6();"
+                                   class="d-none">
+                            <label for="month6" class="border border-black py-1 px-2">6개월</label>
+                        </span>
+                    </td>
+                </tr>
+
+                <!-- 생일 월 선택 Block -->
+                <tr>
+                    <td>생일</td>
+                    <td>
+                        <select id="birth" class="w-15">
+                            <option value="">전체</option>
+                            <option value="1">1월</option>
+                            <option value="2">2월</option>
+                            <option value="3">3월</option>
+                            <option value="4">4월</option>
+                            <option value="5">5월</option>
+                            <option value="6">6월</option>
+                            <option value="7">7월</option>
+                            <option value="8">8월</option>
+                            <option value="9">9월</option>
+                            <option value="10">10월</option>
+                            <option value="11">11월</option>
+                            <option value="12">12월</option>
+                        </select>
+                    </td>
+                </tr>
+
+                <!-- 회원 적립금 선택 Block -->
+                <tr>
+                    <td>적립금</td>
+                    <td>
+                        <input type="text" id="plusPay" name="plusPay">원 이상
+                    </td>
+                </tr>
+
+                <!-- 검색할 Text 입력 Block -->
+                <tr>
+                    <td>검색어</td>
+                    <td>
+                        <select id="type" name="srhType" class="px-2 py-1">
+                            <option value="0">전체</option>
+                            <option value="1">이름</option>
+                            <option value="1">아이디</option>
+                        </select>
+                        <input type="hidden" name="searchType" value="0">
+                        <input type="search" id="srch" name="srch">
+                    </td>
+                </tr>
+            </table>
+
+            <!-- 버튼 리스트(Button List Block) -->
+            <div class="w-100 text-center mt-10 mb-20">
+                <input type = "submit" value = "검색" class="blackBaseButton w-15 py-10 border-0 ">
+            </div>
+        </form>
+
+        <!-- 회원 검색 결과 목록(SearchResult Member List) -->
+        <section class="w-95 mx-auto bg-white mb-50 pb-15" >
+            <form action = "h_productdeletePro" method = "post" name = "completeForm">
+                <input type = "hidden" name = "pageNum" value = "${pageNum}">
+
+                <!-- MemberList Top Menu -->
+                <div th:replace="fragments/host_common :: boardTopList"></div>
+
+                <!-- 회원 목록 Block -->
+                <table class="table text-center fs-75 w-98 mx-auto bg-white border-bottom-1-ccc border-top-1-ccc td-border-bottom-1-ccc vertical-middle-all a-tag-css">
+                    <thead>
+                    <tr class="fw-bold border-0 td-py25 td-px15">
+                        <td>번호</td>
+                        <td>회원구분</td>
+                        <td>이름</td>
+                        <td>아이디</td>
+                        <td>이메일</td>
+                        <td>휴대폰번호</td>
+                        <td>가입일</td>
+                        <td>적립금</td>
+                        <td>방문횟수</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!--<th:block th:if="${srhCnt > 0}">-->
+                    <tr class = "text-center td-py10 td-px15"><!--th:each="list:${list}"-->
+                        <td>${number}</td> <!--<c:set var = "number" value = "${number-1}"/>-->
+                        <td>개인</td>
+                        <td>
+                            <a th:href="@{/host/memberView}"
+                               th:text="|김선우|"> <!--href = "h_productForm?num=${list.num}&number=${number+1}&pageNum=${pageNum}"-->
+                                ${list.name}
+                            </a></td>
+                        <td>${list.id}</td>
+                        <td th:text="${'kim@naver.com'}">${list.email}</td>
+                        <td><b th:text="|010-1234-5678|">${list.hp}</b></td>
+                        <td th:text="${#dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm')}">${list.reg_date}</td>
+                        <td th:text="|1500|">${list.plus}</td>
+                        <td th:text="${15}">${list.visitcnt}</td>
+                    </tr>
+                    <!--</th:block>-->
+                    <!--<tr class = "text-center td-py10 td-px15">
+                      <td colspan = "10">
+                        게시글이 없습니다. 글을 작성해주세요!!
+                      </td>
+                    </tr>-->
+                    </tbody>
+                </table>
+
+                <!-- memberList Bottom Menu -->
+                <div th:replace="fragments/host_common :: boardBottomList(name='product')"></div>
+            </form>
+        </section>
+    </div>
+</div>
+
+<!-- using Javascript, Bootstrap, JQuery -->
+<footer th:replace="fragments/host_common :: footer"></footer>
+</body>
+</html>

@@ -49,4 +49,16 @@ public class HostController {
     public String orderList() {
         return "/host/order/host_orderList";
     }
+
+    /* 회원 */
+    // 회원 목록
+    @GetMapping("/memberList")
+    public String memberList() {
+        return "/host/member/host_memberList";
+    }
+    // 회원 수정
+    @GetMapping("/memberView")
+    public String memberView() {
+        return "/host/member/host_memberView";
+    }
 }

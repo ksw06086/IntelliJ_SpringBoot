@@ -51,7 +51,7 @@
     <div class="flex-fill"><a th:href = "@{/hostMain}">홈</a></div>
     <div class="flex-fill"><a th:href = "@{/host/productList}">상품</a></div>
     <div class="flex-fill"><a th:href = "@{/host/orderList}">주문</a></div>
-    <div class="flex-fill"><a href = "h_member">회원</a></div>
+    <div class="flex-fill"><a th:href="@{/host/memberList}">회원</a></div>
     <div class="flex-fill"><a href = "boardView">운영</a></div>
     <div class="flex-fill"><a href = "h_clicktotal">통계</a></div>
     <div class="flex-fill"></div>
@@ -83,6 +83,16 @@
         <td>&emsp;<a th:href="@{/host/orderList}">주문관리</a></td>
       </tr>
     </table>
+
+    <!-- 회원 Category일 경우의 sidebar 목록 -->
+    <table th:if="${name == 'member'}" id = "memberMenu" class="w-100 border-0 m-0 p-0 td-py10 td-px15 td-border-bottom-1-ccc fs-8">
+      <tr class="border-bottom-3-ccc">
+        <td><b>·회원</b></td>
+      </tr>
+      <tr>
+        <td>&emsp;<a th:href="@{/host/memberList}">회원관리</a></td>
+      </tr>
+    </table>
   </div>
 </aside>
 
@@ -112,7 +122,7 @@
 <div class="position-relative w-98 pt-10 mx-auto" th:fragment="boardBottomList(name)">
     <!-- 삭제 버튼 Block -->
     <div class="position-absolute top-0 left-0"
-    th:if="${name != 'order'}">
+    th:if="${name != 'order' && name != 'member'}">
       <input type = "submit" value = "삭제" class="blackButton px-15">
     </div>
 
