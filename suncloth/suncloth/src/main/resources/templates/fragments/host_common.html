@@ -13,6 +13,12 @@
   <link th:href="@{/css/common_css.css}" rel="stylesheet"> <!-- 클래스 변수설정 css -->
   <link th:href="@{/css/host_sidebar.css}" rel="stylesheet"> <!-- host_sidebar css -->
   <link th:href="${title} == 'main'? @{/css/host_main.css}" rel="stylesheet"> <!-- host_main page -->
+
+  <!-- Total Page Chat API -->
+  <script type="text/javascript" src = "https://www.gstatic.com/charts/loader.js"></script>
+  <script>
+    google.charts.load('current', {packages:['corechart']});
+  </script>
 </head>
 
 <body>
@@ -53,7 +59,7 @@
     <div class="flex-fill"><a th:href = "@{/host/orderList}">주문</a></div>
     <div class="flex-fill"><a th:href="@{/host/memberList}">회원</a></div>
     <div class="flex-fill"><a th:href="@{/host/boardAllList}">운영</a></div>
-    <div class="flex-fill"><a href = "h_clicktotal">통계</a></div>
+    <div class="flex-fill"><a th:href="@{/host/clickTotal}">통계</a></div>
     <div class="flex-fill"></div>
   </div>
 </nav>
@@ -113,6 +119,45 @@
       </tr>
       <tr>
         <td>&emsp;<a th:href="@{/host/boardList(name='REVIEW')}">후기</a></td>
+      </tr>
+    </table>
+
+    <!-- 통계 Category일 경우의 sidebar 목록 -->
+    <table th:if="${name == 'total'}" id = "totalMenu" class="w-100 border-0 m-0 p-0 td-py10 td-px15 td-border-bottom-1-ccc fs-8">
+      <tr class="border-bottom-3-ccc">
+        <td><b>·통계</b></td>
+      </tr>
+      <tr>
+        <td>&emsp;<a th:href="@{/host/clickTotal}">방문자 분석</a></td>
+      </tr>
+      <tr>
+        <td>&emsp;회원 분석</td>
+      </tr>
+      <tr>
+        <td>&emsp;&emsp;<a th:href="@{/host/boardList(name='NOTICE')}">신규회원 분석</a></td>
+      </tr>
+      <tr>
+        <td>&emsp;&emsp;<a th:href="@{/host/boardList(name='NOTICE')}">회원 적립금 분석</a></td>
+      </tr>
+
+      <tr>
+        <td>&emsp;상품 분석</td>
+      </tr>
+      <tr>
+        <td>&emsp;&emsp;<a th:href="@{/host/boardList(name='NOTICE')}">카테고리 분석</a></td>
+      </tr>
+      <tr>
+        <td>&emsp;&emsp;<a th:href="@{/host/boardList(name='NOTICE')}">판매순위 분석</a></td>
+      </tr>
+
+      <tr>
+        <td>&emsp;매출 분석</td>
+      </tr>
+      <tr>
+        <td>&emsp;&emsp;<a th:href="@{/host/boardList(name='NOTICE')}">주문통계</a></td>
+      </tr>
+      <tr>
+        <td>&emsp;&emsp;<a th:href="@{/host/boardList(name='NOTICE')}">매출통계</a></td>
       </tr>
     </table>
   </div>

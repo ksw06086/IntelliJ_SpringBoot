@@ -89,4 +89,11 @@ public class HostController {
         model.addAttribute("name", name);
         return "/host/board/host_boardView";
     }
+
+    /* 통계 */
+    // 방문자 횟수 분석
+    @GetMapping("/clickTotal")
+    public String clickTotal() {
+        return "/host/total/host_clickTotal";
+    }
 }
