@@ -103,19 +103,16 @@
         <td>&emsp;<a th:href="@{/host/boardAllList}">게시판 리스트</a></td>
       </tr>
       <tr>
-        <td>&emsp;<a th:href="@{/host/boardList}">공지사항</a></td>
+        <td>&emsp;<a th:href="@{/host/boardList(name='NOTICE')}">공지사항</a></td>
       </tr>
       <tr>
-        <td>&emsp;<a th:href="@{/host/boardList}">FAQ</a></td>
+        <td>&emsp;<a th:href="@{/host/boardList(name='FAQ')}">FAQ</a></td>
       </tr>
       <tr>
-        <td>&emsp;<a th:href="@{/host/boardList}">Q&A</a></td>
+        <td>&emsp;<a th:href="@{/host/boardList(name='Q&A')}">Q&A</a></td>
       </tr>
       <tr>
-        <td>&emsp;<a th:href="@{/host/boardList}">후기</a></td>
-      </tr>
-      <tr>
-        <td>&emsp;<a th:href="@{/host/noWard}">금칙어관리</a></td>
+        <td>&emsp;<a th:href="@{/host/boardList(name='REVIEW')}">후기</a></td>
       </tr>
     </table>
   </div>

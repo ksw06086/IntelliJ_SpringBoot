@@ -63,9 +63,30 @@ public class HostController {
     }
 
     /* 운영 */
-    // 운영 리스트
+    // 모든 게시판 리스트
     @GetMapping("/boardAllList")
     public String boardAllList() {
         return "/host/board/host_boardAllList";
+    }
+    // 게시판 리스트
+    @GetMapping("/boardList")
+    public String boardList(Model model
+            , @RequestParam(required = false) String name) {
+        model.addAttribute("name", name);
+        return "/host/board/host_boardList";
+    }
+    // 게시판 등록
+    @GetMapping("/boardInput")
+    public String boardInput(Model model
+            , @RequestParam(required = false) String name) {
+        model.addAttribute("name", name);
+        return "/host/board/host_boardInput";
+    }
+    // 게시판 수정/삭제
+    @GetMapping("/boardView")
+    public String boardView(Model model
+            , @RequestParam(required = false) String name) {
+        model.addAttribute("name", name);
+        return "/host/board/host_boardView";
     }
 }

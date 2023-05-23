@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/host_common :: head('boardInput')">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body class="hostBody">
+<!-- host page header(host_common.html) -->
+<header th:replace="fragments/host_common :: header"></header>
+
+<!-- host page navi -->
+<nav th:replace="fragments/host_common :: navi"></nav>
+
+<!-- 본문 내용(Body Block) -->
+<div class="d-flex">
+    <!-- Sidebar Block -->
+    <div style="width:300px;">
+        <aside th:replace="fragments/host_common :: sidebar('board')"></aside>
+    </div>
+    <div class="flex-fill">
+        <form method="post" name="productForm" enctype="multipart/form-data">
+        <div class="position-relative text-center w-95 mx-auto my-15 vertical-middle-all">
+            <p class="fs-15 p-0 m-0"><b>[[${name}]] 게시글 수정</b></p>
+            <p class="position-absolute m-0 top-0 end-0">
+                <input type="submit" value="삭제" class="blueBaseBtn px-10 py-10"
+                       onclick = "javascript: productForm.action = 'h_productPro'">
+                <input type="submit" value="저장" class="blueBaseBtn px-10 py-10"
+                       onclick = "javascript: productForm.action = 'h_productPro'">
+            </p>
+        </div>
+
+        <div class="bg-white w-95 mx-auto mb-20 pb-15">
+            <!-- 게시글 기본 정보 Title Block -->
+            <div class="w-97 mx-auto bg-white px-10 py-15">
+                <b>·[[${name}]]정보</b>
+            </div>
+
+            <!-- 게시글 기본 정보 Input Block -->
+            <table class="w-97 mx-auto bg-white border-top-1-ccc border-bottom-1-ccc td-py15 td-px10 fs-8 td-border-bottom-1-ccc tdChild1-fw-bold tdChild1-bg-lightGray vertical-middle-all">
+                <col style = "width:20%">
+                <col>
+                <!-- 게시글의 번호 -->
+                <tr>
+                    <td>번호</td>
+                    <td th:text="|1|">${number}</td>
+                </tr>
+                <!-- 게시글의 작성자 -->
+                <tr>
+                    <td>작성자</td>
+                    <td th:text="|관리자(host)|">관리자(${sessionScope.memId})</td>
+                </tr>
+                <!-- 게시글의 제목 -->
+                <tr>
+                    <td>제목</td>
+                    <td th:text="|오늘 너무 예쁘다|">${vo.subject}</td>
+                </tr>
+                <!-- 게시글의 내용 -->
+                <tr>
+                    <td><label for="content">내용</label></td>
+                    <td>
+                        <textarea rows="20" cols="95" name="content" id="content" class="w-100 resize-vertical border-0">글 내용을 입력하세요.</textarea>
+                    </td>
+                </tr>
+
+                <!-- 상품 이미지 file 추가 -->
+                <tr>
+                    <td>첨부파일1</td>
+                    <td><input type = "file" name = "file1"></td>
+                </tr>
+                <tr>
+                    <td>첨부파일2</td>
+                    <td><input type = "file" name = "file2"></td>
+                </tr>
+                <tr>
+                    <td>첨부파일3</td>
+                    <td><input type = "file" name = "file3"></td>
+                </tr>
+                <tr>
+                    <td>첨부파일4</td>
+                    <td><input type = "file" name = "file4"></td>
+                </tr>
+                <tr>
+                    <td>첨부파일5</td>
+                    <td><input type = "file" name = "file5"></td>
+                </tr>
+            </table>
+        </div>
+        </form>
+    </div>
+</div>
+
+<!-- using Javascript, Bootstrap, JQuery -->
+<footer th:replace="fragments/host_common :: footer"></footer>
+</body>
+</html>
