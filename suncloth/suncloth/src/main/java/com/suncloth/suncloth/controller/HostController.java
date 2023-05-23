@@ -61,4 +61,11 @@ public class HostController {
     public String memberView() {
         return "/host/member/host_memberView";
     }
+
+    /* 운영 */
+    // 운영 리스트
+    @GetMapping("/boardAllList")
+    public String boardAllList() {
+        return "/host/board/host_boardAllList";
+    }
 }

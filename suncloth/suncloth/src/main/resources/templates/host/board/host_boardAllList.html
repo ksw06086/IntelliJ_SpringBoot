@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/host_common :: head('boardAllList')">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body class="hostBody h-100">
+<!-- host page header(host_common.html) -->
+<header th:replace="fragments/host_common :: header"></header>
+
+<!-- host page navi -->
+<nav th:replace="fragments/host_common :: navi"></nav>
+
+<!-- 본문 내용(Body Block) -->
+<div class="d-flex h-100">
+    <!-- Sidebar Block -->
+    <div style="width:300px;">
+        <aside th:replace="fragments/host_common :: sidebar('board')"></aside>
+    </div>
+    <div class="flex-fill">
+        <div class="position-relative text-center w-95 mx-auto my-15 vertical-middle-all">
+            <p class="fs-15 p-0 m-0"><b>게시판 리스트</b></p>
+        </div>
+
+        <!-- 상품 검색 결과 목록(SearchResult Product List) -->
+        <section class="w-95 mx-auto bg-white mb-50 pb-12 pt-20" >
+            <!-- 모든 게시판 목록 Block -->
+            <table class="table text-center fs-75 w-98 mx-auto bg-white border-bottom-1-ccc border-top-1-ccc td-border-bottom-1-ccc vertical-middle-all a-tag-css">
+                <thead>
+                <tr class="fw-bold border-0 td-py10 td-px15 bg-EAECEE">
+                    <td>번호</td>
+                    <td>게시판 아이디</td>
+                    <td>게시판 이름</td>
+                    <td>새글/총게시글</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class = "text-center td-py10 td-px15">
+                    <td>4</td>
+                    <td><a href = "h_notice?choose=1">notice</a></td>
+                    <td>공지</td>
+                    <td>0/0</td>
+                </tr>
+                <tr class = "text-center td-py10 td-px15">
+                    <td>3</td>
+                    <td><a href = "h_FAQ?choose=2">FAQ</a></td>
+                    <td>FAQ</td>
+                    <td>0/0</td>
+                </tr>
+                <tr class = "text-center td-py10 td-px15">
+                    <td>2</td>
+                    <td><a href = "h_QnA?choose=3">Q&A</a></td>
+                    <td>문의</td>
+                    <td>0/0</td>
+                </tr>
+                <tr class = "text-center td-py10 td-px15">
+                    <td>1</td>
+                    <td><a href = "h_review?choose=4">review</a></td>
+                    <td>후기</td>
+                    <td>0/0</td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+</div>
+
+<!-- using Javascript, Bootstrap, JQuery -->
+<footer th:replace="fragments/host_common :: footer"></footer>
+</body>
+</html>
