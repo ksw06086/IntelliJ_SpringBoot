@@ -81,7 +81,7 @@
             <a th:href="@{/board/boardList(name='FAQ')}">FAQ</a>
             <a th:href="@{/board/boardList(name='Q&A')}">Q&A</a>
             <a th:href="@{/board/boardList(name='REVIEW')}">후기</a>
-            <a th:href="@{/hostMain}">host</a>
+            <a th:href="@{/hostMain}" th:if="${#authentication.getName() == 'host'}">host</a>
             <a>delivery</a>
         </div>
     </div>
@@ -167,7 +167,7 @@
     </div>
 
     <div class="text-center">
-        <p><b class="border-bottom-3-ccc" th:text="|${title}|"></b></p>
+        <p><b class="border-bottom-3-ccc fs-2" th:text="|${title}|"></b></p>
     </div>
 
     <div class="mt-15 text-center fs-75 color-gray" th:if="${title == 'NOTICE'}">

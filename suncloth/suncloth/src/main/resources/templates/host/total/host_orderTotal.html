@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/host_common :: head('clickTotal')">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body class="hostBody">
+<!-- host page header(host_common.html) -->
+<header th:replace="fragments/host_common :: header"></header>
+
+<!-- host page navi -->
+<nav th:replace="fragments/host_common :: navi"></nav>
+
+<!-- 본문 내용(Body Block) -->
+<div class="d-flex">
+    <!-- Sidebar Block -->
+    <div style="width:300px;">
+        <aside th:replace="fragments/host_common :: sidebar('total')"></aside>
+    </div>
+    <div class="flex-fill">
+        <div class="position-relative text-center w-95 mx-auto my-15 vertical-middle-all">
+            <p class="fs-15 p-0 m-0"><b>주문 통계</b></p>
+        </div>
+
+        <!--  검색 선택 부분(Search Select Box) -->
+        <form action="h_productselect" method="post" name="searchForm">
+            <table class="w-95 mx-auto bg-white border-top border-bottom border-dark td-py10 td-px8 fs-8 tdChild1-bg-lightGray tdChild1-fw-bold vertical-middle-all">
+                <col style="width:15%;">
+                <col>
+
+                <!-- 기간 선택 Block -->
+                <tr>
+                    <td>기간</td>
+                    <td>
+                        <select id = "year" name = "year" style = "padding:2px; vertical-align:middle;">
+                            <option value = "2025">2025년</option>
+                            <option value = "2024">2024년</option>
+                            <option value = "2023">2023년</option>
+                            <option value = "2022">2022년</option>
+                            <option value = "2021">2021년</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </form>
+
+        <!-- 주문 통계 검색 결과 Block -->
+        <div class="bg-white w-95 mx-auto mt-15 mb-20 py-15">
+            <!-- 주문 총 통계 Block -->
+            <table class="text-center fs-75 w-97 mx-auto border-bottom-1-ccc border-top-1-ccc td-border-all-1-ccc">
+                <col style = "width:33%;">
+                <col style = "width:33%;">
+                <col style = "width:34%;">
+                <tr class="bg-EAECEE fw-bold td-py10 td-px15">
+                    <td>총 구매자수</td>
+                    <td>총 구매건수</td>
+                    <td>총 판매금액</td>
+                </tr>
+                <tr class="td-py10 td-px15">
+                    <td th:text="|15|">${omtotal[12]}</td>
+                    <td th:text="|150|">${octotal[12]}</td>
+                    <td th:text="|15000000|">${optotal[12]}</td>
+                </tr>
+            </table>
+
+            <!-- 월별 주문 현황 Title Block -->
+            <div class="w-97 mx-auto bg-white px-10 py-15">
+                <b>·월별 주문 현황</b>
+            </div>
+
+            <!-- 월별 방문자분석 / 주문건수 / 주문금액 차트 Block -->
+            <div class="w-97 mx-auto bg-white" style = "display: -webkit-box;">
+                <table class="mx-auto">
+                    <tr>
+                        <td id = "firstChat"></td>
+                        <td id = "secondChat"></td>
+                        <td id = "thirdChat"></td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- 월별 주문 총 통계 Block -->
+            <table class="text-center fs-75 w-97 mx-auto border-bottom-1-ccc border-top-1-ccc td-border-all-1-ccc mt-15">
+                <col style = "width:25%;">
+                <col style = "width:25%;">
+                <col style = "width:25%;">
+                <col style = "width:25%;">
+                <tr class="bg-EAECEE fw-bold td-py10 td-px15">
+                    <td>월별</td>
+                    <td>구매자수</td>
+                    <td>구매건수</td>
+                    <td>판매금액</td>
+                </tr>
+                <tr class="td-px15 td-py10" th:each="num : ${#numbers.sequence(0, 11)}">
+                    <td>[[${num + 1}]]월</td>
+                    <td th:text="|${num}|">${omtotal[0]}</td>
+                    <td th:text="|${num}|">${octotal[0]}</td>
+                    <td th:text="|${num}|">${optotal[0]}</td>
+                </tr>
+                <tr class="bg-black text-white td-px15 td-py10">
+                    <td>합계</td>
+                    <td>${omtotal[12]}</td>
+                    <td>${octotal[12]}</td>
+                    <td>${optotal[12]}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Chat API 사용 부분 -->
+<script type="text/javascript">
+    google.charts.setOnLoadCallback(drawChartFirst);
+    google.charts.setOnLoadCallback(drawChartSecond);
+    google.charts.setOnLoadCallback(drawChartThird);
+
+    var firstChart_options = {
+        title: '월별 방문자 분석',
+        width : 350,
+        height : 350,
+        bar : {
+            groupWidth : '50%'
+        },
+        series: {
+            0: {color:'#ccc'},
+            1: {color: '#c784de'}
+        }
+    }
+
+    function drawChartFirst() {
+        var data = google.visualization.arrayToDataTable([
+            ['Element', '방문자 수'],
+            ['1월', 5],
+            ['2월', 2],
+            ['3월', 3],
+            ['4월', 1],
+            ['5월', 9],
+            ['6월', 3],
+            ['7월', 1],
+            ['8월', 15],
+            ['9월', 9],
+            ['10월', 2],
+            ['11월', 15],
+            ['12월', 11], /*${click12}*/
+        ]);
+
+        var firstChart = new google.visualization.PieChart(document.getElementById('firstChat'));
+        firstChart.draw(data, firstChart_options);
+    }
+
+    var secondChart_options = {
+        title : '주문 건수',
+        width : 350,
+        height : 350,
+        bar : {
+            groupWidth : '100%'
+        },
+        series: {
+            0: {color:'#ccc'},
+            1: {color: '#c784de'}
+        }
+    }
+
+    function drawChartSecond(){
+        var data = google.visualization.arrayToDataTable([
+            ['Element', '주문건수'],
+            ['1월', 1],
+            ['2월', 2],
+            ['3월', 3],
+            ['4월', 4],
+            ['5월', 5],
+            ['6월', 6],
+            ['7월', 7],
+            ['8월', 8],
+            ['9월', 9],
+            ['10월', 10],
+            ['11월', 11],
+            ['12월', 12],/*parseInt(${octotal[11]})*/
+        ]);
+
+        var secondChart = new google.visualization.PieChart(document.getElementById('secondChat'));
+        secondChart.draw(data, secondChart_options);
+    }
+
+    var thirdChart_options = {
+        title : '주문금액',
+        width : 350,
+        height : 350,
+        bar : {
+            groupWidth : '100%'
+        },
+        series: {
+            0: {color:'#ccc'},
+            1: {color: '#c784de'}
+        }
+    }
+
+    function drawChartThird(){
+        var data = google.visualization.arrayToDataTable([
+            ['Element', '주문금액'],
+            ['1월', 12000],
+            ['2월', 2000],
+            ['3월', 6000],
+            ['4월', 9000],
+            ['5월', 12000],
+            ['6월', 10000],
+            ['7월', 12000],
+            ['8월', 12000],
+            ['9월', 16000],
+            ['10월', 11000],
+            ['11월', 15000],
+            ['12월', 12000], /*parseInt(${optotal[11]})*/
+        ]);
+
+        var secondChart = new google.visualization.PieChart(document.getElementById('thirdChat'));
+        secondChart.draw(data, thirdChart_options);
+    }
+</script>
+
+<!-- using Javascript, Bootstrap, JQuery -->
+<footer th:replace="fragments/host_common :: footer"></footer>
+</body>
+</html>
