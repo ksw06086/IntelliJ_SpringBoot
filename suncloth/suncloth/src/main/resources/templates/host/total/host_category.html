@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/host_common :: head('main')">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body class="hostBody h-100">
+<!-- host page header(host_common.html) -->
+<header th:replace="fragments/host_common :: header"></header>
+
+<!-- host page navi -->
+<nav th:replace="fragments/host_common :: navi"></nav>
+
+<!-- 본문 내용(Body Block) -->
+<div class="d-flex h-100">
+    <!-- Sidebar Block -->
+    <div style="width:300px;">
+        <aside th:replace="fragments/host_common :: sidebar('total')"></aside>
+    </div>
+    <div class="flex-fill">
+        <div class="position-relative text-center w-95 mx-auto my-15 vertical-middle-all">
+            <p class="fs-15 p-0 m-0"><b>카테고리 상품 분석</b></p>
+        </div>
+
+        <!--  검색 선택 부분(Search Select Box) -->
+        <form action="h_productselect" method="post" name="searchForm">
+            <table class="w-95 mx-auto bg-white border-top border-bottom border-dark td-border-bottom-1-ccc td-py10 td-px8 fs-8 tdChild1-bg-lightGray tdChild1-fw-bold vertical-middle-all mb-20">
+                <col style="width:15%;">
+                <col>
+
+                <!-- 기간 검색 Block -->
+                <tr>
+                    <td>기간검색</td>
+                    <td>
+                        <select id = "year" name = "yearname" style = "padding:2px; vertical-align:middle;">
+                            <option value = "2025">2025년</option>
+                            <option value = "2024">2024년</option>
+                            <option value = "2023">2023년</option>
+                            <option value = "2022">2022년</option>
+                            <option value = "2021">2021년</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </form>
+
+        <!-- 월별 카테고리 인기순위 현황(All Category Purpose Rank) -->
+        <div class="bg-white w-95 mx-auto mb-20 pb-15">
+            <!-- 월별 카테고리 인기순위 현황 Title Block -->
+            <div class="w-97 mx-auto bg-white px-10 py-15">
+                <b>·월별 카테고리 인기순위 현황</b>
+            </div>
+
+            <!-- 월별 카테고리 인기순위 현황 Block -->
+            <!--<c:set var = "cntsum" value = "0"/> 총 건수 -->
+            <!--<c:set var = "pricesum" value = "0"/> 총 금액 -->
+            <table class="text-center fs-75 w-97 mx-auto border-bottom-1-ccc border-top-1-ccc td-border-all-1-ccc">
+                <col style = "width:20%;">
+                <col style = "width:16%;">
+                <col style = "width:16%;">
+                <col style = "width:16%;">
+                <col style = "width:16%;">
+                <col style = "width:16%;">
+                <tr class="bg-EAECEE fw-bold td-py10 td-px15">
+                    <td rowspan = "2">순위</td> <!-- 5위까지만 -->
+                    <td colspan = "2">구분</td>
+                    <td colspan = "3">전체</td>
+                </tr>
+                <tr class="bg-EAECEE fw-bold td-py10 td-px15">
+                    <td>대분류</td>
+                    <td>중분류</td>
+                    <td>판매수량</td>
+                    <td>판매금액</td>
+                    <td>리뷰</td>
+                </tr>
+                <!--<th:block th:if="${list != null}"></th:block>-->
+                <tr class="td-py10 td-px15"><!--th:each="list:${list}"-->
+                    <td th:text="|1|">${number}</td> <!--<c:set var = "number" value = "${number+1}"/>-->
+                    <td th:text="|asclo|">${list.bigname}</td>
+                    <td th:text="|asclo Pants|">${list.mediname}</td>
+                    <td th:text="|15|">${list.cnttotal}</td>
+                    <td th:text="|150000|">${list.pricetotal}</td>
+                    <td th:text="|10|">${list.cnt}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- using Javascript, Bootstrap, JQuery -->
+<footer th:replace="fragments/host_common :: footer"></footer>
+</body>
+</html>

@@ -96,16 +96,34 @@ public class HostController {
     public String clickTotal() {
         return "/host/total/host_clickTotal";
     }
-
     // 신규회원 분석
     @GetMapping("/newMemberTotal")
     public String newMemberTotal() {
         return "/host/total/host_newMemberTotal";
     }
-
     // 회원 적립금 분석
     @GetMapping("/memberPlusPay")
     public String memberPlusPay() {
         return "/host/total/host_memberPlusPay";
+    }
+    // 카테고리 분석
+    @GetMapping("/category")
+    public String category() {
+        return "/host/total/host_category";
+    }
+    // 판매순위 분석
+    @GetMapping("/saleRank")
+    public String saleRank() {
+        return "/host/total/host_saleRank";
+    }
+    // 주문 통계
+    @GetMapping("/orderTotal")
+    public String orderTotal() {
+        return "/host/total/host_orderTotal";
+    }
+    // 매출 통계
+    @GetMapping("/saleTotal")
+    public String saleTotal() {
+        return "/host/total/host_saleTotal";
     }
 }
