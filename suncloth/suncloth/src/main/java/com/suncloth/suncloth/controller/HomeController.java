@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Collection;
 
@@ -50,4 +51,26 @@ public class HomeController {
     public String hostMain() {
         return "host_main";
     }
+
+    // sc5Form
+//    @GetMapping("/sc5Form")
+//    public String sc5Form(Model model) {
+//        model.addAttribute("bookDTO", new BookDTO());
+//        return "/post/sc5Form";
+//    }
+//    // sc5View
+//    @PostMapping("/sc5View")
+//    public String sc5View(BookDTO bookDTO, Model model) {
+//        // model에 데이터 추가
+//        model.addAttribute("heading", "Book Information");
+//
+//        // userDTO 객체를 통해서 출력
+//        System.out.println("---------------------------------");
+//        System.out.println( bookDTO.getTitle() );
+//        System.out.println( bookDTO.getAuthor() );
+//        System.out.println( bookDTO.getPublisher() );
+//        System.out.println( bookDTO.getDate() );
+//        System.out.println("---------------------------------");
+//        return "/post/sc5View";
+//    }
 }
