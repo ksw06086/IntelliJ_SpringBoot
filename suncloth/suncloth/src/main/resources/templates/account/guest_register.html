@@ -63,7 +63,8 @@
             </th>
             <td>
                 <div class="mx-3">
-                    <input type="password" id="pwdChkInput" name="passwordChk" class="form-control">
+                    <input type="password" id="pwdChkInput" name="passwordChk" class="form-control" th:oninput="pwdChkCheck(this.value)">
+                    <div id="pwdChkDiv" class="mt-2"></div>
                 </div>
             </td>
         </tr>
@@ -337,6 +338,7 @@
     let strongPassword = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})');
     let mediumPassword = new RegExp('((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,}))|((?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9])(?=.{8,}))');
 
+    // ID 중복검사
     function idCheck(id){
         const idForm = document.getElementById("IDForm");
         const idDiv = document.getElementById("IDdiv");
@@ -363,6 +365,7 @@
         });
     }
 
+    // PWD 보안 강함, 보통, 약함
     function pwdCheck(pwd){
         const pwdDiv = document.getElementById("pwdDiv");
         if(pwd === ""){
@@ -377,6 +380,19 @@
         } else {
             pwdDiv.style.color = "red";
             pwdDiv.textContent = "위험";
+        }
+    }
+
+    // PWDChk 일치 확인
+    function pwdChkCheck(pwdChk){
+        const pwd = document.getElementById("pwdInput").value;
+        const pwdChkDiv = document.getElementById("pwdChkDiv");
+        if(pwd !== pwdChk){
+            pwdChkDiv.style.color = "red";
+            pwdChkDiv.textContent = "비밀번호가 일치하지 않습니다.";
+        } else {
+            pwdChkDiv.style.color = "green";
+            pwdChkDiv.textContent = "비밀번호가 일치합니다.";
         }
     }
 
