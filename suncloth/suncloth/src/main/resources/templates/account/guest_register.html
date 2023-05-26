@@ -18,6 +18,7 @@
 
 <!-- 회원가입을 위한 정보 블럭(Register Form) -->
 <form class="body row g-3" novalidate th:action="@{/account/register_finish}" method="post">
+    <!-- 기본정보 -->
     <table class="table caption-top text-start vertical-middle-all">
         <caption class="text-secondary ms-4"><h5><b>&lt;기본정보&gt;</b></h5></caption>
         <colgroup>
@@ -160,11 +161,11 @@
             <td>
                 <div class="mx-3 d-flex">
                     <input type="text" id="idNameInput" name="idName"
-                           th:value="${name=='PROFILE'}? 'kim'" class="form-control">
+                           th:value="${name=='PROFILE'}? 'kim'" class="form-control" required>
                     <span>&nbsp;@&nbsp;</span>
                     <input type="text" id="urlCodeInput" name="urlCode"
-                           th:value="${name=='PROFILE'}? 'naver.com'" class="form-control">
-                    <select class="form-select" id="urlSelect" name="urlSelect" aria-label="Default select example">
+                           th:value="${name=='PROFILE'}? 'naver.com'" class="form-control" required>
+                    <select class="form-select" id="urlSelect" name="urlSelect" aria-label="Default select example" th:onchange="urlSelected()">
                         <option selected>직접입력</option>
                         <option value="naver.com">naver.com</option>
                         <option value="daum.com">daum.com</option>
@@ -227,12 +228,12 @@
             <td th:if="${name=='JOIN US'}">
                 <div>
                     <div class="form-floating mx-3 mb-2">
-                        <input type="text" id="accHostInput" name="accHost" class="form-control">
+                        <input type="text" id="accHostInput" name="accHost" class="form-control" required>
                         <label for="accHostInput">AccHost</label>
                     </div>
                 </div>
                 <div class="form-floating mx-3 mb-2">
-                    <select class="form-select" id="bankInput" name="bank">
+                    <select class="form-select" id="bankInput" name="bank" required>
                         <option selected>==선택==</option>
                         <option value="기업">기업</option>
                         <option value="국민">국민</option>
@@ -246,7 +247,7 @@
                     <label for="bankInput">Bank</label>
                 </div>
                 <div class="form-floating mx-3 mb-2">
-                    <input type="text" id="accNumberInput" name="accNumber" class="form-control">
+                    <input type="text" id="accNumberInput" name="accNumber" class="form-control" required>
                     <label for="accNumberInput">accNumber</label>
                 </div>
             </td>
@@ -279,7 +280,7 @@
         </div>
         <div class="my-3">
             <div class="d-flex flex-row-reverse">
-                <input class="form-check-input" type="checkbox" id="useAgree" name="agrees">
+                <input class="form-check-input" type="checkbox" id="useAgree" name="agrees" th:onchange="agreeCheck()">
                 <label class="form-check-label" for="useAgree"> 동의함 </label>
                 <span class="text-danger me-1">*</span>
             </div>
@@ -303,14 +304,14 @@
         </div>
         <div class="my-3">
             <div class="d-flex flex-row-reverse">
-                <input class="form-check-input" type="checkbox" id="dataAgree" name="agrees">
+                <input class="form-check-input" type="checkbox" id="dataAgree" name="agrees" th:onchange="agreeCheck()">
                 <label class="form-check-label" for="dataAgree"> 동의함 </label>
                 <span class="text-danger me-1">*</span>
             </div>
         </div>
         <div class="mt-4 mb-3">
             <div>
-                <input class="form-check-input" type="checkbox" id="allAgree" name="allAgree">
+                <input class="form-check-input" type="checkbox" id="allAgree" name="allAgree" th:onchange="allCheck()">
                 <label class="form-check-label" for="allAgree"> 전체 동의함 </label>
             </div>
         </div>
@@ -340,7 +341,7 @@
     // 2) 비밀번호 6 자리 이상, 모든 요구 사항을 충족하거나 숫자만 빼고 나머지를 충족하는 경우
     // 3) 비밀번호 6 자리 이상, 최소 하나 이상의 대소문자, 하나의 숫자, 하나의 특수문자
     let strongPassword = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})');
-    // let mediumPassword = new RegExp('((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,}))|((?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9])(?=.{8,}))');
+    let mediumStrongPassword = new RegExp('((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,}))|((?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9])(?=.{8,}))');
     let mediumPassword = new RegExp('(((?=.*[a-z])|(?=.*[A-Z]))(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,}))');
 
     // *** 휴대폰 번호 정규식 ***
@@ -453,6 +454,43 @@
             formalDiv.style.color = "red";
             formalDiv.textContent = "비밀번호가 일치하지 않습니다.";
         }
+    }
+
+    // Email urlSelect 시 동작 함수
+    function urlSelected() {
+        const urlSelect = document.getElementById("urlSelect");
+        const urlCodeInput = document.getElementById("urlCodeInput");
+        if(urlSelect.value === "0"){
+            urlCodeInput.value = "";
+            urlCodeInput.focus();
+            return false;
+        } else {
+            urlCodeInput.value = urlSelect.value;
+            return false;
+        }
+    }
+
+    /* checkbox 한번에 체크 함수 */
+    function allCheck() {
+        const allAgree = document.getElementById("allAgree");
+        const useAgree = document.getElementById("useAgree");
+        const dataAgree = document.getElementById("dataAgree");
+        if(allAgree.checked){
+            useAgree.checked = true;
+            dataAgree.checked = true;
+        } else {
+            useAgree.checked = false;
+            dataAgree.checked = false;
+        }
+    }
+
+    /* checkbox 제거 시에 all체크 제거 함수 */
+    function agreeCheck() {
+        const allAgree = document.getElementById("allAgree");
+        const useAgree = document.getElementById("useAgree");
+        const dataAgree = document.getElementById("dataAgree");
+        if(!useAgree.checked){ allAgree.checked = false; }
+        else { allAgree.checked = dataAgree.checked; }
     }
 
     // 우편번호 버튼 클릭 기능
