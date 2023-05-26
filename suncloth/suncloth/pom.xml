@@ -103,6 +103,13 @@
 			<version>19.3.0.0</version>
 		</dependency>
 
+		<!-- SMS 문자 인증 API 사이트 nurigo(하루 50건 발송 가능) -->
+		<dependency>
+			<groupId>net.nurigo</groupId>
+			<artifactId>sdk</artifactId>
+			<version>4.2.7</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
