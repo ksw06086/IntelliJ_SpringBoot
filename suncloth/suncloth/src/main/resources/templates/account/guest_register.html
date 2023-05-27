@@ -35,7 +35,7 @@
             </th>
             <td>
                 <div class="mx-3" id="IDForm">
-                    <input type="text" id="idInput" name="username" class="form-control"
+                    <input type="text" id="idInput" name="username" class="form-control" required
                            th:value="${name=='PROFILE'}? 'kim'" th:readonly="${name=='PROFILE'}? 'true'" th:oninput="idCheck(this.value)">
                     <div id="IDdiv"></div>
                 </div>
@@ -50,7 +50,7 @@
             </th>
             <td>
                 <div class="mx-3" id="PWDForm">
-                    <input type="password" id="pwdInput" name="password" class="form-control" th:oninput="pwdCheck(this.value)">
+                    <input type="password" id="pwdInput" name="password" class="form-control" th:oninput="pwdCheck(this.value)" required>
                     <div id="pwdDiv" class="mt-2"></div>
                 </div>
             </td>
@@ -64,7 +64,7 @@
             </th>
             <td>
                 <div class="mx-3" id="PWDChkForm">
-                    <input type="password" id="pwdChkInput" name="passwordChk" class="form-control" th:oninput="pwdChkCheck(this.value)">
+                    <input type="password" id="pwdChkInput" name="passwordChk" class="form-control" th:oninput="pwdChkCheck(this.value)" required>
                     <div id="pwdChkDiv" class="mt-2"></div>
                 </div>
             </td>
@@ -222,18 +222,18 @@
         <tr>
             <th scope="row">
                 <label for="addressInput" class="ms-2 col-form-label">
-                    <span class="text-danger">*</span> Refund Account
+                    Refund Account
                 </label>
             </th>
             <td th:if="${name=='JOIN US'}">
                 <div>
                     <div class="form-floating mx-3 mb-2">
-                        <input type="text" id="accHostInput" name="accHost" class="form-control" required>
+                        <input type="text" id="accHostInput" name="accHost" class="form-control">
                         <label for="accHostInput">AccHost</label>
                     </div>
                 </div>
                 <div class="form-floating mx-3 mb-2">
-                    <select class="form-select" id="bankInput" name="bank" required>
+                    <select class="form-select" id="bankInput" name="bank">
                         <option selected>==선택==</option>
                         <option value="기업">기업</option>
                         <option value="국민">국민</option>
@@ -247,7 +247,7 @@
                     <label for="bankInput">Bank</label>
                 </div>
                 <div class="form-floating mx-3 mb-2">
-                    <input type="text" id="accNumberInput" name="accNumber" class="form-control" required>
+                    <input type="text" id="accNumberInput" name="accNumber" class="form-control">
                     <label for="accNumberInput">accNumber</label>
                 </div>
             </td>
@@ -280,7 +280,7 @@
         </div>
         <div class="my-3">
             <div class="d-flex flex-row-reverse">
-                <input class="form-check-input" type="checkbox" id="useAgree" name="agrees" th:onchange="agreeCheck()">
+                <input class="form-check-input" type="checkbox" id="useAgree" name="agrees" th:onchange="agreeCheck()" required>
                 <label class="form-check-label" for="useAgree"> 동의함 </label>
                 <span class="text-danger me-1">*</span>
             </div>
@@ -304,14 +304,14 @@
         </div>
         <div class="my-3">
             <div class="d-flex flex-row-reverse">
-                <input class="form-check-input" type="checkbox" id="dataAgree" name="agrees" th:onchange="agreeCheck()">
+                <input class="form-check-input" type="checkbox" id="dataAgree" name="agrees" th:onchange="agreeCheck()" required>
                 <label class="form-check-label" for="dataAgree"> 동의함 </label>
                 <span class="text-danger me-1">*</span>
             </div>
         </div>
         <div class="mt-4 mb-3">
             <div>
-                <input class="form-check-input" type="checkbox" id="allAgree" name="allAgree" th:onchange="allCheck()">
+                <input class="form-check-input" type="checkbox" id="allAgree" name="allAgree" th:onchange="allCheck()" required>
                 <label class="form-check-label" for="allAgree"> 전체 동의함 </label>
             </div>
         </div>
