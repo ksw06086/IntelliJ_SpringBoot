@@ -93,18 +93,18 @@
             <td>
                 <div>
                     <div class="mx-3 mb-2 d-flex">
-                        <input type="text" id="addressInput" name="address"
+                        <input type="text" id="addressInput" name="addressNum"
                                th:value="${name=='PROFILE'}? '14451'" class="form-control w-25" required>
                         <button type="button" class="btn btn-outline-secondary" th:onclick="addressSearch()">우편번호</button>
                     </div>
                 </div>
                 <div class="form-floating mx-3 mb-2">
-                    <input type="text" id="subAddressInput" name="subAddress"
+                    <input type="text" id="subAddressInput" name="addressSub"
                            th:value="${name=='PROFILE'}? '서울시 강남구'" class="form-control" required>
                     <label for="subAddressInput">SubAddress</label>
                 </div>
                 <div class="form-floating mx-3 mb-2">
-                    <input type="text" id="detailAddressInput" name="detailAddress"
+                    <input type="text" id="detailAddressInput" name="addressDetail"
                            th:value="${name=='PROFILE'}? '선우아파트 901호'" class="form-control" required>
                     <label for="detailAddressInput">DetailAddress</label>
                 </div>
@@ -113,23 +113,14 @@
         <!-- userPhoneNumber -->
         <tr>
             <th scope="row">
-                <label for="baseHPInput" class="ms-2 col-form-label">
+                <label for="hpInput" class="ms-2 col-form-label">
                     <span class="text-danger">*</span> Phone Number
                 </label>
             </th>
             <td>
                 <div class="mx-3 d-flex">
-                    <select class="form-select w-25" id="baseHPInput" name="baseHP" aria-label="Default select example" required>
-                        <option value="010" th:selected="${name=='PROFILE'}? true">010</option>
-                        <option value="011">011</option>
-                        <option value="012">012</option>
-                    </select>
-                    <span>&nbsp;-&nbsp;</span>
-                    <input type="text" id="secondHPInput" name="secondHP"
-                           th:value="${name=='PROFILE'}? '1234'" class="form-control w-50" required>
-                    <span>&nbsp;-&nbsp;</span>
-                    <input type="text" id="thirdHPInput" name="thirdHP"
-                           th:value="${name=='PROFILE'}? '5678'" class="form-control w-50" required>
+                    <input type="text" id="hpInput" name="hp"
+                           th:value="${name=='PROFILE'}? '010-1234-5678'" class="form-control w-75" required>
                     <button type="button" class="btn btn-outline-secondary w-25" th:onclick="SMSFormal()">인증</button>
                 </div>
             </td>
@@ -151,6 +142,7 @@
                 </div>
             </td>
         </tr>
+
         <!-- Email -->
         <tr>
             <th scope="row">
@@ -160,10 +152,10 @@
             </th>
             <td>
                 <div class="mx-3 d-flex">
-                    <input type="text" id="idNameInput" name="idName"
+                    <input type="text" id="idNameInput" name="emailIdName"
                            th:value="${name=='PROFILE'}? 'kim'" class="form-control" required>
                     <span>&nbsp;@&nbsp;</span>
-                    <input type="text" id="urlCodeInput" name="urlCode"
+                    <input type="text" id="urlCodeInput" name="emailUrlCode"
                            th:value="${name=='PROFILE'}? 'naver.com'" class="form-control" required>
                     <select class="form-select" id="urlSelect" name="urlSelect" aria-label="Default select example" th:onchange="urlSelected()">
                         <option selected>직접입력</option>
@@ -218,6 +210,7 @@
                 </div>
             </td>
         </tr>
+
         <!-- refund account info -->
         <tr>
             <th scope="row">
@@ -233,7 +226,7 @@
                     </div>
                 </div>
                 <div class="form-floating mx-3 mb-2">
-                    <select class="form-select" id="bankInput" name="bank">
+                    <select class="form-select" id="bankInput" name="bankName">
                         <option selected>==선택==</option>
                         <option value="기업">기업</option>
                         <option value="국민">국민</option>
@@ -421,15 +414,12 @@
     function SMSFormal(){
         const keyCheckForm = document.getElementById("keyCheckForm");
         const keyHiddenInput = document.getElementById("keyNumber");
-        const baseHP = document.getElementById("baseHPInput").value;
-        const secondHP = document.getElementById("secondHPInput").value;
-        const thirdHP = document.getElementById("thirdHPInput").value;
-        if(!regPhone.test(baseHP + "-" + secondHP + "-" + thirdHP)){
-            alert("번호입력이 잘못되었습니다. 다시 입력해주세요.");
+        const hp = document.getElementById("hpInput").value;
+        if(!regPhone.test(hp)){
+            alert("번호입력이 잘못되었습니다. 다시 입력해주세요.(ex 010-1234-5678)");
         } else {
-            const phoneNumber = baseHP+secondHP+thirdHP;
             $.ajax({
-                url: '/smsApi/send-one/' + phoneNumber,
+                url: '/smsApi/send-one/' + hp.replace(/-/g, ''),
                 type: 'GET',
                 success: (result) => {
                     //AJAX 성공시 실행 코드

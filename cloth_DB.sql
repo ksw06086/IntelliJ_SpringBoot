@@ -23,6 +23,16 @@ create table user_tbl(
     id int GENERATED ALWAYS as IDENTITY,
     username VARCHAR2(50),
     password VARCHAR2(100),
+    name VARCHAR2(50),
+    addressNum VARCHAR2(10),
+    addressSub VARCHAR2(400),
+    addressDetail VARCHAR2(400),
+    hp VARCHAR2(30),
+    emailIdName VARCHAR2(30),
+    emailUrlCode VARCHAR2(30),
+    reg_date DATE DEFAULT sysdate,
+    birthDay Date,
+    birthType VARCHAR2(20),
     enabled number(1),
     CONSTRAINT pk_user_id PRIMARY key(id),
     constraint uk_username unique(username)
@@ -53,4 +63,14 @@ create table user_role(
     CONSTRAINT fk_role FOREIGN key(role_id) REFERENCES role_tbl(id) on delete cascade
 );
 
-
+/** refundAcc_tbl 테이블(시큐리티 적용을 위해 user와 role 연결) **/
+create table refundAcc_tbl(
+    id int GENERATED ALWAYS as IDENTITY,
+    user_id int,
+    accHost VARCHAR2(50),
+    bankName VARCHAR2(50),
+    accNumber VARCHAR2(50),
+    CONSTRAINT pk_refundAcc_id PRIMARY key(id),
+    constraint uk_accNumber unique(accNumber),
+    CONSTRAINT fk_user_refundAcc FOREIGN key(user_id) REFERENCES user_tbl(id) on delete cascade
+);

@@ -17,6 +17,7 @@ public class UserApiController {
         this.repository = repository;
     }
 
+    // 모든 Guest 정보 불러오기
     @GetMapping("/users")
     Iterable<User> all(@RequestParam(required = false) String method,
                        @RequestParam(required = false, defaultValue = "") String text) {
@@ -30,6 +31,7 @@ public class UserApiController {
     }
     // end::get-aggregate-root[]
 
+    // Guest 추가
     @PostMapping("/users")
     User newUser(@RequestBody User newUser) {
         return repository.save(newUser);
@@ -37,18 +39,21 @@ public class UserApiController {
 
     // Single item
 
+    // Guest 1명 데이터 불러오기
     @GetMapping("/users/{id}")
     User one(@PathVariable Long id) {
 
         return repository.findById(id).orElse(null);
     }
 
+    // Guest 1명 ID명으로 조회하기
     @GetMapping("/userCheck/{username}")
     User idCheck(@PathVariable String username) {
 
         return repository.findByUsername(username);
     }
 
+    // Guest 1명 ID명으로 수정하기
     @PutMapping("/users/{id}")
     User replaceUser(@RequestBody User newUser, @PathVariable Long id) {
 
@@ -67,9 +72,9 @@ public class UserApiController {
                 });
     }
 
+    // Guest 1명 삭제하기
     @DeleteMapping("/users/{id}")
     void deleteUser(@PathVariable Long id) {
-        log.debug("여기 옴");
         repository.deleteById(id);
     }
 }
