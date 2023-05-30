@@ -19,7 +19,7 @@
 <!-- 회원가입을 위한 정보 블럭(Register Form) -->
 <form class="body row g-3" novalidate th:action="@{/account/register_finish}" method="post">
     <!-- 기본정보 -->
-    <table class="table caption-top text-start vertical-middle-all">
+    <table class="table caption-top text-start vertical-middle-all" th:object="${userDTO}">
         <caption class="text-secondary ms-4"><h5><b>&lt;기본정보&gt;</b></h5></caption>
         <colgroup>
             <col width="20%">
@@ -35,8 +35,8 @@
             </th>
             <td>
                 <div class="mx-3" id="IDForm">
-                    <input type="text" id="idInput" name="username" class="form-control" required
-                           th:value="${name=='PROFILE'}? 'kim'" th:readonly="${name=='PROFILE'}? 'true'" th:oninput="idCheck(this.value)">
+                    <input type="text" id="idInput" class="form-control" required
+                           th:field="*{username}" th:readonly="${name=='PROFILE'}? 'true'" th:oninput="idCheck(this.value)">
                     <div id="IDdiv"></div>
                 </div>
             </td>
@@ -50,7 +50,8 @@
             </th>
             <td>
                 <div class="mx-3" id="PWDForm">
-                    <input type="password" id="pwdInput" name="password" class="form-control" th:oninput="pwdCheck(this.value)" required>
+                    <input type="password" id="pwdInput" class="form-control" required
+                           th:field="*{password}" th:oninput="pwdCheck(this.value)">
                     <div id="pwdDiv" class="mt-2"></div>
                 </div>
             </td>
@@ -64,7 +65,7 @@
             </th>
             <td>
                 <div class="mx-3" id="PWDChkForm">
-                    <input type="password" id="pwdChkInput" name="passwordChk" class="form-control" th:oninput="pwdChkCheck(this.value)" required>
+                    <input type="password" id="pwdChkInput" class="form-control" th:oninput="pwdChkCheck(this.value)" required>
                     <div id="pwdChkDiv" class="mt-2"></div>
                 </div>
             </td>
@@ -78,8 +79,8 @@
             </th>
             <td>
                 <div class="mx-3">
-                    <input type="text" id="userNameInput" name="name" class="form-control"
-                           th:value="${name=='PROFILE'}? 'kim'" required>
+                    <input type="text" id="userNameInput" class="form-control"
+                           th:field="*{name}"  required>
                 </div>
             </td>
         </tr>
@@ -93,19 +94,19 @@
             <td>
                 <div>
                     <div class="mx-3 mb-2 d-flex">
-                        <input type="text" id="addressInput" name="addressNum"
-                               th:value="${name=='PROFILE'}? '14451'" class="form-control w-25" required>
+                        <input type="text" id="addressInput" class="form-control w-25"
+                               th:field="*{addressNum}" required>
                         <button type="button" class="btn btn-outline-secondary" th:onclick="addressSearch()">우편번호</button>
                     </div>
                 </div>
                 <div class="form-floating mx-3 mb-2">
-                    <input type="text" id="subAddressInput" name="addressSub"
-                           th:value="${name=='PROFILE'}? '서울시 강남구'" class="form-control" required>
+                    <input type="text" id="subAddressInput"
+                           th:field="*{addressSub}" class="form-control" required>
                     <label for="subAddressInput">SubAddress</label>
                 </div>
                 <div class="form-floating mx-3 mb-2">
-                    <input type="text" id="detailAddressInput" name="addressDetail"
-                           th:value="${name=='PROFILE'}? '선우아파트 901호'" class="form-control" required>
+                    <input type="text" id="detailAddressInput"
+                           th:field="*{addressDetail}" class="form-control" required>
                     <label for="detailAddressInput">DetailAddress</label>
                 </div>
             </td>
@@ -119,8 +120,8 @@
             </th>
             <td>
                 <div class="mx-3 d-flex">
-                    <input type="text" id="hpInput" name="hp"
-                           th:value="${name=='PROFILE'}? '010-1234-5678'" class="form-control w-75" required>
+                    <input type="text" id="hpInput"
+                           th:field="*{hp}" class="form-control w-75" required>
                     <button type="button" class="btn btn-outline-secondary w-25" th:onclick="SMSFormal()">인증</button>
                 </div>
             </td>
@@ -153,10 +154,10 @@
             <td>
                 <div class="mx-3 d-flex">
                     <input type="text" id="idNameInput" name="emailIdName"
-                           th:value="${name=='PROFILE'}? 'kim'" class="form-control" required>
+                           th:field="*{emailIdName}" class="form-control" required>
                     <span>&nbsp;@&nbsp;</span>
                     <input type="text" id="urlCodeInput" name="emailUrlCode"
-                           th:value="${name=='PROFILE'}? 'naver.com'" class="form-control" required>
+                           th:field="*{emailUrlCode}" class="form-control" required>
                     <select class="form-select" id="urlSelect" name="urlSelect" aria-label="Default select example" th:onchange="urlSelected()">
                         <option selected>직접입력</option>
                         <option value="naver.com">naver.com</option>
@@ -165,6 +166,29 @@
                         <option value="gmail.com">gmail.com</option>
                         <option value="hanmail.com">hanmail.com</option>
                     </select>
+                </div>
+            </td>
+        </tr>
+
+        <!-- BirthDay -->
+        <tr>
+            <th scope="row">
+                <label class="ms-2 col-form-label"> BirthDay</label>
+            </th>
+            <td>
+                <div class="mx-3 d-flex">
+                    <input type="date" id="birthDayInput" name="birthDay"
+                           th:field="*{birthDay}" class="form-control w-50 me-2">
+                    <div class="ms-3 form-check-inline align-self-center">
+                        <input type="radio" name="birthType"
+                               id="birthType1" value="yang" th:checked="*{birthType == 'yang'}? true">
+                        <label class="" for="birthType1">양력</label>
+                    </div>
+                    <div class="form-check-inline align-self-center">
+                        <input type="radio" name="birthType"
+                               id="birthType2" value="umm" th:checked="*{birthType == 'umm'}? true">
+                        <label class="" for="birthType2">음력</label>
+                    </div>
                 </div>
             </td>
         </tr>
@@ -182,37 +206,15 @@
     </table>
 
     <!-- 추가정보 -->
-    <table class="table caption-top text-start mt-4 vertical-middle-all">
+    <table class="table caption-top text-start mt-4 vertical-middle-all" th:object="${refundAccDTO}">
         <caption class="text-secondary ms-4"><h5><b>&lt;추가정보&gt;</b></h5></caption>
         <colgroup>
             <col width="20%">
             <col width="80%">
         </colgroup>
         <tbody>
-        <!-- BirthDay -->
-        <tr class="border-top">
-            <th scope="row">
-                <label class="ms-2 col-form-label"> BirthDay</label>
-            </th>
-            <td>
-                <div class="mx-3 d-flex">
-                    <input type="date" id="birthDayInput" name="birthDay"
-                           th:value="${name == 'PROFILE'}? '2021-05-15'" class="form-control w-50 me-2">
-                    <div class="ms-3 form-check-inline align-self-center">
-                        <input type="radio" name="birthTypes"
-                               id="birthType1" value="yang" th:checked="${name == 'PROFILE'}? true">
-                        <label class="" for="birthType1">양력</label>
-                    </div>
-                    <div class="form-check-inline align-self-center">
-                        <input type="radio" name="birthTypes" id="birthType2" value="umm">
-                        <label class="" for="birthType2">음력</label>
-                    </div>
-                </div>
-            </td>
-        </tr>
-
         <!-- refund account info -->
-        <tr>
+        <tr class="border-top-1-ccc">
             <th scope="row">
                 <label for="addressInput" class="ms-2 col-form-label">
                     Refund Account
@@ -221,7 +223,8 @@
             <td th:if="${name=='JOIN US'}">
                 <div>
                     <div class="form-floating mx-3 mb-2">
-                        <input type="text" id="accHostInput" name="accHost" class="form-control">
+                        <input type="text" id="accHostInput" name="accHost"
+                               th:field="*{accHost}" class="form-control">
                         <label for="accHostInput">AccHost</label>
                     </div>
                 </div>
@@ -240,7 +243,8 @@
                     <label for="bankInput">Bank</label>
                 </div>
                 <div class="form-floating mx-3 mb-2">
-                    <input type="text" id="accNumberInput" name="accNumber" class="form-control">
+                    <input type="text" id="accNumberInput" name="accNumber"
+                           class="form-control" th:field="*{accNumber}">
                     <label for="accNumberInput">accNumber</label>
                 </div>
             </td>
@@ -395,9 +399,9 @@
 
     // PWDChk 일치 확인
     function pwdChkCheck(pwdChk){
-        const pwd = document.getElementById("pwdInput").value;
+        const pwd = document.getElementById("pwdInput");
         const pwdChkDiv = document.getElementById("pwdChkDiv");
-        if(pwd !== pwdChk){
+        if(pwd.value !== pwdChk){
             pwdChkDiv.previousElementSibling.className = "form-control is-invalid";
             pwdChkDiv.className = "invalid-feedback"
             pwdChkDiv.style.color = "red";
@@ -484,7 +488,7 @@
     }
 
     // 우편번호 버튼 클릭 기능
-    function addressSearch(){
+    function addressSearch() {
         new daum.Postcode({
             oncomplete: function(data) {
                 // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
@@ -524,6 +528,39 @@
                 document.getElementById('detailAddressInput').focus();
             }
         }).open();
+    }
+
+    // Register 폼 제출 전 확인 script
+    function registerCheck() {
+        // 아이디 입력 확인(30자 이하여야함)
+        if (document.getElementById("IDForm").value.length < 30){
+            document.getElementById("IDdiv").previousElementSibling.className = "form-control is-invalid";
+            document.getElementById("IDdiv").className = "invalid-feedback"
+            document.getElementById("IDdiv").innerText = "id는 30자 이하여야합니다.";
+            document.getElementById("IDForm").focus();
+            return false;
+        }
+
+        // 패스워드 입력 확인(강함, 보통인지)
+        if (!(document.getElementById("pwdDiv").textContent === '강함')
+            && !(document.getElementById("pwdDiv").textContent === '보통')) {
+            document.getElementById("pwdDiv").previousElementSibling.className = "form-control is-invalid";
+            document.getElementById("pwdDiv").className = "invalid-feedback"
+            document.getElementById("pwdDiv").style.color = "red";
+            document.getElementById("pwdDiv").textContent = "패스워드는 강함/보통 정도여야합니다.";
+            document.getElementById("pwdDiv").focus();
+            return false;
+        }
+
+        // 패스워드 Chk 확인
+        if(document.getElementById("pwdInput").value !== document.getElementById("pwdChkInput").value){
+            document.getElementById("pwdChkDiv").previousElementSibling.className = "form-control is-invalid";
+            document.getElementById("pwdChkDiv").className = "invalid-feedback"
+            document.getElementById("pwdChkDiv").style.color = "red";
+            document.getElementById("pwdChkDiv").textContent = "비밀번호가 일치하지 않습니다.";
+            document.getElementById("pwdChkInput").focus();
+            return false;
+        }
     }
 </script>
 <footer th:replace="fragments/guest_common :: footer"></footer>

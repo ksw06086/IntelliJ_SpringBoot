@@ -4,10 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import oracle.sql.TIMESTAMP;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.spi.CalendarDataProvider;
 
 @Data
 @Entity
@@ -24,8 +29,9 @@ public class User {
     private String addressDetail;   // Address Detail
     private String hp;              // HP
     private String emailIdName;     // Email idName
-    private String emailUrlCode;    // Email UrlCode
-    private Date reg_date;          // Register Date
+    private String emailUrlCode;    // Email
+    @CreationTimestamp              // insert 될 때 현재 시간을 넣어줌
+    private Date regDate;          // Register Date
     private Date birthDay;          // BirthDay
     private String birthType;       // BirthType
     private int enabled;            // User 권한

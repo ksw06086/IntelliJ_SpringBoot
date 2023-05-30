@@ -1,5 +1,6 @@
 package com.suncloth.suncloth.controller;
 
+import com.suncloth.suncloth.model.RefundAccount;
 import com.suncloth.suncloth.model.User;
 import com.suncloth.suncloth.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +27,14 @@ public class AccountController {
     public String register(Model model
             , @RequestParam(required = false) String name) {
         model.addAttribute("name", name);
+        model.addAttribute("userDTO", new User());
+        model.addAttribute("refundAccDTO", new RefundAccount());
         return "account/guest_register";
     }
 
     @PostMapping("/register_finish")
-    public String registerFinish(Model model, User user) {
-        userService.save(user);
+    public String registerFinish(Model model, User user, RefundAccount refundAccount) {
+        userService.save(user, refundAccount);
         System.out.println("user = " + user);
         model.addAttribute("user", user);
         return "account/guest_register_finish";
