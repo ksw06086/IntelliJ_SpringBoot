@@ -45,6 +45,14 @@ public class SubCategoryApiController {
         return repository.save(newSubCategory);
     }
 
+    // PUT : MainCode에 맞게 한가지 SubCategory 정보 삽입하기
+    @PutMapping("/subCategory/{mainCode}")
+    SubCategory insertSubCategory(@RequestBody SubCategory newSubCategory, @PathVariable Long mainCode) {
+        MainCategory mainCategory = mainCategoryRepository.findById(mainCode).orElse(null);
+        newSubCategory.setMainCategory(mainCategory);
+        return repository.save(newSubCategory);
+    }
+
     // Single item
 
     // GET : mainCode 에 맞게 한가지 Sub Category 정보만 가져오기
@@ -62,7 +70,7 @@ public class SubCategoryApiController {
 
     // PUT : Id에 맞게 한가지 Sub Categroy 정보만 갱신
     @PutMapping("/subCategories/{subCode}")
-    SubCategory replaceMainCategory(@RequestBody SubCategory newSubCategory, @PathVariable Long subCode) {
+    SubCategory replaceSubCategory(@RequestBody SubCategory newSubCategory, @PathVariable Long subCode) {
 
         return repository.findById(subCode)
                 .map(subCategory -> {
