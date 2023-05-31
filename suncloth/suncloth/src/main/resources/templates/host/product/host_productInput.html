@@ -64,7 +64,7 @@
                 <tr>
                     <td>2차 카테고리 추가</td>
                     <td>
-                        <select class="mainCategoriesSelector" onchange = "select_inputcategory2();">
+                        <select class="mainCategoriesSelector" th:onchange = "subCategoriesGet(this.value)">
                             <option value = "">1차 카테고리</option>
                             <!-- 가져올 카테고리가 있으면 -->
                             <!--<th:block th:if="${bigsrhCnt > 0}">
@@ -74,7 +74,7 @@
                         <input type = "text" name = "mediumPart">
                         <input type = "button" class = "whiteButton" name = "mediumPro" value = "추가"
                                onclick = "mediumpartPro();">
-                        <select name = "mediumPartDel"> <!-- 일단 아우터것만 이거는 jQuery로 조건써서 갖다넣을려고함 -->
+                        <select class="subCategoriesSelector">
                             <option value = "">2차 카테고리</option>
                             <!-- 가져올 sub 카테고리가 있으면 -->
                             <!--<th:block th:if="${mediumsrhCnt > 0}">
@@ -97,7 +97,7 @@
                                 <option th:each="list:${bigList}" value = "${list.bigcode}">${list.bigname}</option>
                             </th:block>-->
                         </select>
-                        <select name = "subPart"> <!-- 일단 아우터것만 이거는 jQuery로 조건써서 갖다넣을려고함 -->
+                        <select class="subCategoriesSelector">
                             <option value = "">2차 카테고리</option>
                             <!-- 가져올 sub 카테고리가 있으면 -->
                             <!--<th:block th:if="${mediumsrhCnt > 0}">
@@ -338,6 +338,36 @@
                         option.innerHTML = data.mainName;
                         option.value = data.mainCode;
                         allMainCategoryByClass[i].append(option);
+                    }
+                })
+            }, error:function(e) {
+                alert("error: " + e);
+            }
+        });
+    }
+
+    // SubCategory 목록 화면의 subCategoriesSeletor에 추가해주기
+    function subCategoriesGet(mainCode){
+        alert(mainCode);
+        $.ajax({
+            type: 'GET',
+            url: '/api/subCategories/' + mainCode,
+            success: (result) => {
+                alert(result);
+                //AJAX 성공시 실행 코드(* mainCategoriesSelector Class)
+                const allSubCategoryByClass = document.getElementsByClassName("subCategoriesSelector");
+
+                // 1. mainCategoriesSelector Clear
+                for (let i = 0; i < allSubCategoryByClass.length; i++) {
+                    allSubCategoryByClass[i].innerHTML = `<option value = "">2차 카테고리</option>`;
+                }
+                // 2. mainCategoriesSelector Option 추가
+                result.forEach(data => {
+                    for (let i = 0; i < allSubCategoryByClass.length; i++) {
+                        const option = document.createElement('option');
+                        option.innerHTML = data.subName;
+                        option.value = data.subCode;
+                        allSubCategoryByClass[i].append(option);
                     }
                 })
             }, error:function(e) {
