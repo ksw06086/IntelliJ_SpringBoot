@@ -1,14 +1,22 @@
 package com.suncloth.suncloth.controller;
 
+import com.suncloth.suncloth.model.Brand;
+import com.suncloth.suncloth.repository.BrandRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/host")
 public class HostController {
+
+    @Autowired
+    BrandRepository brandRepository;
 
     /* 상품 */
     // 상품 리스트
@@ -32,7 +40,9 @@ public class HostController {
     /* 브랜드 */
     // 브랜드 목록
     @GetMapping("/brandList")
-    public String brandList() {
+    public String brandList(Model model) {
+        List<Brand> brandList = brandRepository.findAll();
+        model.addAttribute("brandList", brandList);
         return "/host/product/host_brandList";
     }
     // 브랜드 등록/수정
