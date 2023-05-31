@@ -13,8 +13,8 @@ import java.util.List;
 public class MainCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // => 자동증가
-    private long mainCode;               // Sub Category 식별번호
-    private String mainName;             // Sub Category Name
+    private long mainCode;               // Main Category 식별번호
+    private String mainName;             // Main Category Name
 
     // MainCategory 와 연결된 SubCategory 들
     @OneToMany(mappedBy = "mainCategory", cascade = CascadeType.ALL)

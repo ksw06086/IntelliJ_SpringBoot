@@ -1,4 +1,4 @@
-package com.suncloth.suncloth.controller;
+package com.suncloth.suncloth.controller.api;
 
 import com.suncloth.suncloth.model.User;
 import com.suncloth.suncloth.repository.UserRepository;

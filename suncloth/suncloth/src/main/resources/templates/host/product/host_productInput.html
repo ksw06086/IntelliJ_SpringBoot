@@ -46,28 +46,25 @@
                 </tr>
                 <!-- mainCategory 추가/삭제 -->
                 <tr>
-                    <td>1차 카테고리 추가</td>
+                    <td><label for="mainCategoryInput">1차 카테고리 추가</label></td>
                     <td>
-                        <input type = "text" name = "bigPart">
-                        <input type = "button" class = "whiteButton " name = "bigPro" value = "추가"
-                               onclick = "bigpartPro();">
-                        <select name = "bigPartDel">
+                        <input type = "text" id = "mainCategoryInput">
+                        <input type = "button" class = "whiteButton " value = "추가" th:onclick="mainCategoryAdd()">
+                        <select class = "mainCategoriesSelector" id="mainCategoryDelSelector">
                             <option value = "">1차 카테고리</option>
-                            <option value = "asclo">asclo</option>
                             <!-- 가져올 카테고리가 있으면 -->
                             <!--<th:block th:if="${bigsrhCnt > 0}">
                                 <option th:each="list:${bigList}" value = "${list.bigcode}">${list.bigname}</option>
                             </th:block>-->
                         </select>
-                        <input type = "button" class = "whiteButton" name = "bigDel" value = "삭제"
-                               onclick = "bigpartdelPro();">
+                        <input type = "button" class = "whiteButton" value = "삭제" th:onclick = "mainCategoryDel()">
                     </td>
                 </tr>
                 <!-- subCategory 추가/삭제 -->
                 <tr>
                     <td>2차 카테고리 추가</td>
                     <td>
-                        <select name = "subBigPart" onchange = "select_inputcategory2();">
+                        <select class="mainCategoriesSelector" onchange = "select_inputcategory2();">
                             <option value = "">1차 카테고리</option>
                             <!-- 가져올 카테고리가 있으면 -->
                             <!--<th:block th:if="${bigsrhCnt > 0}">
@@ -93,9 +90,8 @@
                 <tr>
                     <td>상품 카테고리*</td>
                     <td>
-                        <select onchange = "select_inputcategory();" name = "mainPart">
+                        <select onchange = "select_inputcategory();" class="mainCategoriesSelector">
                             <option value = "">1차 카테고리</option>
-                            <option value = "asclo">asclo</option>
                             <!-- 가져올 카테고리가 있으면 -->
                             <!--<th:block th:if="${bigsrhCnt > 0}">
                                 <option th:each="list:${bigList}" value = "${list.bigcode}">${list.bigname}</option>
@@ -281,6 +277,78 @@
         </form>
     </div>
 </div>
+
+<script>
+    // MainCategory 추가하기
+    function mainCategoryAdd(){
+        const mainCategoryInput = document.getElementById("mainCategoryInput").value;
+        const mainCategoryParam = { mainName : mainCategoryInput };
+
+        $.ajax({
+            type: 'post',
+            contentType:'application/json',
+            data: JSON.stringify(mainCategoryParam),
+            url: '/api/mainCategory',
+            success: (result) => {
+                //AJAX 성공시 실행 코드
+                alert(result.mainName + " 카테고리가 추가되었습니다.");
+                mainCategoriesGet();
+            }, error:function(e) {
+                alert("error: " + e);
+            }
+        });
+    }
+
+    // MainCategory 삭제하기
+    function mainCategoryDel(){
+        const deleteMainCategoryForm = document.getElementById("mainCategoryDelSelector");
+        const mainCode = deleteMainCategoryForm.value;
+        const mainName = deleteMainCategoryForm.options[deleteMainCategoryForm.selectedIndex].text;
+
+        $.ajax({
+            type: 'DELETE',
+            url: '/api/mainCategories/' + mainCode,
+            success: (result) => {
+                //AJAX 성공시 실행 코드
+                alert(mainName + " 카테고리가 삭제되었습니다.");
+                mainCategoriesGet();
+            }, error:function(e) {
+                alert("error: " + e);
+            }
+        });
+    }
+
+    // MainCategory 목록 화면의 mainCategoriesSeletor에 추가해주기
+    function mainCategoriesGet(){
+        $.ajax({
+            type: 'get',
+            url: '/api/mainCategories',
+            success: (result) => {
+                //AJAX 성공시 실행 코드(* mainCategoriesSelector Class)
+                const allMainCategoryByClass = document.getElementsByClassName("mainCategoriesSelector");
+
+                // 1. mainCategoriesSelector Clear
+                for (let i = 0; i < allMainCategoryByClass.length; i++) {
+                    allMainCategoryByClass[i].innerHTML = `<option value = "">1차 카테고리</option>`;
+                }
+                // 2. mainCategoriesSelector Option 추가
+                result.forEach(data => {
+                    for (let i = 0; i < allMainCategoryByClass.length; i++) {
+                        const option = document.createElement('option');
+                        option.innerHTML = data.mainName;
+                        option.value = data.mainCode;
+                        allMainCategoryByClass[i].append(option);
+                    }
+                })
+            }, error:function(e) {
+                alert("error: " + e);
+            }
+        });
+    }
+
+
+</script>
+
 
 <!-- using Javascript, Bootstrap, JQuery -->
 <footer th:replace="fragments/host_common :: footer"></footer>
