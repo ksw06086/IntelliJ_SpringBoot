@@ -10,7 +10,7 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name="refundAcc_tbl")
+@Table(name="refund_acc_tbl")
 public class RefundAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // => 자동증가
