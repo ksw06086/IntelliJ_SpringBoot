@@ -24,8 +24,8 @@
             <p class="position-absolute m-0 top-0 end-0">
                 <input th:if="${name == 'input'}" type="button" value="등록" class="blueBaseBtn px-10 py-10"
                        th:onclick = "brandAdd()">
-                <input th:if="${name == 'update'}" type="submit" value="수정" class="blueBaseBtn px-10 py-10"
-                       onclick = "javascript: productForm.action = 'h_brandUpdatePro'">
+                <input th:if="${name == 'update'}" type="button" value="수정" class="blueBaseBtn px-10 py-10"
+                       th:onclick = "brandUpdate()">
             </p>
         </div>
 
@@ -42,13 +42,13 @@
                 <!-- 등록할 브랜드 : 번호 -->
                 <tr th:if="${name == 'update'}">
                     <td>브랜드번호 *</td>
-                    <td th:text="|1|">[[${num}]]</td>
+                    <td id = "brandId">[[${brand.getBrandId()}]]</td>
                 </tr>
                 <!-- 등록할 브랜드 : 이름 -->
                 <tr>
                     <td><label for="brandNameInput">브랜드명 *</label></td>
                     <td>
-                        <input type = "text" id="brandNameInput">
+                        <input type = "text" id="brandNameInput" th:value="${brand.getBrandName()}">
                     </td>
                 </tr>
                 <!-- 등록할 브랜드 : 전화번호 -->
@@ -56,10 +56,15 @@
                     <td>브랜드 전화번호</td>
                     <td>
                         <div id="brandHPForm">
-                            <input type="text" id="brandHPInput" th:oninput="pwdChkCheck(this.value)">&nbsp;&nbsp;&nbsp;
+                            <input type="text" id="brandHPInput" th:value="${brand.getHp()}">&nbsp;&nbsp;&nbsp;
                             <span id="brandHPDiv">ex) 010-1234-5678</span>
                         </div>
                     </td>
+                </tr>
+                <!-- 등록할 브랜드 : 등록날짜 -->
+                <tr th:if="${name == 'update'}">
+                    <td>브랜드 전화번호</td>
+                    <td>[[${brand.getRegDate()}]]</td>
                 </tr>
             </table>
         </div>
@@ -71,10 +76,16 @@
     // *** 휴대폰 번호 정규식 ***
     let regPhone = /^01([0|1|2|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
 
+    // 브랜드 추가하기
     function brandAdd() {
         const brandNameInput = document.getElementById("brandNameInput").value;
         const brandHPInput = document.getElementById("brandHPInput").value;
         const brandParam = { brandName : brandNameInput, hp : brandHPInput };
+
+        if(brandNameInput === ""){
+            alert("브랜드 명을 입력해주세요.");
+            return false;
+        }
 
         $.ajax({
             type: 'post',
@@ -84,6 +95,33 @@
             success: (result) => {
                 //AJAX 성공시 실행 코드
                 alert(result.brandName + "브랜드가 추가되었습니다.");
+                window.location.href="/host/brandList";
+            }, error:function(e) {
+                alert("error: " + e);
+            }
+        });
+    }
+
+    // 브랜드 수정하기
+    function brandUpdate(){
+        const brandId = document.getElementById("brandId").textContent;
+        const brandName = document.getElementById("brandNameInput").value;
+        const brandHP = document.getElementById("brandHPInput").value;
+        const brandParam = { brandName : brandName, hp : brandHP };
+
+        if(brandName === ""){
+            alert("브랜드 명을 입력해주세요.");
+            return false;
+        }
+
+        $.ajax({
+            type: 'PUT',
+            contentType:'application/json',
+            data: JSON.stringify(brandParam),
+            url: '/api/brands/' + brandId,
+            success: (result) => {
+                //AJAX 성공시 실행 코드
+                alert(result.brandName + " 브랜드가 수정되었습니다.");
                 window.location.href="/host/brandList";
             }, error:function(e) {
                 alert("error: " + e);

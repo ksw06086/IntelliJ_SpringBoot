@@ -57,6 +57,7 @@ public class BrandApiController {
         return repository.findById(brandId)
                 .map(brand -> {
                     brand.setBrandName(newBrand.getBrandName());
+                    brand.setHp(newBrand.getHp());
                     return repository.save(brand);
                 })
                 .orElseGet(() -> {

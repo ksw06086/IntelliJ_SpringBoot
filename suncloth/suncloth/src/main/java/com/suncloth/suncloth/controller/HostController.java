@@ -2,6 +2,7 @@ package com.suncloth.suncloth.controller;
 
 import com.suncloth.suncloth.model.Brand;
 import com.suncloth.suncloth.repository.BrandRepository;
+import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -48,7 +49,12 @@ public class HostController {
     // 브랜드 등록/수정
     @GetMapping("/brandInput")
     public String brandInput(Model model
-            , @RequestParam(required = false) String name) {
+            , @RequestParam(required = false) String name
+            , @RequestParam(required = false) Long brandId) {
+        Brand brand;
+        if(brandId == null) { brand = new Brand(); }
+        else { brand = brandRepository.findById(brandId).orElse(null); }
+        model.addAttribute("brand", brand);
         model.addAttribute("name", name);
         return "/host/product/host_brandInput";
     }
