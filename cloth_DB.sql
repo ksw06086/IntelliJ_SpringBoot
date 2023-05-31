@@ -91,6 +91,14 @@ create table sub_category_tbl(
     CONSTRAINT subcategory_subcode_pk_excption PRIMARY key(sub_code)
 );
 
+/** 브랜드(brand_tbl) Table **/
+create table brand_tbl(
+    brand_id   number(5) PRIMARY key,
+    brand_name varchar2(50) not null,
+    reg_date   TIMESTAMP DEFAULT sysdate, -- 등록일
+    hp varchar2(50)
+);
+
 /** 상품(cloths_tbl) Table **/
 create table cloths_tbl (
     num number(5) PRIMARY key,
