@@ -17,7 +17,7 @@
 </div>
 
 <!-- 회원가입을 위한 정보 블럭(Register Form) -->
-<form class="body row g-3" novalidate th:action="@{/account/register_finish}" method="post">
+<form class="body row g-3" th:action="@{/account/register_finish}" method="post" th:onsubmit="return registerCheck()">
     <!-- 기본정보 -->
     <table class="table caption-top text-start vertical-middle-all" th:object="${userDTO}">
         <caption class="text-secondary ms-4"><h5><b>&lt;기본정보&gt;</b></h5></caption>
@@ -35,8 +35,8 @@
             </th>
             <td>
                 <div class="mx-3" id="IDForm">
-                    <input type="text" id="idInput" class="form-control" required
-                           th:field="*{username}" th:readonly="${name=='PROFILE'}? 'true'" th:oninput="idCheck(this.value)">
+                    <input type="text" id="idInput" class="form-control" th:field="*{username}"
+                           th:readonly="${name=='PROFILE'}? 'true'" th:oninput="idCheck(this.value)" required/>
                     <div id="IDdiv"></div>
                 </div>
             </td>
@@ -178,7 +178,7 @@
             <td>
                 <div class="mx-3 d-flex">
                     <input type="date" id="birthDayInput" name="birthDay"
-                           th:field="*{birthDay}" class="form-control w-50 me-2">
+                           th:field="*{birthDay}" class="form-control w-50 me-2" required>
                     <div class="ms-3 form-check-inline align-self-center">
                         <input type="radio" name="birthType"
                                id="birthType1" value="yang" th:checked="*{birthType == 'yang'}? true">
@@ -230,7 +230,7 @@
                 </div>
                 <div class="form-floating mx-3 mb-2">
                     <select class="form-select" id="bankInput" name="bankName">
-                        <option selected>==선택==</option>
+                        <option value="" selected>==선택==</option>
                         <option value="기업">기업</option>
                         <option value="국민">국민</option>
                         <option value="농협">농협</option>
@@ -358,6 +358,10 @@
                     idDiv.previousElementSibling.className = "form-control is-invalid";
                     idDiv.className = "invalid-feedback"
                     idDiv.innerText = "입력해주세요.";
+                } else if(id.length > 30){
+                    idDiv.previousElementSibling.className = "form-control is-invalid";
+                    idDiv.className = "invalid-feedback"
+                    idDiv.innerText = "id는 30자가 넘어가면 안됩니다.";
                 } else if(result === ""){
                     idDiv.previousElementSibling.className = "form-control is-valid";
                     idDiv.className = "valid-feedback";
@@ -533,17 +537,14 @@
     // Register 폼 제출 전 확인 script
     function registerCheck() {
         // 아이디 입력 확인(30자 이하여야함)
-        if (document.getElementById("IDForm").value.length < 30){
-            document.getElementById("IDdiv").previousElementSibling.className = "form-control is-invalid";
-            document.getElementById("IDdiv").className = "invalid-feedback"
-            document.getElementById("IDdiv").innerText = "id는 30자 이하여야합니다.";
-            document.getElementById("IDForm").focus();
+        if (document.getElementById("IDdiv").className === "invalid-feedback"){
+            document.getElementById("IDdiv").innerText = "사용가능한 아이디여야합니다.";
+            document.getElementById("idInput").focus();
             return false;
         }
 
         // 패스워드 입력 확인(강함, 보통인지)
-        if (!(document.getElementById("pwdDiv").textContent === '강함')
-            && !(document.getElementById("pwdDiv").textContent === '보통')) {
+        if (document.getElementById("pwdDiv").className === "invalid-feedback") {
             document.getElementById("pwdDiv").previousElementSibling.className = "form-control is-invalid";
             document.getElementById("pwdDiv").className = "invalid-feedback"
             document.getElementById("pwdDiv").style.color = "red";
@@ -561,6 +562,21 @@
             document.getElementById("pwdChkInput").focus();
             return false;
         }
+
+        // 휴대폰 인증번호 확인
+        if(document.getElementById("keyCheckForm").className === "d-none") { // 휴대폰 인증 확인
+            alert("휴대폰 인증을 해주세요");
+            document.getElementById("hpInput").focus();
+            return false;
+        } else if(document.getElementById("keyNumber").value !== document.getElementById("formalInput").value) { // 인증번호 확인
+            alert("인증번호를 확인해주세요.");
+            const formalDiv = document.getElementById("formalDiv");
+            formalDiv.style.color = "red";
+            formalDiv.textContent = "인증번호를 확인해주세요.";
+            document.getElementById("formalInput").focus();
+            return false;
+        }
+
     }
 </script>
 <footer th:replace="fragments/guest_common :: footer"></footer>

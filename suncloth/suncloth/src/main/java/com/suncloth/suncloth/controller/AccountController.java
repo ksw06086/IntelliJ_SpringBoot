@@ -34,8 +34,8 @@ public class AccountController {
 
     @PostMapping("/register_finish")
     public String registerFinish(Model model, User user, RefundAccount refundAccount) {
-        userService.save(user, refundAccount);
         System.out.println("user = " + user);
+        userService.save(user, refundAccount);
         model.addAttribute("user", user);
         return "account/guest_register_finish";
     }

@@ -14,10 +14,10 @@ import java.util.List;
 public class RefundAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // => 자동증가
-    private long id;                // Refund Account 식별번호
-    private String accHost;         // Account Host
-    private String bankName;        // Bank Name
-    private String accNumber;       // Account Number
+    private long id;                        // Refund Account 식별번호
+    private String accHost = null;         // Account Host
+    private String bankName = null;        // Bank Name
+    private String accNumber = null;       // Account Number
 
     // User 테이블과 조인
     // name : 나의 외래키 컬럼, referencedColumnName(생략가능) : 상대의 primary 컬럼

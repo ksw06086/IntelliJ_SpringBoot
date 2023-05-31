@@ -31,9 +31,9 @@ public class User {
     private String emailIdName;     // Email idName
     private String emailUrlCode;    // Email
     @CreationTimestamp              // insert 될 때 현재 시간을 넣어줌
-    private Date regDate;          // Register Date
-    private Date birthDay;          // BirthDay
-    private String birthType;       // BirthType
+    private Date regDate;           // Register Date
+    private Date birthDay = null;   // BirthDay
+    private String birthType = null;// BirthType
     private int enabled;            // User 권한
 
     // 권한 테이블과 조인함

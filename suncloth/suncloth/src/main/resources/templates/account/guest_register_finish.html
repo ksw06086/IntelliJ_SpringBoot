@@ -10,14 +10,14 @@
 
 <div class="mx-3 my-3"><h4>Register Complete</h4></div>
 
-<fieldset id="userInfo" class="mx-auto my-4 w-50 border">
+<fieldset id="userInfo" class="mx-auto my-4 w-50 border" th:object="${user}">
   <div class="p-3">
     <b>*** 저희 쇼핑몰을 이용해 주셔서 감사합니다. ***</b>
   </div>
   <div class="text-start ms-5">
-    <div class="fw-bold" th:text="${user != null}? 'ID : ' + ${user.username} : 'ID : kim'"></div>
-    <div th:text="|Name : 홍길동|"></div>
-    <div th:text="|Email : ksw1234@naver.com|"></div>
+    <div class="fw-bold" th:text="|ID : *{username}|"></div>
+    <div th:text="|Name : *{name}|"></div>
+    <div th:text="|Email : *{emailIdName}@*{emailUrlCode}|"></div>
   </div>
   <div class="my-3 d-flex">
     <div class="p-2 flex-fill">
