@@ -22,8 +22,8 @@
         <div class="position-relative text-center w-95 mx-auto my-15 vertical-middle-all">
             <p class="fs-15 p-0 m-0"><b>브랜드관리</b></p>
             <p class="position-absolute m-0 top-0 end-0">
-                <input th:if="${name == 'input'}" type="submit" value="등록" class="blueBaseBtn px-10 py-10"
-                       onclick = "javascript: productForm.action = 'h_brandPro'">
+                <input th:if="${name == 'input'}" type="button" value="등록" class="blueBaseBtn px-10 py-10"
+                       th:onclick = "brandAdd()">
                 <input th:if="${name == 'update'}" type="submit" value="수정" class="blueBaseBtn px-10 py-10"
                        onclick = "javascript: productForm.action = 'h_brandUpdatePro'">
             </p>
@@ -46,25 +46,19 @@
                 </tr>
                 <!-- 등록할 브랜드 : 이름 -->
                 <tr>
-                    <td><label for="brandName">브랜드명 *</label></td>
+                    <td><label for="brandNameInput">브랜드명 *</label></td>
                     <td>
-                        <input type = "text" id="brandName" name = "brandName">
+                        <input type = "text" id="brandNameInput">
                     </td>
                 </tr>
                 <!-- 등록할 브랜드 : 전화번호 -->
                 <tr>
                     <td>브랜드 전화번호</td>
                     <td>
-                        <select id = "telPhone" name = "telPhone">
-                            <option value = "010">010</option>
-                            <option value = "011">011</option>
-                            <option value = "016">016</option>
-                            <option value = "017">017</option>
-                            <option value = "018">018</option>
-                            <option value = "019">019</option>
-                        </select>
-                        - <input type = "text" id = "telPhoneSecond" name = "telPhoneSecond">
-                        - <input type = "text" id = "telPhoneThird" name = "telPhoneThird">
+                        <div id="brandHPForm">
+                            <input type="text" id="brandHPInput" th:oninput="pwdChkCheck(this.value)">&nbsp;&nbsp;&nbsp;
+                            <span id="brandHPDiv">ex) 010-1234-5678</span>
+                        </div>
                     </td>
                 </tr>
             </table>
@@ -72,6 +66,42 @@
         </form>
     </div>
 </div>
+
+<script>
+    // *** 휴대폰 번호 정규식 ***
+    let regPhone = /^01([0|1|2|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
+
+    function brandAdd() {
+        const brandNameInput = document.getElementById("brandNameInput").value;
+        const brandHPInput = document.getElementById("brandHPInput").value;
+        const brandParam = { brandName : brandNameInput, hp : brandHPInput };
+
+        $.ajax({
+            type: 'post',
+            contentType:'application/json',
+            data: JSON.stringify(brandParam),
+            url: '/api/brand',
+            success: (result) => {
+                //AJAX 성공시 실행 코드
+                alert(result.brandName + "가 추가되었습니다.");
+                window.location.href="/host/brandList";
+            }, error:function(e) {
+                alert("error: " + e);
+            }
+        });
+    }
+
+    // 브랜드 HP 입력 확인(쓰지 않고 표시만 해주는 방향으로 생각 바뀜 혹시 몰라 남겨둠)
+    function brandHPInput(hp) {
+        const brandHPDiv = document.getElementById("brandHPDiv");
+
+        if(!regPhone.test(hp)){
+            brandHPDiv.style.color = "red";
+            brandHPDiv.textContent = "ex) 010-1234-5678";
+        }
+    }
+
+</script>
 
 <!-- using Javascript, Bootstrap, JQuery -->
 <footer th:replace="fragments/host_common :: footer"></footer>

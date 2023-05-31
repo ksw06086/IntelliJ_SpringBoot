@@ -93,10 +93,11 @@ create table sub_category_tbl(
 
 /** 브랜드(brand_tbl) Table **/
 create table brand_tbl(
-    brand_id   number(5) PRIMARY key,
+    brand_id   int GENERATED ALWAYS as IDENTITY,
     brand_name varchar2(50) not null,
-    reg_date   TIMESTAMP DEFAULT sysdate, -- 등록일
-    hp varchar2(50)
+    reg_date   date DEFAULT sysdate, -- 등록일
+    hp varchar2(50),
+    CONSTRAINT brand_brandid_pk_excption PRIMARY key(brand_id)
 );
 
 /** 상품(cloths_tbl) Table **/
