@@ -22,8 +22,8 @@
         <div class="position-relative text-center w-95 mx-auto my-15 vertical-middle-all">
             <p class="fs-15 p-0 m-0"><b>판매상품관리</b></p>
             <p class="position-absolute m-0 top-0 end-0">
-                <input type="submit" value="등록" class="blueBaseBtn px-10 py-10"
-                       onclick = "javascript: productForm.action = 'h_productPro'">
+                <input type="button" value="등록" class="blueBaseBtn px-10 py-10"
+                       th:onclick = "imageUpload()">
             </p>
         </div>
 
@@ -39,9 +39,9 @@
                 <col>
                 <!-- mainImage 추가 -->
                 <tr>
-                    <td class="border-right-1-ccc">메인 이미지1</td>
+                    <td class="border-right-1-ccc">메인 이미지 업로드</td>
                     <td>
-                        <input type = "file" name = "mainFile">
+                        <input type = "file" id = "mainFile">
                     </td>
                 </tr>
                 <!-- mainCategory 추가/삭제 -->
@@ -169,9 +169,9 @@
 
             <!-- 상품 판매 정보 Input Block -->
             <table class="w-97 mx-auto bg-white border-top-1-ccc border-bottom-1-ccc td-py15 td-px10 td-border-bottom-1-ccc fs-8 vertical-middle-all">
-                <col style = "width:15%">
+                <col style = "width:20%">
                 <col>
-                <col style = "width:15%">
+                <col style = "width:20%">
                 <col>
                 <tr>
                     <td class="fw-bold bg-EAECEE">
@@ -235,26 +235,10 @@
                     </td>
                 </tr>
 
-                <!-- 상품 이미지 file 추가 -->
+                <!-- 상품 이미지 SubFile 추가 -->
                 <tr>
-                    <td>첨부파일1</td>
-                    <td><input type = "file" name = "file1"></td>
-                </tr>
-                <tr>
-                    <td>첨부파일2</td>
-                    <td><input type = "file" name = "file2"></td>
-                </tr>
-                <tr>
-                    <td>첨부파일3</td>
-                    <td><input type = "file" name = "file3"></td>
-                </tr>
-                <tr>
-                    <td>첨부파일4</td>
-                    <td><input type = "file" name = "file4"></td>
-                </tr>
-                <tr>
-                    <td>첨부파일5</td>
-                    <td><input type = "file" name = "file5"></td>
+                    <td>첨부파일(다중 선택 가능)</td>
+                    <td><input type = "file" multiple="multiple" id="subFile" name = "subFile"></td>
                 </tr>
 
                 <!-- With Item 선택하기 -->
@@ -415,6 +399,39 @@
         });
     }
 
+    // Image File Upload Ajax 구현 함수
+    // clothDTO랑 FileDTO 연결하는거 아직 구현은 못함 연결해야함(****** 숙제 ******)
+    function imageUpload(clothId) {
+        const mainImageInput = document.getElementById("mainFile");
+        const subImageInput = document.getElementById("subFile");
+        // 파일을 여러개 선택할 수 있으므로 files 라는 객체에 담긴다.
+        console.log("main: ", mainImageInput.files);
+        console.log("sub: ", subImageInput.files);
+
+        if(mainImageInput.files.length === 0){
+            alert("메인 이미지 파일을 선택해주세요");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("mainImage", mainImageInput.files[0]);
+        formData.append("subImages", subImageInput.files);
+        formData.append("clothId", clothId);
+
+        $.ajax({
+            type:"POST",
+            url: "/api/files",
+            processData: false,
+            contentType: false,
+            data: formData,
+            success: function(result){
+                alert(result);
+            },
+            err: function(err){
+                console.log("err:", err)
+            }
+        })
+    }
 </script>
 
 

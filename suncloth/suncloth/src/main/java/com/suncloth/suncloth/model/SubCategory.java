@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @Entity
 @Table(name="sub_category_tbl")
@@ -19,4 +22,9 @@ public class SubCategory {
     @JoinColumn(name = "main_code")
     @JsonIgnore
     private MainCategory mainCategory;
+
+    // SubCategory 와 연결된 Cloth 들
+    @OneToMany(mappedBy = "subCategory", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Cloth> clothList = new ArrayList<>();
 }

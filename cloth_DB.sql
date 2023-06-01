@@ -100,28 +100,36 @@ create table brand_tbl(
     CONSTRAINT brand_brandid_pk_excption PRIMARY key(brand_id)
 );
 
-/** 상품(cloths_tbl) Table **/
-create table cloths_tbl (
-    num number(5) PRIMARY key,
-    name varchar2(50) not null,
-    content varchar2(255) DEFAULT '내용 없음',
-    smallcode number(5),
-    tex varchar2(30) not null,
-    brandnum number(5),
-    icon varchar2(30),
-    plus number(7) default 0,
-    saleprice number(7) not null,
-    buyprice number(7) not null,
-    deliday number(5) not null,
-    deliprice number(7) default 2500,
-    mainfile varchar2(50) not null,
-    file1 varchar2(50),
-    file2 varchar2(50),
-    file3 varchar2(50),
-    file4 varchar2(50),
-    file5 varchar2(50),
-    withprdnum number(5),
-    reg_date TIMESTAMP default sysdate,
-    FOREIGN KEY(smallcode) references smallpart(smallcode),
-    FOREIGN key(brandnum) references brand_tbl(num)
+/** 이미지파일(file_tbl) Table **/
+create table file_tbl(
+    file_id  int GENERATED ALWAYS as IDENTITY,
+    org_nm clob,
+    saved_nm clob, 
+    saved_path clob,
+    cloth_id int,
+    file_type varchar2(20),
+    CONSTRAINT file_id_pk_excption PRIMARY key(file_id),
+    FOREIGN KEY(cloth_id) references cloth_tbl(cloth_id)
 );
+
+/** 상품(cloths_tbl) Table **/
+create table cloth_tbl (
+    cloth_id int GENERATED ALWAYS as IDENTITY,
+    cloth_name varchar2(50) not null,
+    content varchar2(255) DEFAULT '내용 없음',
+    sub_code int,
+    tex varchar2(30) not null,
+    brand_id int,
+    icon varchar2(30),
+    plus int default 0,
+    sale_price int not null,
+    buy_price int not null,
+    deli_day int not null,
+    deli_price int default 2500,
+    with_item_ids varchar2(100),
+    reg_date Date default sysdate,
+    CONSTRAINT cloth_clothid_pk_excption PRIMARY key(cloth_id),
+    FOREIGN KEY(sub_code) references sub_category_tbl(sub_code),
+    FOREIGN key(brand_id) references brand_tbl(brand_id)
+);
+
