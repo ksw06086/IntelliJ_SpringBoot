@@ -18,12 +18,12 @@
         <aside th:replace="fragments/host_common :: sidebar('product')"></aside>
     </div>
     <div class="flex-fill">
-        <form method="post" name="productForm" enctype="multipart/form-data">
+        <form method="post" id="clothInputForm" enctype="multipart/form-data">
         <div class="position-relative text-center w-95 mx-auto my-15 vertical-middle-all">
             <p class="fs-15 p-0 m-0"><b>판매상품관리</b></p>
             <p class="position-absolute m-0 top-0 end-0">
                 <input type="button" value="등록" class="blueBaseBtn px-10 py-10"
-                       th:onclick = "imageUpload()">
+                       th:onclick = "clothAdd()">
             </p>
         </div>
 
@@ -88,14 +88,14 @@
                 <tr>
                     <td>상품 카테고리*</td>
                     <td>
-                        <select th:onchange = "subCategoriesGet(this.value)" class="mainCategoriesSelector">
+                        <select th:onchange = "subCategoriesGet(this.value)" class="mainCategoriesSelector" id="mainCategorySelector">
                             <option value = "">1차 카테고리</option>
                             <!-- 가져올 카테고리가 있으면 -->
                             <!--<th:block th:if="${bigsrhCnt > 0}">
                                 <option th:each="list:${bigList}" value = "${list.bigcode}">${list.bigname}</option>
                             </th:block>-->
                         </select>
-                        <select class="subCategoriesSelector">
+                        <select class="subCategoriesSelector" id="subCategorySelector" name="subCategoryId">
                             <option value = "">2차 카테고리</option>
                             <!-- 가져올 sub 카테고리가 있으면 -->
                             <!--<th:block th:if="${mediumsrhCnt > 0}">
@@ -106,9 +106,9 @@
                 </tr>
                 <!-- 등록할 상품의 name 작성 -->
                 <tr>
-                    <td><label for="prdName">상품명 *</label></td>
+                    <td><label for="clothName">상품명 *</label></td>
                     <td>
-                        <input type = "text" id="prdName" name = "prdName">
+                        <input type = "text" id="clothName" name = "clothName">
                     </td>
                 </tr>
                 <!-- 등록할 상품의 tax/notTax 선택 -->
@@ -124,9 +124,9 @@
 
                 <!-- 등록할 상품의 tax/notTax 선택 -->
                 <tr>
-                    <td>브랜드</td>
+                    <td><label for="brandId">브랜드</label></td>
                     <td>
-                        <select name = "brand">
+                        <select name = "brandId" id="brandId">
                             <option value = "">브랜드 선택</option>
                             <!-- 가져올 브랜드가 있으면 -->
                             <!--<th:block th:if="${brandsrhCnt > 0}">
@@ -153,11 +153,11 @@
                 <tr>
                     <td>적립금</td>
                     <td>
-                        <input type = "radio" name = "plus" id = "notPlus" value = "notPlus">
+                        <input type = "radio" name = "plusType" id = "notPlus" value = "notPlus">
                         <label for = "notPlus">없음</label>&emsp;
-                        <input type = "radio" name = "plus" id = "plus" value = "plus">
+                        <input type = "radio" name = "plusType" id = "plus" value = "plus">
                         <label for = "plus">적립금</label>&emsp;
-                        <input type = "text" name = "plusPay">원
+                        <input type = "text" name = "plus" value="0">원
                     </td>
                 </tr>
             </table>
@@ -214,7 +214,7 @@
                         <label for = "free">무료</label><br>
                         <input type = "radio" name = "deliPay" id = "plusDeliPay" value = "pluspay">
                         <label for = "plusDeliPay">유료</label>
-                        <input type = "text" id = "plusPay" name = "deliPrice">원
+                        <input type = "text" id = "deliPrice" name = "deliPrice" value="0">원
                     </td>
                 </tr>
             </table>
@@ -244,7 +244,7 @@
                 <!-- With Item 선택하기 -->
                 <tr>
                     <td class="text-center py-10">
-                        <input type = "hidden" name = "withItem" value = "">
+                        <input type = "hidden" name = "withItemIds" value = "">
                         <div id = "image" class="bg-secondary-subtle wh-100px mx-auto">
                             No image
                         </div>
@@ -399,9 +399,33 @@
         });
     }
 
+    // Cloth 상품 추가하기
+    function clothAdd(){
+        if(document.getElementById("basePay").checked === true) {
+            document.getElementById("deliPrice").value = 2500;
+        }
+        let clothInputForm = new FormData(document.getElementById("clothInputForm"));
+
+        $.ajax({
+            type:"POST",
+            url: "/api/cloth",
+            enctype: 'multipart/form-data',
+            processData: false,
+            contentType: false,
+            data: clothInputForm,
+            success: function(result){
+                alert(result);
+            },
+            err: function(err){
+                console.log("err:", err)
+            }
+        });
+    }
+
+
     // Image File Upload Ajax 구현 함수
     // clothDTO랑 FileDTO 연결하는거 아직 구현은 못함 연결해야함(****** 숙제 ******)
-    function imageUpload(clothId) {
+    function imageUpload(cloth) {
         const mainImageInput = document.getElementById("mainFile");
         const subImageInput = document.getElementById("subFile");
         // 파일을 여러개 선택할 수 있으므로 files 라는 객체에 담긴다.
@@ -416,7 +440,7 @@
         const formData = new FormData();
         formData.append("mainImage", mainImageInput.files[0]);
         formData.append("subImages", subImageInput.files);
-        formData.append("clothId", clothId);
+        formData.append("cloth", cloth);
 
         $.ajax({
             type:"POST",

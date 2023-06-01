@@ -49,7 +49,7 @@ public class ClothApiController {
 
     // POST : Cloth 테이블에 정보 삽입하기
     @PostMapping("/cloth")
-    Cloth newCloth(@RequestBody Cloth newCloth) {
+    Cloth newCloth(Cloth newCloth) {
         System.out.println(newCloth);
         return clothRepository.save(newCloth);
     }
