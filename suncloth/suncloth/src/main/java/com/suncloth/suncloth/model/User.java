@@ -3,6 +3,9 @@ package com.suncloth.suncloth.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import oracle.sql.TIMESTAMP;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -14,7 +17,9 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.spi.CalendarDataProvider;
 
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name="user_tbl")
 public class User {

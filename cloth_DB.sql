@@ -109,7 +109,7 @@ create table file_tbl(
     cloth_id int,
     file_type varchar2(20),
     CONSTRAINT file_id_pk_excption PRIMARY key(file_id),
-    FOREIGN KEY(cloth_id) references cloth_tbl(cloth_id)
+    FOREIGN KEY(cloth_id) references cloth_tbl(cloth_id) on delete cascade
 );
 
 /** ªÛ«∞(cloths_tbl) Table **/

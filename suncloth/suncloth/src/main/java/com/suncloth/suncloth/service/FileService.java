@@ -1,5 +1,6 @@
 package com.suncloth.suncloth.service;
 
+import com.suncloth.suncloth.model.Cloth;
 import com.suncloth.suncloth.model.File;
 import com.suncloth.suncloth.repository.FileRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +25,9 @@ public class FileService {
 
     private final FileRepository fileRepository;
 
-    public Long saveFile(MultipartFile files, String fileType) throws IOException {
+    public void saveFile(MultipartFile files, String fileType, Cloth cloth) throws IOException {
         if (files.isEmpty()) {
-            return null;
+            return;
         }
 
         // 원래 파일 이름 추출
@@ -50,6 +51,7 @@ public class FileService {
                 .savedNm(savedName)
                 .savedPath(savedPath)
                 .fileType(fileType)
+                .cloth(cloth)
                 .build();
 
         // 실제로 로컬에 uuid를 파일명으로 저장
@@ -58,6 +60,5 @@ public class FileService {
         // 데이터베이스에 파일 정보 저장
         File savedFile = fileRepository.save(file);
 
-        return savedFile.getFileId();
     }
 }

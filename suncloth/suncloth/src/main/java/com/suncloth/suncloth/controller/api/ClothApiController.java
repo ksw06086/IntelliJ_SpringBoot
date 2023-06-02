@@ -49,7 +49,13 @@ public class ClothApiController {
 
     // POST : Cloth 테이블에 정보 삽입하기
     @PostMapping("/cloth")
-    Cloth newCloth(Cloth newCloth) {
+    Cloth newCloth(Cloth newCloth, Long brandId, Long subCategoryId) {
+        Brand brand = brandRepository.findById(brandId).orElse(null);
+        SubCategory subCategory = subCategoryRepository.findById(subCategoryId).orElse(null);
+
+        newCloth.setBrand(brand);
+        newCloth.setSubCategory(subCategory);
+
         System.out.println(newCloth);
         return clothRepository.save(newCloth);
     }

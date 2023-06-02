@@ -79,16 +79,15 @@ public class FileApiController {
     @Transactional
     @PostMapping("/files")
     public String newFiles(@RequestParam("mainImage") MultipartFile file
-            , @RequestParam(value = "subImages", required = false) List<MultipartFile> files) {
+            , @RequestParam("subImages") List<MultipartFile> files
+            , @RequestParam(value = "clothId", required = false) long clothId) {
         try {
-            fileService.saveFile(file, "main");
-            System.out.println(file);
+            Cloth cloth = clothRepository.findById(clothId).orElse(null);
+            fileService.saveFile(file, "main", cloth);
 
-            if(files != null) {
-                for (MultipartFile multipartFile : files) {
-                    fileService.saveFile(multipartFile, "sub");
-                    System.out.println(multipartFile);
-                }
+            for (MultipartFile multipartFile : files) {
+                fileService.saveFile(multipartFile, "sub", cloth);
+                System.out.println(multipartFile);
             }
             return "성공";
         } catch (IOException e) {

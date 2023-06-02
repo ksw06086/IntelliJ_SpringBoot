@@ -3,11 +3,16 @@ package com.suncloth.suncloth.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name="sub_category_tbl")
 public class SubCategory {
@@ -24,7 +29,7 @@ public class SubCategory {
     private MainCategory mainCategory;
 
     // SubCategory 와 연결된 Cloth 들
-    @OneToMany(mappedBy = "subCategory", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "subCategory")
     @JsonIgnore
     private List<Cloth> clothList = new ArrayList<>();
 }

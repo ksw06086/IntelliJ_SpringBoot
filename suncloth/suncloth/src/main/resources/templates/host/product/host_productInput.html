@@ -22,8 +22,8 @@
         <div class="position-relative text-center w-95 mx-auto my-15 vertical-middle-all">
             <p class="fs-15 p-0 m-0"><b>판매상품관리</b></p>
             <p class="position-absolute m-0 top-0 end-0">
-                <input type="button" value="등록" class="blueBaseBtn px-10 py-10"
-                       th:onclick = "clothAdd()">
+                <input type="submit" value="등록" class="blueBaseBtn px-10 py-10"
+                       th:onclick = "return clothAdd()">
             </p>
         </div>
 
@@ -41,7 +41,8 @@
                 <tr>
                     <td class="border-right-1-ccc">메인 이미지 업로드</td>
                     <td>
-                        <input type = "file" id = "mainFile">
+                        <img src="" alt="이미지" id="mainImage" class="wh-100px d-none" />
+                        <input type = "file" id = "mainFile" th:onchange="imageFileSelect(this.files[0])" required>
                     </td>
                 </tr>
                 <!-- mainCategory 추가/삭제 -->
@@ -53,9 +54,9 @@
                         <select class = "mainCategoriesSelector" id="mainCategoryDelSelector">
                             <option value = "">1차 카테고리</option>
                             <!-- 가져올 카테고리가 있으면 -->
-                            <!--<th:block th:if="${bigsrhCnt > 0}">
-                                <option th:each="list:${bigList}" value = "${list.bigcode}">${list.bigname}</option>
-                            </th:block>-->
+                            <th:block th:if="${mainCategoryList.size() > 0}">
+                                <option th:each="list:${mainCategoryList}" th:value="${list.getMainCode()}">[[${list.getMainName()}]]</option>
+                            </th:block>
                         </select>
                         <input type = "button" class = "whiteButton" value = "삭제" th:onclick = "mainCategoryDel()">
                     </td>
@@ -66,19 +67,14 @@
                     <td>
                         <select class="mainCategoriesSelector" id="subCategoryMainCode" th:onchange = "subCategoriesGet(this.value)">
                             <option value = "">1차 카테고리</option>
-                            <!-- 가져올 카테고리가 있으면 -->
-                            <!--<th:block th:if="${bigsrhCnt > 0}">
-                                <option th:each="list:${bigList}" value = "${list.bigcode}">${list.bigname}</option>
-                            </th:block>-->
+                            <th:block th:if="${mainCategoryList.size() > 0}">
+                                <option th:each="list:${mainCategoryList}" th:value="${list.getMainCode()}">[[${list.getMainName()}]]</option>
+                            </th:block>
                         </select>
                         <input type = "text" id="subCategoryInput">
                         <input type = "button" class = "whiteButton" value = "추가" th:onclick = "subCategoryAdd()">
                         <select class="subCategoriesSelector" id="subCategoryDelSelector">
                             <option value = "">2차 카테고리</option>
-                            <!-- 가져올 sub 카테고리가 있으면 -->
-                            <!--<th:block th:if="${mediumsrhCnt > 0}">
-                                <option th:each="list:${mediumList}" value = "${list.mediumcode}">${list.mediumname}</option>
-                            </th:block>-->
                         </select>
                         <input type = "button" class = "whiteButton" value = "삭제" th:onclick = "subCategoryDel()">
                     </td>
@@ -88,19 +84,14 @@
                 <tr>
                     <td>상품 카테고리*</td>
                     <td>
-                        <select th:onchange = "subCategoriesGet(this.value)" class="mainCategoriesSelector" id="mainCategorySelector">
+                        <select th:onchange = "subCategoriesGet(this.value)" class="mainCategoriesSelector" id="mainCategorySelector" required>
                             <option value = "">1차 카테고리</option>
-                            <!-- 가져올 카테고리가 있으면 -->
-                            <!--<th:block th:if="${bigsrhCnt > 0}">
-                                <option th:each="list:${bigList}" value = "${list.bigcode}">${list.bigname}</option>
-                            </th:block>-->
+                            <th:block th:if="${mainCategoryList.size() > 0}">
+                                <option th:each="list:${mainCategoryList}" th:value="${list.getMainCode()}">[[${list.getMainName()}]]</option>
+                            </th:block>
                         </select>
-                        <select class="subCategoriesSelector" id="subCategorySelector" name="subCategoryId">
+                        <select class="subCategoriesSelector" id="subCategorySelector" name="subCategoryId" required>
                             <option value = "">2차 카테고리</option>
-                            <!-- 가져올 sub 카테고리가 있으면 -->
-                            <!--<th:block th:if="${mediumsrhCnt > 0}">
-                                <option th:each="list:${mediumList}" value = "${list.mediumcode}">${list.mediumname}</option>
-                            </th:block>-->
                         </select>
                     </td>
                 </tr>
@@ -108,7 +99,7 @@
                 <tr>
                     <td><label for="clothName">상품명 *</label></td>
                     <td>
-                        <input type = "text" id="clothName" name = "clothName">
+                        <input type = "text" id="clothName" name = "clothName" required>
                     </td>
                 </tr>
                 <!-- 등록할 상품의 tax/notTax 선택 -->
@@ -126,12 +117,11 @@
                 <tr>
                     <td><label for="brandId">브랜드</label></td>
                     <td>
-                        <select name = "brandId" id="brandId">
+                        <select name = "brandId" id="brandId" required>
                             <option value = "">브랜드 선택</option>
-                            <!-- 가져올 브랜드가 있으면 -->
-                            <!--<th:block th:if="${brandsrhCnt > 0}">
-                                <option th:each="list:${brandList}" value = "${list.num}">${list.name}</option>
-                            </th:block>-->
+                            <th:block th:if="${brandList.size() > 0}">
+                                <option th:each="list:${brandList}" th:value="${list.getBrandId()}">[[${list.getBrandName()}]]</option>
+                            </th:block>
                         </select>
                     </td>
                 </tr>
@@ -153,7 +143,7 @@
                 <tr>
                     <td>적립금</td>
                     <td>
-                        <input type = "radio" name = "plusType" id = "notPlus" value = "notPlus">
+                        <input type = "radio" name = "plusType" id = "notPlus" value = "notPlus" checked>
                         <label for = "notPlus">없음</label>&emsp;
                         <input type = "radio" name = "plusType" id = "plus" value = "plus">
                         <label for = "plus">적립금</label>&emsp;
@@ -177,12 +167,12 @@
                     <td class="fw-bold bg-EAECEE">
                         <label for="salePrice">판매가격 *</label></td>
                     <td>
-                        <input type = "text" id="salePrice" name = "salePrice">원
+                        <input type = "text" id="salePrice" name = "salePrice" required>원
                     </td>
                     <td class="fw-bold bg-EAECEE">
                         <label for="buyPrice">매입가격 *</label></td>
                     <td>
-                        <input type = "text" id="buyPrice" name = "buyPrice">원
+                        <input type = "text" id="buyPrice" name = "buyPrice" required>원
                     </td>
                 </tr>
             </table>
@@ -199,16 +189,15 @@
 
                 <!-- 예상배송소요일 설정 -->
                 <tr>
-                    <td><label for="deliDate">예상배송소요일 *</label></td>
-                    <td><input type = "text" id = "deliDate" name = "deliDate">일
-                    </td>
+                    <td><label for="deliDay">예상배송소요일 *</label></td>
+                    <td><input type = "text" id = "deliDay" name = "deliDay" required>일</td>
                 </tr>
 
                 <!-- 배송비 설정 -->
                 <tr>
                     <td>배송비 설정</td>
                     <td>
-                        <input type = "radio" name = "deliPay" id = "basePay" value = "basepay">
+                        <input type = "radio" name = "deliPay" id = "basePay" value = "basepay" checked>
                         <label for = "basePay">기본 배송비</label><br>
                         <input type = "radio" name = "deliPay" id = "free" value = "free">
                         <label for = "free">무료</label><br>
@@ -231,7 +220,7 @@
                 <!-- 상품 설명 Box -->
                 <tr>
                     <td colspan = "2">
-                        <textarea rows="20" cols="95" name="content" class="w-100 resize-vertical border-0" ></textarea>
+                        <textarea rows="20" cols="95" name="content" class="w-100 resize-vertical border-0"></textarea>
                     </td>
                 </tr>
 
@@ -414,33 +403,33 @@
             contentType: false,
             data: clothInputForm,
             success: function(result){
-                alert(result);
+                imageUpload(result.clothId);
+                alert("상품이 등록되었습니다.");
+                window.location.href="/host/productList";
             },
             err: function(err){
-                console.log("err:", err)
+                console.log("err:", err);
+                alert("실패");
             }
         });
     }
 
-
     // Image File Upload Ajax 구현 함수
-    // clothDTO랑 FileDTO 연결하는거 아직 구현은 못함 연결해야함(****** 숙제 ******)
-    function imageUpload(cloth) {
+    function imageUpload(clothId) {
         const mainImageInput = document.getElementById("mainFile");
         const subImageInput = document.getElementById("subFile");
         // 파일을 여러개 선택할 수 있으므로 files 라는 객체에 담긴다.
         console.log("main: ", mainImageInput.files);
         console.log("sub: ", subImageInput.files);
-
-        if(mainImageInput.files.length === 0){
-            alert("메인 이미지 파일을 선택해주세요");
-            return;
-        }
+        console.log("clothId: ", clothId);
 
         const formData = new FormData();
         formData.append("mainImage", mainImageInput.files[0]);
-        formData.append("subImages", subImageInput.files);
-        formData.append("cloth", cloth);
+        for (let i = 0; i < subImageInput.files.length; i++) {
+            // formData 에 'subImages' 이라는 키값으로 subImageFile 값을 append 시킨다.
+            formData.append('subImages', subImageInput.files[i]);
+        }
+        formData.append("clothId", clothId);
 
         $.ajax({
             type:"POST",
@@ -449,12 +438,22 @@
             contentType: false,
             data: formData,
             success: function(result){
-                alert(result);
             },
             err: function(err){
-                console.log("err:", err)
+                alert("파일 삽입 실패");
             }
         })
+    }
+
+    // 메인이미지 선택시 미리보기
+    function imageFileSelect(mainImage) {
+        const preview = document.getElementById('mainImage');
+        const reader = new FileReader();
+        reader.readAsDataURL(mainImage);
+        reader.onload = (e) => {
+            preview.src = e.target.result;
+            preview.className = "wh-100px";
+        };
     }
 </script>
 

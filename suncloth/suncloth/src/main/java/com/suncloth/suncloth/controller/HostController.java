@@ -1,7 +1,11 @@
 package com.suncloth.suncloth.controller;
 
 import com.suncloth.suncloth.model.Brand;
+import com.suncloth.suncloth.model.MainCategory;
 import com.suncloth.suncloth.repository.BrandRepository;
+import com.suncloth.suncloth.repository.ClothRepository;
+import com.suncloth.suncloth.repository.FileRepository;
+import com.suncloth.suncloth.repository.MainCategoryRepository;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +22,12 @@ public class HostController {
 
     @Autowired
     BrandRepository brandRepository;
+    @Autowired
+    MainCategoryRepository mainCategoryRepository;
+    @Autowired
+    ClothRepository clothRepository;
+    @Autowired
+    FileRepository fileRepository;
 
     /* 상품 */
     // 상품 리스트
@@ -27,7 +37,13 @@ public class HostController {
     }
     // 상품 등록
     @GetMapping("/productInput")
-    public String productInput() {
+    public String productInput(Model model) {
+        List<Brand> brands = brandRepository.findAll();
+        List<MainCategory> mainCategories = mainCategoryRepository.findAll();
+
+        model.addAttribute("brandList", brands);
+        model.addAttribute("mainCategoryList", mainCategories);
+
         return "/host/product/host_productInput";
     }
     // 상품 수정

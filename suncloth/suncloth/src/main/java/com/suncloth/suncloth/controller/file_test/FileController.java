@@ -1,5 +1,6 @@
 package com.suncloth.suncloth.controller.file_test;
 
+import com.suncloth.suncloth.model.Cloth;
 import com.suncloth.suncloth.model.File;
 import com.suncloth.suncloth.repository.FileRepository;
 import com.suncloth.suncloth.service.FileService;
@@ -35,11 +36,13 @@ public class FileController {
     }
 
     @PostMapping("/upload")
-    public String uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("files") List<MultipartFile> files) throws IOException {
-        fileService.saveFile(file, "main");
+    public String uploadFile(@RequestParam("file") MultipartFile file
+            , @RequestParam("files") List<MultipartFile> files
+            , @RequestParam("cloth") Cloth cloth) throws IOException {
+        fileService.saveFile(file, "main", cloth);
 
         for (MultipartFile multipartFile : files) {
-            fileService.saveFile(multipartFile, "sub");
+            fileService.saveFile(multipartFile, "sub", cloth);
         }
 
         return "/file/upload";

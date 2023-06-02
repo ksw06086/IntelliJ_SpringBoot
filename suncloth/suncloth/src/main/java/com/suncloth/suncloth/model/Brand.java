@@ -3,13 +3,18 @@ package com.suncloth.suncloth.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name="brand_tbl")
 public class Brand {
@@ -22,7 +27,7 @@ public class Brand {
     private String hp;                  // 브랜드 업체 통신수단(브랜드 전화번호)
 
     // SubCategory 와 연결된 Cloth 들
-    @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "brand")
     @JsonIgnore
     private List<Cloth> clothList = new ArrayList<>();
 }
