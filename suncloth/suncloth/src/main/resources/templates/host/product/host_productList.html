@@ -174,37 +174,32 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <!--<th:block th:if="${srhCnt > 0}">-->
-                    <tr class = "text-center td-py10 td-px15"><!--th:each="list:${list}"-->
-                        <td><input type = "checkbox" name = "prdChecks" value = "${list.num}"></td>
-                        <td> <!-- th:if="${list.mainfile != null}" -->
-                            <img src="https://cdn-icons-png.flaticon.com/128/2957/2957307.png"
-                                 width = "50px" height = "60px">
-                        </td>
-                        <td>${number}(${list.num})
-                            <!--<c:set var = "number" value = "${number-1}"/>-->
-                        </td>
-                        <!-- 상세 페이지 -->
-                        <td th:text="${'outer'}">
-                            ${list.mediumpartname}
-                        </td>
-                        <td class="text-start">
-                            <a th:href="@{/host/productView(name='text')}"
-                               th:text="|누군가가 훔쳐갈 수도 있는 아름다운 여름 옷|"> <!--href = "h_productForm?num=${list.num}&number=${number+1}&pageNum=${pageNum}"-->
-                                ${list.name}
-                            </a></td>
-                        <td><b th:text="|KRW 15000|">KRW ${list.saleprice}</b></td>
-                        <td th:text="|1500|">${list.deliprice}</td>
-                        <td th:text="${#dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm')}">${list.reg_date}</td>
-                        <td><input type = "button" value = "color/size 추가" name = "csInput" class="whiteButton"
-                                   onclick = "window.location = 'h_csinput?num=${list.num}&pageNum=${pageNum}'"></td>
-                    </tr>
-                    <!--</th:block>-->
-                    <!--<tr class = "text-center td-py10 td-px15">
+                    <th:block th:if="${clothList.size() > 0}">
+                        <tr class = "text-center td-py10 td-px15" th:each="list:${clothList}">
+                            <td><input type = "checkbox" name = "prdChecks" th:value = "${list.getClothId()}"></td>
+                            <td> <!-- th:if="${list.mainfile != null}" -->
+                                <img th:src="${list.getFiles().get(0).getSavedPath()}" alt="이미지 없음"
+                                     width = "50px" height = "60px">
+                            </td>
+                            <td th:text="${list.getClothId()}"></td>
+                            <td th:text="${list.getSubCategory().getSubName()}"></td>
+                            <!-- 상세 페이지 -->
+                            <td class="text-start">
+                                <a th:href="@{/host/productView(name='text')}"
+                                   th:text="${list.getClothName()}"> <!--href = "h_productForm?num=${list.num}&number=${number+1}&pageNum=${pageNum}"-->
+                                </a></td>
+                            <td><b th:text="|KRW ${list.getSalePrice()}|">KRW 12000</b></td>
+                            <td th:text="|${list.getDeliPrice()}|">1500</td>
+                            <td th:text="|${list.getRegDate()}|">[[${#dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm')}]]</td>
+                            <td><input type = "button" value = "color/size 추가" name = "csInput" class="whiteButton"
+                                       onclick = "window.location = 'h_csinput?num=${list.num}&pageNum=${pageNum}'"></td>
+                        </tr>
+                    </th:block>
+                    <tr class = "text-center td-py10 td-px15" th:if="${clothList.size() == 0}">
                       <td colspan = "10">
-                        게시글이 없습니다. 글을 작성해주세요!!
+                        등록된 상품이 없습니다. 상품을 등록해주세요.
                       </td>
-                    </tr>-->
+                    </tr>
                     </tbody>
                 </table>
 

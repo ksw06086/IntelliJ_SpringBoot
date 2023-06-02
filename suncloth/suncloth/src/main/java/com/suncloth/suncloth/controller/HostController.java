@@ -1,6 +1,7 @@
 package com.suncloth.suncloth.controller;
 
 import com.suncloth.suncloth.model.Brand;
+import com.suncloth.suncloth.model.Cloth;
 import com.suncloth.suncloth.model.MainCategory;
 import com.suncloth.suncloth.repository.BrandRepository;
 import com.suncloth.suncloth.repository.ClothRepository;
@@ -32,7 +33,9 @@ public class HostController {
     /* 상품 */
     // 상품 리스트
     @GetMapping("/productList")
-    public String productList() {
+    public String productList(Model model) {
+        List<Cloth> cloths = clothRepository.findAll();
+        model.addAttribute("clothList", cloths);
         return "/host/product/host_productList";
     }
     // 상품 등록
