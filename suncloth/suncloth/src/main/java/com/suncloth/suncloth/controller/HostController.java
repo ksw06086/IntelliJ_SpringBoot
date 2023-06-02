@@ -34,8 +34,14 @@ public class HostController {
     // 상품 리스트
     @GetMapping("/productList")
     public String productList(Model model) {
+        List<Brand> brands = brandRepository.findAll();
+        List<MainCategory> mainCategories = mainCategoryRepository.findAll();
         List<Cloth> cloths = clothRepository.findAll();
+
+        model.addAttribute("brandList", brands);
+        model.addAttribute("mainCategoryList", mainCategories);
         model.addAttribute("clothList", cloths);
+
         return "/host/product/host_productList";
     }
     // 상품 등록

@@ -37,15 +37,14 @@
                 <tr>
                     <td>카테고리</td>
                     <td>
-                        <select id="mainCategory" name="mainCategory" onchange="select_category();">
-                            <option value="">1차 카테고리</option>
-                            <!-- 1차카테고리가 있으면 option 추가 -->
-                            <!--<th:block th:if="${bigsrhCnt > 0}">
-                                <option th:each="list:${biglist}" value = "${list.bigcode}">${list.bigname}</option>
-                            </th:block>-->
+                        <select th:onchange = "subCategoriesGet(this.value)" class="mainCategoriesSelector" id="mainCategorySelector">
+                            <option value = "">메인 카테고리 전체</option>
+                            <th:block th:if="${mainCategoryList.size() > 0}">
+                                <option th:each="list:${mainCategoryList}" th:value="${list.getMainCode()}">[[${list.getMainName()}]]</option>
+                            </th:block>
                         </select>
-                        <select id="subCategory" name="subCategory"> <!-- 일단 아우터것만 이거는 jQuery로 조건써서 갖다넣을려고함 -->
-                            <option value="">2차 카테고리</option>
+                        <select class="subCategoriesSelector" id="subCategorySelector" name="subCategoryId">
+                            <option value = "">서브 카테고리 전체</option>
                         </select>
                     </td>
                 </tr>
@@ -54,12 +53,11 @@
                 <tr>
                     <td>브랜드</td>
                     <td>
-                        <select id="brand" class="w-15">
-                            <option value="">전체</option>
-                            <!-- 브랜드가 있으면 option 추가 -->
-                            <!--<th:block th:if="${brandsrhCnt > 0}">
-                                <option th:each="list:${brandlist}" value = "${list.num}">${list.name}</option>
-                            </th:block>-->
+                        <select name = "brandId" id="brandId" class="w-15">
+                            <option value = "">전체</option>
+                            <th:block th:if="${brandList.size() > 0}">
+                                <option th:each="list:${brandList}" th:value="${list.getBrandId()}">[[${list.getBrandName()}]]</option>
+                            </th:block>
                         </select>
                     </td>
                 </tr>
@@ -75,21 +73,16 @@
                         <!-- 버튼 클릭시 위에 date input 값이 변하게 됨 -->
                         <input type="hidden" name="dayNum" value="0">
                         <span class="p-0 ms-2">
-                            <input type="radio" name="dayType" id="today" value="today" onclick="today();"
-                                   class="d-none">
-                            <label for="today" class="border border-black py-1 px-2">오늘</label>
-                            <input type="radio" name="dayType" id="week" value="week" onclick="week();"
-                                   class="d-none">
-                            <label for="week" class="border border-black py-1 px-2">1주일</label>
-                            <input type="radio" name="dayType" id="month1" value="month1" onclick="month1();"
-                                   class="d-none">
-                            <label for="month1" class="border border-black py-1 px-2">1개월</label>
-                            <input type="radio" name="dayType" id="month3" value="month3" onclick="month3();"
-                                   class="d-none">
-                            <label for="month3" class="border border-black py-1 px-2">3개월</label>
-                            <input type="radio" name="dayType" id="month6" value="month6" onclick="month6();"
-                                   class="d-none">
-                            <label for="month6" class="border border-black py-1 px-2">6개월</label>
+                            <button type="button" class="border border-black py-1 px-2 bg-white"
+                                    th:onclick="dateToday()">오늘</button>
+                            <button type="button" class="border border-black py-1 px-2 bg-white"
+                                    th:onclick="dateWeek()">1주일</button>
+                            <button type="button" class="border border-black py-1 px-2 bg-white"
+                                    th:onclick="dateMonth1()">1개월</button>
+                            <button type="button" class="border border-black py-1 px-2 bg-white"
+                                    th:onclick="dateMonth3()">3개월</button>
+                            <button type="button" class="border border-black py-1 px-2 bg-white"
+                                    th:onclick="dateMonth6()">6개월</button>
                         </span>
                     </td>
                 </tr>
@@ -145,14 +138,6 @@
             <form action = "h_productdeletePro" method = "post" name = "completeForm">
                 <input type = "hidden" name = "pageNum" value = "${pageNum}">
 
-                <!-- Q&A일 경우 어느 카테고리로 질문했는지? 선택 -->
-                <!--<div th:if="${title == 'Q&A'}" class="d-flex mt-5 mb-5 fs-75 justify-content-center">
-                  <div>상품문의</div><div class="mx-2">|</div>
-                  <div>배송문의</div><div class="mx-2">|</div>
-                  <div>입금확인문의</div><div class="mx-2">|</div>
-                  <div>주문/변경/취소/환불문의</div><div class="mx-2">|</div>
-                  <div>기타문의</div>
-                </div>-->
                 <!-- ProductList Top Menu -->
                 <div th:replace="fragments/host_common :: boardTopList"></div>
 
