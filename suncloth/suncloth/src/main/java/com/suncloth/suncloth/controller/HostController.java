@@ -63,6 +63,36 @@ public class HostController {
         return "/host/product/host_productView";
     }
 
+    /* 재고 */
+    // 재고 리스트
+    @GetMapping("/stockList")
+    public String stockList(Model model
+            , @RequestParam(required = false) long clothId) {
+        List<Brand> brands = brandRepository.findAll();
+        List<MainCategory> mainCategories = mainCategoryRepository.findAll();
+        Cloth cloth = clothRepository.findById(clothId).orElse(null);
+
+        model.addAttribute("brandList", brands);
+        model.addAttribute("mainCategoryList", mainCategories);
+        model.addAttribute("cloth", cloth);
+
+        return "/host/product/host_stockList";
+    }
+    // 재고 등록
+    @GetMapping("/stockInput")
+    public String stockInput(Model model
+            , @RequestParam(required = false) long clothId) {
+        List<Brand> brands = brandRepository.findAll();
+        List<MainCategory> mainCategories = mainCategoryRepository.findAll();
+        Cloth cloth = clothRepository.findById(clothId).orElse(null);
+
+        model.addAttribute("brandList", brands);
+        model.addAttribute("mainCategoryList", mainCategories);
+        model.addAttribute("cloth", cloth);
+
+        return "/host/product/host_stockInput";
+    }
+
     /* 브랜드 */
     // 브랜드 목록
     @GetMapping("/brandList")

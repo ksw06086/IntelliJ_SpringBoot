@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/host_common :: head('prdInput')">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body class="hostBody">
+<!-- host page header(host_common.html) -->
+<header th:replace="fragments/host_common :: header"></header>
+
+<!-- host page navi -->
+<nav th:replace="fragments/host_common :: navi"></nav>
+
+<!-- 본문 내용(Body Block) -->
+<div class="d-flex">
+    <!-- Sidebar Block -->
+    <div style="width:300px;">
+        <aside th:replace="fragments/host_common :: sidebar('product')"></aside>
+    </div>
+    <div class="flex-fill">
+        <form method="post" id="clothInputForm" enctype="multipart/form-data">
+        <div class="position-relative text-center w-95 mx-auto my-15 vertical-middle-all">
+            <p class="fs-15 p-0 m-0"><b th:text="|[${cloth.getClothName()}] 재고 상품 등록|"></b></p>
+            <p class="position-absolute m-0 top-0 end-0">
+                <input type="submit" value="등록" class="blueBaseBtn px-10 py-10"
+                       th:onclick = "return clothAdd()">
+            </p>
+        </div>
+
+        <div class="bg-white w-95 mx-auto mb-20 pb-15">
+            <!-- 재고 기본 정보 Title Block -->
+            <div class="w-97 mx-auto bg-white px-10 py-15">
+                <b>재고기본정보</b>
+            </div>
+
+            <!-- 재고 기본 정보 Input Block -->
+            <table class="w-97 mx-auto bg-white border-top-1-ccc border-bottom-1-ccc td-py15 td-px10 fs-8 td-border-bottom-1-ccc tdChild1-fw-bold tdChild1-bg-lightGray vertical-middle-all">
+                <col style = "width:20%">
+                <col>
+                <!-- 상품 정보 -->
+                <tr>
+                    <td class="text-center py-10">
+                        <img th:src="|/uploadImages/${cloth.getFiles().get(0).getSavedNm()}|" alt="이미지 없음" class="wh-100px">
+                    </td>
+                    <td th:text="${cloth.getClothName()}">[멋있는 옷]</td>
+                </tr>
+                <!-- 컬러 추가/삭제 -->
+                <tr>
+                    <td><label for="colorInput">컬러 추가</label></td>
+                    <td>
+                        <input type = "text" id = "colorInput">
+                        <input type = "button" class = "whiteButton " value = "추가" th:onclick="colorAdd()">
+                        <select class = "colorsSelector" id="colorDelSelector">
+                            <option value = "">컬러 선택</option>
+                            <!-- 가져올 카테고리가 있으면 -->
+
+                        </select>
+                        <input type = "button" class = "whiteButton" value = "삭제" th:onclick = "colorDel()">
+                    </td>
+                </tr>
+                <!-- 사이즈 추가/삭제 -->
+                <tr>
+                    <td><label for="sizeInput">사이즈 추가</label></td>
+                    <td>
+                        <input type = "text" id = "sizeInput">
+                        <input type = "button" class = "whiteButton " value = "추가" th:onclick="sizeAdd()">
+                        <select class = "sizesSelector" id="sizeDelSelector">
+                            <option value = "">사이즈 선택</option>
+                            <!-- 가져올 카테고리가 있으면 -->
+
+                        </select>
+                        <input type = "button" class = "whiteButton" value = "삭제" th:onclick = "sizeDel()">
+                    </td>
+                </tr>
+
+                <!-- 등록할 재고의 color/size 선택 -->
+                <tr>
+                    <td>color/size 선택*</td>
+                    <td>
+                        <select class = "colorsSelector" id="colorSelector" name="colorId" required>
+                            <option value = "">컬러 선택</option>
+                            <!-- 가져올 카테고리가 있으면 -->
+
+                        </select>
+                        <select class = "sizesSelector" id="sizeSelector" name="sizeId">
+                            <option value = "">사이즈 선택</option>
+                            <!-- 가져올 카테고리가 있으면 -->
+
+                        </select>
+                    </td>
+                </tr>
+
+                <!-- 판매상태 선택 -->
+                <tr>
+                    <td>판매상태*</td>
+                    <td>
+                        <input type = "radio" name = "state" id = "saleIng" value = "판매중" checked>
+                        <label for = "saleIng">판매중</label>&emsp;
+                        <input type = "radio" name = "state" id = "notStock" value = "품절">
+                        <label for = "notStock">품절</label>&emsp;
+                        <input type = "radio" name = "state" id = "saleReady" value = "판매대기">
+                        <label for = "saleReady">판매대기</label>&emsp;
+                        <input type = "radio" name = "state" id = "saleStop" value = "판매중지">
+                        <label for = "saleStop">판매중지</label>&emsp;
+                    </td>
+                </tr>
+
+                <!-- 재고 수량 선정 -->
+                <tr>
+                    <td><label for="stockCount">재고*</label></td>
+                    <td><input type = "number" id = "stockCount" name = "stockCount" min = "1" required>ea
+                    </td>
+                </tr>
+
+                <!-- 최대구매수량 선정 -->
+                <tr>
+                    <td><label for="stockMaxCount">최대구매수량*</label></td>
+                    <td>
+                        최대 <input type = "number" id = "stockMaxCount" name = "stockMaxCount" min = "1" required>개 까지 구매 가능
+                    </td>
+                </tr>
+
+                <!-- 등록할 상품의 tax/notTax 선택 -->
+                <tr>
+                    <td>과세/비과세</td>
+                    <td>
+                        <input type = "radio" name = "tex" id = "tax" value = "과세" checked>
+                        <label for = "tax">과세</label>&emsp;
+                        <input type = "radio" name = "tex" id = "notTax" value = "비과세">
+                        <label for = "notTax">비과세</label>
+                    </td>
+                </tr>
+
+                <!-- 등록할 상품의 적립금 선택 -->
+                <tr>
+                    <td>적립금</td>
+                    <td>
+                        <input type = "radio" name = "plusType" id = "notPlus" value = "notPlus" checked>
+                        <label for = "notPlus">없음</label>&emsp;
+                        <input type = "radio" name = "plusType" id = "plus" value = "plus">
+                        <label for = "plus">적립금</label>&emsp;
+                        <input type = "text" name = "plus" value="0">원
+                    </td>
+                </tr>
+            </table>
+
+            <!-- 상품 판매 정보 Title Block -->
+            <div class="w-97 mx-auto bg-white px-10 py-15">
+                <b>·재고 판매정보</b>
+            </div>
+
+            <!-- 상품 판매 정보 Input Block -->
+            <table class="w-97 mx-auto bg-white border-top-1-ccc border-bottom-1-ccc td-py15 td-px10 td-border-bottom-1-ccc fs-8 vertical-middle-all">
+                <col style = "width:20%">
+                <col>
+                <col style = "width:20%">
+                <col>
+                <tr>
+                    <td class="fw-bold bg-EAECEE">
+                        <label for="salePrice">판매가격 *</label></td>
+                    <td>
+                        <input type = "text" id="salePrice" name = "salePrice" required>원
+                    </td>
+                    <td class="fw-bold bg-EAECEE">
+                        <label for="buyPrice">매입가격 *</label></td>
+                    <td>
+                        <input type = "text" id="buyPrice" name = "buyPrice" required>원
+                    </td>
+                </tr>
+            </table>
+
+            <!-- 배송 관련 정보 Title Block -->
+            <div class="w-97 mx-auto bg-white px-10 py-15">
+                <b>·배송관련</b>
+            </div>
+
+            <!-- 배송 관련 정보 Input Block -->
+            <table class="w-97 mx-auto bg-white border-top-1-ccc border-bottom-1-ccc td-px10 td-py15 td-border-bottom-1-ccc fs-8 tdChild1-bg-lightGray tdChild1-fw-bold vertical-middle-all">
+                <col style = "width:20%;">
+                <col>
+
+                <!-- 예상배송소요일 설정 -->
+                <tr>
+                    <td><label for="deliDay">예상배송소요일 *</label></td>
+                    <td><input type = "text" id = "deliDay" name = "deliDay" required>일</td>
+                </tr>
+
+                <!-- 배송비 설정 -->
+                <tr>
+                    <td>배송비 설정</td>
+                    <td>
+                        <input type = "radio" name = "deliPay" id = "basePay" value = "basepay" checked>
+                        <label for = "basePay">기본 배송비</label><br>
+                        <input type = "radio" name = "deliPay" id = "free" value = "free">
+                        <label for = "free">무료</label><br>
+                        <input type = "radio" name = "deliPay" id = "plusDeliPay" value = "pluspay">
+                        <label for = "plusDeliPay">유료</label>
+                        <input type = "text" id = "deliPrice" name = "deliPrice" value="0">원
+                    </td>
+                </tr>
+            </table>
+        </div>
+        </form>
+    </div>
+</div>
+
+<!-- using Javascript, Bootstrap, JQuery -->
+<footer th:replace="fragments/host_common :: footer"></footer>
+</body>
+</html>

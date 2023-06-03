@@ -112,20 +112,14 @@ create table file_tbl(
     FOREIGN KEY(cloth_id) references cloth_tbl(cloth_id) on delete cascade
 );
 
-/** 상품(cloths_tbl) Table **/
+/** 상품(cloth_tbl) Table **/
 create table cloth_tbl (
     cloth_id int GENERATED ALWAYS as IDENTITY,
     cloth_name varchar2(50) not null,
     content varchar2(255) DEFAULT '내용 없음',
     sub_code int,
-    tex varchar2(30) not null,
     brand_id int,
     icon varchar2(30),
-    plus int default 0,
-    sale_price int not null,
-    buy_price int not null,
-    deli_day int not null,
-    deli_price int default 2500,
     with_item_ids varchar2(100),
     reg_date Date default sysdate,
     CONSTRAINT cloth_clothid_pk_excption PRIMARY key(cloth_id),
@@ -133,3 +127,40 @@ create table cloth_tbl (
     FOREIGN key(brand_id) references brand_tbl(brand_id)
 );
 
+/************ 재고 관련 Table ***********/
+/** 색상(color_tbl) Table **/
+create table color_tbl(
+    color_code int GENERATED ALWAYS as IDENTITY,
+    color_name varchar2(50) constraint color_colorname_nn_excption not null,
+    CONSTRAINT color_colorcode_pk_excption PRIMARY key(color_code)
+);
+
+/** 사이즈(size_tbl) Table **/
+create table size_tbl(
+    size_code int GENERATED ALWAYS as IDENTITY,
+    size_name varchar2(50) constraint size_sizename_nn_excption not null,
+    CONSTRAINT size_sizecode_pk_excption PRIMARY key(size_code)
+);
+
+/** 재고(stock_tbl) Table **/
+create table stock_tbl (
+    stock_id int GENERATED ALWAYS as IDENTITY,
+    cloth_id int,
+    color_code int,
+    size_code int,
+    stock_count int,
+    stock_max_count int,
+    tex varchar2(30) not null,
+    plus int default 0,
+    sale_price int not null,
+    buy_price int not null,
+    deli_day int not null,
+    deli_price int default 2500,
+    state varchar2(50) not null,
+    reg_date Date default sysdate,
+    CONSTRAINT stock_stockid_pk_excption PRIMARY key(stock_id),
+    FOREIGN KEY(color_code) references color_tbl(color_code) on delete cascade,
+    FOREIGN KEY(size_code) references size_tbl(size_code) on delete cascade,
+    FOREIGN key(cloth_id) references cloth_tbl(cloth_id) on delete cascade
+);
+    

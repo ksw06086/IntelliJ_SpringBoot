@@ -95,21 +95,12 @@
                         </select>
                     </td>
                 </tr>
+
                 <!-- 등록할 상품의 name 작성 -->
                 <tr>
                     <td><label for="clothName">상품명 *</label></td>
                     <td>
                         <input type = "text" id="clothName" name = "clothName" required>
-                    </td>
-                </tr>
-                <!-- 등록할 상품의 tax/notTax 선택 -->
-                <tr>
-                    <td>과세/비과세</td>
-                    <td>
-                        <input type = "radio" name = "tex" id = "tax" value = "과세" checked>
-                        <label for = "tax">과세</label>&emsp;
-                        <input type = "radio" name = "tex" id = "notTax" value = "비과세">
-                        <label for = "notTax">비과세</label>
                     </td>
                 </tr>
 
@@ -136,74 +127,6 @@
                         <label for = "minPrice">최저가</label>&emsp;
                         <input type = "radio" name = "icon" id = "best" value = "best">
                         <label for = "best">best</label>
-                    </td>
-                </tr>
-
-                <!-- 등록할 상품의 적립금 선택 -->
-                <tr>
-                    <td>적립금</td>
-                    <td>
-                        <input type = "radio" name = "plusType" id = "notPlus" value = "notPlus" checked>
-                        <label for = "notPlus">없음</label>&emsp;
-                        <input type = "radio" name = "plusType" id = "plus" value = "plus">
-                        <label for = "plus">적립금</label>&emsp;
-                        <input type = "text" name = "plus" value="0">원
-                    </td>
-                </tr>
-            </table>
-
-            <!-- 상품 판매 정보 Title Block -->
-            <div class="w-97 mx-auto bg-white px-10 py-15">
-                <b>·상품 판매정보</b>
-            </div>
-
-            <!-- 상품 판매 정보 Input Block -->
-            <table class="w-97 mx-auto bg-white border-top-1-ccc border-bottom-1-ccc td-py15 td-px10 td-border-bottom-1-ccc fs-8 vertical-middle-all">
-                <col style = "width:20%">
-                <col>
-                <col style = "width:20%">
-                <col>
-                <tr>
-                    <td class="fw-bold bg-EAECEE">
-                        <label for="salePrice">판매가격 *</label></td>
-                    <td>
-                        <input type = "text" id="salePrice" name = "salePrice" required>원
-                    </td>
-                    <td class="fw-bold bg-EAECEE">
-                        <label for="buyPrice">매입가격 *</label></td>
-                    <td>
-                        <input type = "text" id="buyPrice" name = "buyPrice" required>원
-                    </td>
-                </tr>
-            </table>
-
-            <!-- 배송 관련 정보 Title Block -->
-            <div class="w-97 mx-auto bg-white px-10 py-15">
-                <b>·배송관련</b>
-            </div>
-
-            <!-- 배송 관련 정보 Input Block -->
-            <table class="w-97 mx-auto bg-white border-top-1-ccc border-bottom-1-ccc td-px10 td-py15 td-border-bottom-1-ccc fs-8 tdChild1-bg-lightGray tdChild1-fw-bold vertical-middle-all">
-                <col style = "width:20%;">
-                <col>
-
-                <!-- 예상배송소요일 설정 -->
-                <tr>
-                    <td><label for="deliDay">예상배송소요일 *</label></td>
-                    <td><input type = "text" id = "deliDay" name = "deliDay" required>일</td>
-                </tr>
-
-                <!-- 배송비 설정 -->
-                <tr>
-                    <td>배송비 설정</td>
-                    <td>
-                        <input type = "radio" name = "deliPay" id = "basePay" value = "basepay" checked>
-                        <label for = "basePay">기본 배송비</label><br>
-                        <input type = "radio" name = "deliPay" id = "free" value = "free">
-                        <label for = "free">무료</label><br>
-                        <input type = "radio" name = "deliPay" id = "plusDeliPay" value = "pluspay">
-                        <label for = "plusDeliPay">유료</label>
-                        <input type = "text" id = "deliPrice" name = "deliPrice" value="0">원
                     </td>
                 </tr>
             </table>

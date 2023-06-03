@@ -243,9 +243,6 @@ function subCategoriesGet(mainCode){
 // *** Cloth 상품 관련 Script *** //
 // Cloth 상품 추가하기
 function clothAdd(){
-    if(document.getElementById("basePay").checked === true) {
-        document.getElementById("deliPrice").value = 2500;
-    }
     let clothInputForm = new FormData(document.getElementById("clothInputForm"));
 
     $.ajax({
@@ -309,6 +306,142 @@ function imageFileSelect(mainImage) {
     };
 }
 
+// *** 색상 관련 Script *** //
+// Color 추가하기
+function colorAdd(){
+    const colorInput = document.getElementById("colorInput").value;
+    const colorParam = { colorName : colorInput };
+
+    $.ajax({
+        type: 'post',
+        contentType:'application/json',
+        data: JSON.stringify(colorParam),
+        url: '/api/color',
+        success: (result) => {
+            //AJAX 성공시 실행 코드
+            alert(result.colorName + " 색상이 추가되었습니다.");
+            colorsGet();
+        }, error:function(e) {
+            alert("error: " + e);
+        }
+    });
+}
+
+// Color 삭제하기
+function colorDel(){
+    const deleteColorForm = document.getElementById("colorDelSelector");
+    const colorCode = deleteColorForm.value;
+    const colorName = deleteColorForm.options[deleteColorForm.selectedIndex].text;
+
+    $.ajax({
+        type: 'DELETE',
+        url: '/api/colors/' + colorCode,
+        success: (result) => {
+            //AJAX 성공시 실행 코드
+            alert(colorName + " 색상이 삭제되었습니다.");
+            colorsGet();
+        }, error:function(e) {
+            alert("error: " + e);
+        }
+    });
+}
+
+// Color 목록 화면의 colorsSeletor에 추가해주기
+function colorsGet(){
+    $.ajax({
+        type: 'get',
+        url: '/api/colors',
+        success: (result) => {
+            //AJAX 성공시 실행 코드(* mainCategoriesSelector Class)
+            const allColorByClass = document.getElementsByClassName("colorsSelector");
+
+            // 1. mainCategoriesSelector Clear
+            for (let i = 0; i < allColorByClass.length; i++) {
+                allColorByClass[i].innerHTML = `<option value = "">컬러 선택</option>`;
+            }
+            // 2. mainCategoriesSelector Option 추가
+            result.forEach(data => {
+                for (let i = 0; i < allColorByClass.length; i++) {
+                    const option = document.createElement('option');
+                    option.innerHTML = data.colorName;
+                    option.value = data.colorCode;
+                    allColorByClass[i].append(option);
+                }
+            })
+        }, error:function(e) {
+            alert("error: " + e);
+        }
+    });
+}
+
+// *** 사이즈 관련 Script *** //
+// Size 추가하기
+function sizeAdd(){
+    const sizeInput = document.getElementById("sizeInput").value;
+    const sizeParam = { sizeName : sizeInput };
+
+    $.ajax({
+        type: 'post',
+        contentType:'application/json',
+        data: JSON.stringify(sizeParam),
+        url: '/api/size',
+        success: (result) => {
+            //AJAX 성공시 실행 코드
+            alert(result.sizeName + " 사이즈가 추가되었습니다.");
+            sizesGet();
+        }, error:function(e) {
+            alert("error: " + e);
+        }
+    });
+}
+
+// Size 삭제하기
+function sizeDel(){
+    const deleteSizeForm = document.getElementById("sizeDelSelector");
+    const sizeCode = deleteSizeForm.value;
+    const sizeName = deleteSizeForm.options[deleteSizeForm.selectedIndex].text;
+
+    $.ajax({
+        type: 'DELETE',
+        url: '/api/sizes/' + sizeCode,
+        success: (result) => {
+            //AJAX 성공시 실행 코드
+            alert(sizeName + " 사이즈가 삭제되었습니다.");
+            sizesGet();
+        }, error:function(e) {
+            alert("error: " + e);
+        }
+    });
+}
+
+// Size 목록 화면의 colorsSeletor에 추가해주기
+function sizesGet(){
+    $.ajax({
+        type: 'get',
+        url: '/api/sizes',
+        success: (result) => {
+            //AJAX 성공시 실행 코드(* mainCategoriesSelector Class)
+            const allSizeByClass = document.getElementsByClassName("sizesSelector");
+
+            // 1. mainCategoriesSelector Clear
+            for (let i = 0; i < allSizeByClass.length; i++) {
+                allSizeByClass[i].innerHTML = `<option value = "">사이즈 선택</option>`;
+            }
+            // 2. mainCategoriesSelector Option 추가
+            result.forEach(data => {
+                for (let i = 0; i < allSizeByClass.length; i++) {
+                    const option = document.createElement('option');
+                    option.innerHTML = data.sizeName;
+                    option.value = data.sizeCode;
+                    allSizeByClass[i].append(option);
+                }
+            })
+        }, error:function(e) {
+            alert("error: " + e);
+        }
+    });
+}
+
 // *** 검색 관련 Script *** //
 // --- 날짜 관련 함수들 --- //
 /* 관련 함수 설명
@@ -352,3 +485,8 @@ function dateMonth6(){ // 6개월
     document.getElementById('firstDay').value = date.toISOString().substring(0, 10);
     document.searchForm.dayNum.value = 4;
 }
+
+
+/*if(document.getElementById("basePay").checked === true) {
+    document.getElementById("deliPrice").value = 2500;
+}*/
