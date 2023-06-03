@@ -19,8 +19,10 @@
     </div>
     <div class="flex-fill">
         <div class="position-relative text-center w-95 mx-auto my-15 vertical-middle-all">
-            <p class="fs-15 p-0 m-0"><b th:text="|[ ${cloth.getClothName()} ] 재고관리|"></b></p>
-            <p class="position-absolute m-0 top-0 end-0">
+            <p class="fs-15 p-0 m-0">
+                <img th:src="|/uploadImages/${cloth.getFiles().get(0).getSavedNm()}|" alt="이미지 없음" class="wh-50px">
+                <b th:text="|[ ${cloth.getClothName()} ] 재고관리|">[멋있는 옷] 재고관리</b></p>
+            <p class="position-absolute m-0 top-50 end-0 translate-middle-y">
                 <button type="button" class="blueBaseBtn px-10 py-10">
                     <a class="text-white text-decoration-none" th:href="@{/host/stockInput(clothId=${cloth.getClothId()})}">재고등록</a>
                 </button>
@@ -33,30 +35,27 @@
                 <col style="width:15%;">
                 <col>
 
-                <!-- 카테고리 선택 Block -->
+                <!-- 컬러 선택 Block -->
                 <tr>
-                    <td>카테고리</td>
+                    <td>컬러</td>
                     <td>
-                        <select th:onchange = "subCategoriesGet(this.value)" class="mainCategoriesSelector" id="mainCategorySelector">
-                            <option value = "">메인 카테고리 전체</option>
-                            <th:block th:if="${mainCategoryList.size() > 0}">
-                                <option th:each="list:${mainCategoryList}" th:value="${list.getMainCode()}">[[${list.getMainName()}]]</option>
+                        <select class="colorsSelector" id="colorSelector">
+                            <option value = "">컬러 전체</option>
+                            <th:block th:if="${colorList.size() > 0}">
+                                <option th:each="list:${colorList}" th:value="${list.getColorCode()}">[[${list.getColorName()}]]</option>
                             </th:block>
-                        </select>
-                        <select class="subCategoriesSelector" id="subCategorySelector" name="subCategoryId">
-                            <option value = "">서브 카테고리 전체</option>
                         </select>
                     </td>
                 </tr>
 
-                <!-- 브랜드 선택 Block -->
+                <!-- 사이즈 선택 Block -->
                 <tr>
-                    <td>브랜드</td>
+                    <td>사이즈</td>
                     <td>
-                        <select name = "brandId" id="brandId" class="w-15">
-                            <option value = "">전체</option>
-                            <th:block th:if="${brandList.size() > 0}">
-                                <option th:each="list:${brandList}" th:value="${list.getBrandId()}">[[${list.getBrandName()}]]</option>
+                        <select class="sizesSelector" id="sizeSelector">
+                            <option value = "">사이즈 전체</option>
+                            <th:block th:if="${sizeList.size() > 0}">
+                                <option th:each="list:${sizeList}" th:value="${list.getSizeCode()}">[[${list.getSizeName()}]]</option>
                             </th:block>
                         </select>
                     </td>
@@ -87,9 +86,9 @@
                     </td>
                 </tr>
 
-                <!-- 검색할 상품 가격 선택 Block -->
+                <!-- 검색할 재고 가격 선택 Block -->
                 <tr>
-                    <td>상품가격</td>
+                    <td>재고가격</td>
                     <td>
                         <input type="text" id="minPrice" name="minPrice">원
                         ~ <input type="text" id="maxPrice" name="maxPrice">원
@@ -112,19 +111,6 @@
                         <label for="all">전체</label>
                     </td>
                 </tr>
-
-                <!-- 검색할 Text 입력 Block -->
-                <tr>
-                    <td>검색어</td>
-                    <td>
-                        <select id="type" name="srhType" class="px-2 py-1">
-                            <option value="0">상품명</option>
-                            <option value="1">상품번호</option>
-                        </select>
-                        <input type="hidden" name="searchType" value="0">
-                        <input type="search" id="srch" name="srch">
-                    </td>
-                </tr>
             </table>
 
             <!-- 버튼 리스트(Button List Block) -->
@@ -133,7 +119,62 @@
             </div>
         </form>
 
+        <!-- 재고 검색 결과 목록(SearchResult Stock List) -->
+        <section class="w-95 mx-auto bg-white mb-50 pb-15" >
+            <form method = "post" name = "completeForm">
+                <input type = "hidden" name = "pageNum" value = "${pageNum}">
 
+                <!-- StockList Top Menu -->
+                <div th:replace="fragments/host_common :: boardTopList"></div>
+
+                <!-- 재고 목록 Block -->
+                <table class="table text-center fs-75 w-98 mx-auto bg-white border-bottom-1-ccc border-top-1-ccc td-border-bottom-1-ccc vertical-middle-all a-tag-css">
+                    <thead>
+                    <tr class="fw-bold border-0 td-py25 td-px15">
+                        <td>
+                            <input type = "checkbox" name = "stockCheck" id = "stockCheckAll"  value = "전체선택">
+                        </td>
+                        <td>번호</td>
+                        <td>컬러</td>
+                        <td>사이즈</td>
+                        <td>판매가격</td>
+                        <td>배송비</td>
+                        <td>수량</td>
+                        <td>최대구매수량</td>
+                        <td>등록일</td>
+                        <td>판매상태</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <th:block th:if="${stockList.size() > 0}">
+                        <tr class = "text-center td-py10 td-px15" th:each="list:${stockList}">
+                            <td><input type = "checkbox" name = "stockChecks" th:value = "${list.getStockId()}"></td>
+                            <!-- 상세 페이지 -->
+                            <td><a th:href="@{/host/stockView(name='text')}" th:text="${list.getStockId()}">
+                                <!--href = "h_productForm?num=${list.num}&number=${number+1}&pageNum=${pageNum}"-->
+                            </a></td>
+                            <td th:text="${list.getStockColor().getColorName()}"></td>
+                            <td th:text="${list.getStockSize().getSizeName()}"></td>
+                            <td th:text="|KSW ${list.getSalePrice()}|"></td>
+                            <td th:text="${list.getDeliPrice()}"></td>
+                            <td th:text="${list.getStockCount()}"></td>
+                            <td th:text="${list.getStockMaxCount()}"></td>
+                            <td th:text="|${list.getRegDate()}|">[[${#dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm')}]]</td>
+                            <td th:text="${list.getState()}"></td>
+                        </tr>
+                    </th:block>
+                    <tr class = "text-center td-py10 td-px15" th:if="${stockList.size() == 0}">
+                        <td colspan = "10">
+                            등록된 상품이 없습니다. 상품을 등록해주세요.
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <!-- ProductList Bottom Menu -->
+                <div th:replace="fragments/host_common :: boardBottomList(name='product')"></div>
+            </form>
+        </section>
     </div>
 </div>
 

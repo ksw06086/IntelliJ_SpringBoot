@@ -1,12 +1,7 @@
 package com.suncloth.suncloth.controller;
 
-import com.suncloth.suncloth.model.Brand;
-import com.suncloth.suncloth.model.Cloth;
-import com.suncloth.suncloth.model.MainCategory;
-import com.suncloth.suncloth.repository.BrandRepository;
-import com.suncloth.suncloth.repository.ClothRepository;
-import com.suncloth.suncloth.repository.FileRepository;
-import com.suncloth.suncloth.repository.MainCategoryRepository;
+import com.suncloth.suncloth.model.*;
+import com.suncloth.suncloth.repository.*;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,6 +16,7 @@ import java.util.List;
 @RequestMapping("/host")
 public class HostController {
 
+    // Repository 목록들 //
     @Autowired
     BrandRepository brandRepository;
     @Autowired
@@ -29,6 +25,12 @@ public class HostController {
     ClothRepository clothRepository;
     @Autowired
     FileRepository fileRepository;
+    @Autowired
+    ColorRepository colorRepository;
+    @Autowired
+    SizeRepository sizeRepository;
+    @Autowired
+    StockRepository stockRepository;
 
     /* 상품 */
     // 상품 리스트
@@ -68,13 +70,15 @@ public class HostController {
     @GetMapping("/stockList")
     public String stockList(Model model
             , @RequestParam(required = false) long clothId) {
-        List<Brand> brands = brandRepository.findAll();
-        List<MainCategory> mainCategories = mainCategoryRepository.findAll();
         Cloth cloth = clothRepository.findById(clothId).orElse(null);
+        List<Stock> stocks = stockRepository.findByStockCloth(cloth);
+        List<Color> colors = colorRepository.findAll();
+        List<Size> sizes = sizeRepository.findAll();
 
-        model.addAttribute("brandList", brands);
-        model.addAttribute("mainCategoryList", mainCategories);
         model.addAttribute("cloth", cloth);
+        model.addAttribute("stockList", stocks);
+        model.addAttribute("colorList", colors);
+        model.addAttribute("sizeList", sizes);
 
         return "/host/product/host_stockList";
     }
@@ -82,12 +86,12 @@ public class HostController {
     @GetMapping("/stockInput")
     public String stockInput(Model model
             , @RequestParam(required = false) long clothId) {
-        List<Brand> brands = brandRepository.findAll();
-        List<MainCategory> mainCategories = mainCategoryRepository.findAll();
+        List<Color> colors = colorRepository.findAll();
+        List<Size> sizes = sizeRepository.findAll();
         Cloth cloth = clothRepository.findById(clothId).orElse(null);
 
-        model.addAttribute("brandList", brands);
-        model.addAttribute("mainCategoryList", mainCategories);
+        model.addAttribute("colorList", colors);
+        model.addAttribute("sizeList", sizes);
         model.addAttribute("cloth", cloth);
 
         return "/host/product/host_stockInput";

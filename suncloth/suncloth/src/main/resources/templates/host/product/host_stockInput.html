@@ -18,19 +18,19 @@
         <aside th:replace="fragments/host_common :: sidebar('product')"></aside>
     </div>
     <div class="flex-fill">
-        <form method="post" id="clothInputForm" enctype="multipart/form-data">
+        <form method="post" id="stockInputForm" enctype="multipart/form-data">
         <div class="position-relative text-center w-95 mx-auto my-15 vertical-middle-all">
             <p class="fs-15 p-0 m-0"><b th:text="|[${cloth.getClothName()}] 재고 상품 등록|"></b></p>
             <p class="position-absolute m-0 top-0 end-0">
                 <input type="submit" value="등록" class="blueBaseBtn px-10 py-10"
-                       th:onclick = "return clothAdd()">
+                       th:onclick = "return stockAdd()">
             </p>
         </div>
 
         <div class="bg-white w-95 mx-auto mb-20 pb-15">
             <!-- 재고 기본 정보 Title Block -->
             <div class="w-97 mx-auto bg-white px-10 py-15">
-                <b>재고기본정보</b>
+                <b>·재고기본정보</b>
             </div>
 
             <!-- 재고 기본 정보 Input Block -->
@@ -40,9 +40,10 @@
                 <!-- 상품 정보 -->
                 <tr>
                     <td class="text-center py-10">
+                        <input type="hidden" name="clothId" id="clothId" th:value="${cloth.getClothId()}">
                         <img th:src="|/uploadImages/${cloth.getFiles().get(0).getSavedNm()}|" alt="이미지 없음" class="wh-100px">
                     </td>
-                    <td th:text="${cloth.getClothName()}">[멋있는 옷]</td>
+                    <td th:text="|[${cloth.getClothName()}]|">[멋있는 옷]</td>
                 </tr>
                 <!-- 컬러 추가/삭제 -->
                 <tr>
@@ -52,8 +53,10 @@
                         <input type = "button" class = "whiteButton " value = "추가" th:onclick="colorAdd()">
                         <select class = "colorsSelector" id="colorDelSelector">
                             <option value = "">컬러 선택</option>
-                            <!-- 가져올 카테고리가 있으면 -->
-
+                            <!-- 가져올 컬러가 있으면 -->
+                            <th:block th:if="${colorList.size() > 0}">
+                                <option th:each="list:${colorList}" th:value="${list.getColorCode()}">[[${list.getColorName()}]]</option>
+                            </th:block>
                         </select>
                         <input type = "button" class = "whiteButton" value = "삭제" th:onclick = "colorDel()">
                     </td>
@@ -66,8 +69,10 @@
                         <input type = "button" class = "whiteButton " value = "추가" th:onclick="sizeAdd()">
                         <select class = "sizesSelector" id="sizeDelSelector">
                             <option value = "">사이즈 선택</option>
-                            <!-- 가져올 카테고리가 있으면 -->
-
+                            <!-- 가져올 사이즈가 있으면 -->
+                            <th:block th:if="${sizeList.size() > 0}">
+                                <option th:each="list:${sizeList}" th:value="${list.getSizeCode()}">[[${list.getSizeName()}]]</option>
+                            </th:block>
                         </select>
                         <input type = "button" class = "whiteButton" value = "삭제" th:onclick = "sizeDel()">
                     </td>
@@ -77,15 +82,19 @@
                 <tr>
                     <td>color/size 선택*</td>
                     <td>
-                        <select class = "colorsSelector" id="colorSelector" name="colorId" required>
+                        <select class = "colorsSelector" id="colorSelector" name="colorCode" required>
                             <option value = "">컬러 선택</option>
                             <!-- 가져올 카테고리가 있으면 -->
-
+                            <th:block th:if="${colorList.size() > 0}">
+                                <option th:each="list:${colorList}" th:value="${list.getColorCode()}">[[${list.getColorName()}]]</option>
+                            </th:block>
                         </select>
-                        <select class = "sizesSelector" id="sizeSelector" name="sizeId">
+                        <select class = "sizesSelector" id="sizeSelector" name="sizeCode">
                             <option value = "">사이즈 선택</option>
                             <!-- 가져올 카테고리가 있으면 -->
-
+                            <th:block th:if="${sizeList.size() > 0}">
+                                <option th:each="list:${sizeList}" th:value="${list.getSizeCode()}">[[${list.getSizeName()}]]</option>
+                            </th:block>
                         </select>
                     </td>
                 </tr>
@@ -138,7 +147,7 @@
                         <input type = "radio" name = "plusType" id = "notPlus" value = "notPlus" checked>
                         <label for = "notPlus">없음</label>&emsp;
                         <input type = "radio" name = "plusType" id = "plus" value = "plus">
-                        <label for = "plus">적립금</label>&emsp;
+                        <label for = "plus">사용자 지정</label>&emsp;
                         <input type = "text" name = "plus" value="0">원
                     </td>
                 </tr>
@@ -194,7 +203,7 @@
                         <input type = "radio" name = "deliPay" id = "free" value = "free">
                         <label for = "free">무료</label><br>
                         <input type = "radio" name = "deliPay" id = "plusDeliPay" value = "pluspay">
-                        <label for = "plusDeliPay">유료</label>
+                        <label for = "plusDeliPay">사용자 지정</label>
                         <input type = "text" id = "deliPrice" name = "deliPrice" value="0">원
                     </td>
                 </tr>

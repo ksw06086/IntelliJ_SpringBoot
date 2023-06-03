@@ -87,29 +87,16 @@
                     </td>
                 </tr>
 
-                <!-- 검색할 상품 가격 선택 Block -->
+                <!-- 상품 아이콘 선택 Block -->
                 <tr>
-                    <td>상품가격</td>
+                    <td>아이콘</td>
                     <td>
-                        <input type="text" id="minPrice" name="minPrice">원
-                        ~ <input type="text" id="maxPrice" name="maxPrice">원
-                    </td>
-                </tr>
-
-                <!-- 상품 판매상태 선택 Block -->
-                <tr>
-                    <td>판매상태</td>
-                    <td>
-                        <input type="checkbox" name="state" id="sale" value="sale">
-                        <label for="sale">판매중</label>&emsp;
-                        <input type="checkbox" name="state" id="notStock" value="notStock">
-                        <label for="notStock">품절</label>&emsp;
-                        <input type="checkbox" name="state" id="saleReady" value="saleReady">
-                        <label for="saleReady">판매대기</label>&emsp;
-                        <input type="checkbox" name="state" id="saleStop" value="saleStop">
-                        <label for="saleStop">판매중지</label>&emsp;
-                        <input type="checkbox" name="state" id="all" value="all">
-                        <label for="all">전체</label>
+                        <input type = "checkbox" name = "icon" id = "hot" value = "hot">
+                        <label for = "hot">hot</label>&emsp;
+                        <input type = "checkbox" name = "icon" id = "minPrice" value = "minPrice">
+                        <label for = "minPrice">최저가</label>&emsp;
+                        <input type = "checkbox" name = "icon" id = "best" value = "best">
+                        <label for = "best">best</label>
                     </td>
                 </tr>
 
@@ -176,7 +163,7 @@
                         </tr>
                     </th:block>
                     <tr class = "text-center td-py10 td-px15" th:if="${clothList.size() == 0}">
-                      <td colspan = "10">
+                      <td colspan = "7">
                         등록된 상품이 없습니다. 상품을 등록해주세요.
                       </td>
                     </tr>
