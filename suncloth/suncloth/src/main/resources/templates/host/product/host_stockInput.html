@@ -22,8 +22,12 @@
         <div class="position-relative text-center w-95 mx-auto my-15 vertical-middle-all">
             <p class="fs-15 p-0 m-0"><b th:text="|[${cloth.getClothName()}] 재고 상품 등록|"></b></p>
             <p class="position-absolute m-0 top-0 end-0">
+                <!-- 재고 등록 버튼 -->
                 <input type="submit" value="등록" class="blueBaseBtn px-10 py-10"
                        th:onclick = "return stockAdd()">
+                <!-- 재고 수정 버튼 -->
+                <input type="button" value="수정" class="blueBaseBtn px-10 py-10"
+                       th:if="${stock != null}" onclick = "productForm.action = 'h_productupdatePro1'">
             </p>
         </div>
 
@@ -55,7 +59,8 @@
                             <option value = "">컬러 선택</option>
                             <!-- 가져올 컬러가 있으면 -->
                             <th:block th:if="${colorList.size() > 0}">
-                                <option th:each="list:${colorList}" th:value="${list.getColorCode()}">[[${list.getColorName()}]]</option>
+                                <option th:each="list:${colorList}" th:value="${list.getColorCode()}">
+                                    [[${list.getColorName()}]]</option>
                             </th:block>
                         </select>
                         <input type = "button" class = "whiteButton" value = "삭제" th:onclick = "colorDel()">
@@ -86,14 +91,20 @@
                             <option value = "">컬러 선택</option>
                             <!-- 가져올 카테고리가 있으면 -->
                             <th:block th:if="${colorList.size() > 0}">
-                                <option th:each="list:${colorList}" th:value="${list.getColorCode()}">[[${list.getColorName()}]]</option>
+                                <option th:each="list:${colorList}" th:value="${list.getColorCode()}"
+                                        th:selected="${stock != null && stock.getStockColor().getColorCode() == list.getColorCode()}?true">
+                                    [[${list.getColorName()}]]
+                                </option>
                             </th:block>
                         </select>
                         <select class = "sizesSelector" id="sizeSelector" name="sizeCode">
                             <option value = "">사이즈 선택</option>
                             <!-- 가져올 카테고리가 있으면 -->
                             <th:block th:if="${sizeList.size() > 0}">
-                                <option th:each="list:${sizeList}" th:value="${list.getSizeCode()}">[[${list.getSizeName()}]]</option>
+                                <option th:each="list:${sizeList}" th:value="${list.getSizeCode()}"
+                                        th:selected="${stock != null && stock.getStockSize().getSizeCode() == list.getSizeCode()}?true">
+                                    [[${list.getSizeName()}]]
+                                </option>
                             </th:block>
                         </select>
                     </td>

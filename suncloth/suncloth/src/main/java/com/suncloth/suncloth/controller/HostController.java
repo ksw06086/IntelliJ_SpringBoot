@@ -85,10 +85,15 @@ public class HostController {
     // 재고 등록
     @GetMapping("/stockInput")
     public String stockInput(Model model
-            , @RequestParam(required = false) long clothId) {
+            , @RequestParam(required = false) Long clothId
+            , @RequestParam(required = false) Long stockId) {
         List<Color> colors = colorRepository.findAll();
         List<Size> sizes = sizeRepository.findAll();
         Cloth cloth = clothRepository.findById(clothId).orElse(null);
+        if(stockId != null) {
+            Stock stock = stockRepository.findById(stockId).orElse(null);
+            model.addAttribute("stock", stock);
+        }
 
         model.addAttribute("colorList", colors);
         model.addAttribute("sizeList", sizes);
