@@ -18,12 +18,12 @@
         <aside th:replace="fragments/host_common :: sidebar('product')"></aside>
     </div>
     <div class="flex-fill">
-        <form method="post" id="clothInputForm" enctype="multipart/form-data">
+        <form method="post" id="clothInputForm" enctype="multipart/form-data"
+              th:onsubmit = "return clothAdd()">
         <div class="position-relative text-center w-95 mx-auto my-15 vertical-middle-all">
             <p class="fs-15 p-0 m-0"><b>판매상품관리</b></p>
             <p class="position-absolute m-0 top-0 end-0">
-                <input type="submit" value="등록" class="blueBaseBtn px-10 py-10"
-                       th:onclick = "return clothAdd()">
+                <input type="submit" value="등록" class="blueBaseBtn px-10 py-10">
             </p>
         </div>
 
@@ -41,7 +41,7 @@
                 <tr>
                     <td class="border-right-1-ccc">메인 이미지 업로드</td>
                     <td>
-                        <img src="" alt="이미지" id="mainImage" class="wh-100px d-none" />
+                        <img src="" alt="이미지" id="mainImage" class="wh-100px d-none"/>
                         <input type = "file" id = "mainFile" th:onchange="imageFileSelect(this.files[0])" required>
                     </td>
                 </tr>

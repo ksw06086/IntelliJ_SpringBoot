@@ -447,6 +447,8 @@ function sizesGet(){
 function stockAdd(){
     if(document.getElementById("basePay").checked === true) {
         document.getElementById("deliPrice").value = 2500;
+    } else if(document.getElementById("free").checked === true) {
+        document.getElementById("deliPrice").value = 0;
     }
     const clothId = document.getElementById("clothId").value;
     let stockInputForm = new FormData(document.getElementById("stockInputForm"));

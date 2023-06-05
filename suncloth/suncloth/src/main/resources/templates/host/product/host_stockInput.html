@@ -24,10 +24,10 @@
             <p class="position-absolute m-0 top-0 end-0">
                 <!-- 재고 등록 버튼 -->
                 <input type="submit" value="등록" class="blueBaseBtn px-10 py-10"
-                       th:onclick = "return stockAdd()">
+                       th:if="${stock.getStockCloth() == null}" th:onclick = "return stockAdd()">
                 <!-- 재고 수정 버튼 -->
                 <input type="button" value="수정" class="blueBaseBtn px-10 py-10"
-                       th:if="${stock != null}" onclick = "productForm.action = 'h_productupdatePro1'">
+                       th:if="${stock.getStockCloth() != null}" onclick = "productForm.action = 'h_productupdatePro1'">
             </p>
         </div>
 
@@ -45,6 +45,7 @@
                 <tr>
                     <td class="text-center py-10">
                         <input type="hidden" name="clothId" id="clothId" th:value="${cloth.getClothId()}">
+                        <input type="hidden" name="stockId" id="stockId" th:value="${stock.getStockId()}">
                         <img th:src="|/uploadImages/${cloth.getFiles().get(0).getSavedNm()}|" alt="이미지 없음" class="wh-100px">
                     </td>
                     <td th:text="|[${cloth.getClothName()}]|">[멋있는 옷]</td>
@@ -92,7 +93,7 @@
                             <!-- 가져올 카테고리가 있으면 -->
                             <th:block th:if="${colorList.size() > 0}">
                                 <option th:each="list:${colorList}" th:value="${list.getColorCode()}"
-                                        th:selected="${stock != null && stock.getStockColor().getColorCode() == list.getColorCode()}?true">
+                                        th:selected="${stock.getStockColor() != null && stock.getStockColor().getColorCode() == list.getColorCode()}?true">
                                     [[${list.getColorName()}]]
                                 </option>
                             </th:block>
@@ -102,7 +103,7 @@
                             <!-- 가져올 카테고리가 있으면 -->
                             <th:block th:if="${sizeList.size() > 0}">
                                 <option th:each="list:${sizeList}" th:value="${list.getSizeCode()}"
-                                        th:selected="${stock != null && stock.getStockSize().getSizeCode() == list.getSizeCode()}?true">
+                                        th:selected="${stock.getStockSize() != null && stock.getStockSize().getSizeCode() == list.getSizeCode()}?true">
                                     [[${list.getSizeName()}]]
                                 </option>
                             </th:block>
@@ -114,13 +115,13 @@
                 <tr>
                     <td>판매상태*</td>
                     <td>
-                        <input type = "radio" name = "state" id = "saleIng" value = "판매중" checked>
+                        <input type = "radio" name = "state" id = "saleIng" value = "판매중" th:checked="${stock.getState() == '판매중' || stock.getTex() == null}?true">
                         <label for = "saleIng">판매중</label>&emsp;
-                        <input type = "radio" name = "state" id = "notStock" value = "품절">
+                        <input type = "radio" name = "state" id = "notStock" value = "품절" th:checked="${stock.getState() == '품절'}?true">
                         <label for = "notStock">품절</label>&emsp;
-                        <input type = "radio" name = "state" id = "saleReady" value = "판매대기">
+                        <input type = "radio" name = "state" id = "saleReady" value = "판매대기" th:checked="${stock.getState() == '판매대기'}?true">
                         <label for = "saleReady">판매대기</label>&emsp;
-                        <input type = "radio" name = "state" id = "saleStop" value = "판매중지">
+                        <input type = "radio" name = "state" id = "saleStop" value = "판매중지" th:checked="${stock.getState() == '판매중지'}?true">
                         <label for = "saleStop">판매중지</label>&emsp;
                     </td>
                 </tr>
@@ -128,7 +129,7 @@
                 <!-- 재고 수량 선정 -->
                 <tr>
                     <td><label for="stockCount">재고*</label></td>
-                    <td><input type = "number" id = "stockCount" name = "stockCount" min = "1" required>ea
+                    <td><input type = "number" id = "stockCount" name = "stockCount" min = "1" th:value="${stock.getStockCount()}" required>ea
                     </td>
                 </tr>
 
@@ -136,7 +137,7 @@
                 <tr>
                     <td><label for="stockMaxCount">최대구매수량*</label></td>
                     <td>
-                        최대 <input type = "number" id = "stockMaxCount" name = "stockMaxCount" min = "1" required>개 까지 구매 가능
+                        최대 <input type = "number" id = "stockMaxCount" name = "stockMaxCount" min = "1" th:value="${stock.getStockMaxCount()}" required>개 까지 구매 가능
                     </td>
                 </tr>
 
@@ -144,9 +145,9 @@
                 <tr>
                     <td>과세/비과세</td>
                     <td>
-                        <input type = "radio" name = "tex" id = "tax" value = "과세" checked>
+                        <input type = "radio" name = "tex" id = "tax" value = "과세" th:checked="${stock.getTex() == '과세' || stock.getTex() == null}?true">
                         <label for = "tax">과세</label>&emsp;
-                        <input type = "radio" name = "tex" id = "notTax" value = "비과세">
+                        <input type = "radio" name = "tex" id = "notTax" value = "비과세" th:checked="${stock.getTex() == '비과세'}?true">
                         <label for = "notTax">비과세</label>
                     </td>
                 </tr>
@@ -155,11 +156,13 @@
                 <tr>
                     <td>적립금</td>
                     <td>
-                        <input type = "radio" name = "plusType" id = "notPlus" value = "notPlus" checked>
+                        <input type = "radio" name = "plusType" id = "notPlus" value = "notPlus"
+                               th:checked="${stock.getPlus() == 0 || stock.getPlus() == null}?true" checked>
                         <label for = "notPlus">없음</label>&emsp;
-                        <input type = "radio" name = "plusType" id = "plus" value = "plus">
+                        <input type = "radio" name = "plusType" id = "plus" value = "plus"
+                               th:checked="${stock.getPlus() != 0}?true">
                         <label for = "plus">사용자 지정</label>&emsp;
-                        <input type = "text" name = "plus" value="0">원
+                        <input type = "text" name = "plus" th:value="${stock.getPlus()}">원
                     </td>
                 </tr>
             </table>
@@ -179,12 +182,12 @@
                     <td class="fw-bold bg-EAECEE">
                         <label for="salePrice">판매가격 *</label></td>
                     <td>
-                        <input type = "text" id="salePrice" name = "salePrice" required>원
+                        <input type = "text" id="salePrice" name = "salePrice" th:value="${stock.getSalePrice()}" required>원
                     </td>
                     <td class="fw-bold bg-EAECEE">
                         <label for="buyPrice">매입가격 *</label></td>
                     <td>
-                        <input type = "text" id="buyPrice" name = "buyPrice" required>원
+                        <input type = "text" id="buyPrice" name = "buyPrice" th:value="${stock.getBuyPrice()}" required>원
                     </td>
                 </tr>
             </table>
@@ -202,20 +205,23 @@
                 <!-- 예상배송소요일 설정 -->
                 <tr>
                     <td><label for="deliDay">예상배송소요일 *</label></td>
-                    <td><input type = "text" id = "deliDay" name = "deliDay" required>일</td>
+                    <td><input type = "text" id = "deliDay" name = "deliDay" th:value="${stock.getDeliDay()}" required>일</td>
                 </tr>
 
                 <!-- 배송비 설정 -->
                 <tr>
                     <td>배송비 설정</td>
                     <td>
-                        <input type = "radio" name = "deliPay" id = "basePay" value = "basepay" checked>
+                        <input type = "radio" name = "deliPay" id = "basePay" value = "basePay"
+                               th:checked="${stock.getDeliPrice() == 2500 || stock.getDeliPrice() == null}?true">
                         <label for = "basePay">기본 배송비</label><br>
-                        <input type = "radio" name = "deliPay" id = "free" value = "free">
+                        <input type = "radio" name = "deliPay" id = "free" value = "free"
+                               th:checked="${stock.getDeliPrice() == 0}?true">
                         <label for = "free">무료</label><br>
-                        <input type = "radio" name = "deliPay" id = "plusDeliPay" value = "pluspay">
+                        <input type = "radio" name = "deliPay" id = "plusDeliPay" value = "plusPay"
+                               th:checked="${stock.getDeliPrice() != 2500 && stock.getDeliPrice() != 0}?true">
                         <label for = "plusDeliPay">사용자 지정</label>
-                        <input type = "text" id = "deliPrice" name = "deliPrice" value="0">원
+                        <input type = "text" id = "deliPrice" name = "deliPrice" th:value="${stock.getDeliPrice()}">원
                     </td>
                 </tr>
             </table>

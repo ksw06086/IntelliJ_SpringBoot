@@ -90,11 +90,11 @@ public class HostController {
         List<Color> colors = colorRepository.findAll();
         List<Size> sizes = sizeRepository.findAll();
         Cloth cloth = clothRepository.findById(clothId).orElse(null);
+        Stock stock = new Stock();
         if(stockId != null) {
-            Stock stock = stockRepository.findById(stockId).orElse(null);
-            model.addAttribute("stock", stock);
+            stock = stockRepository.findById(stockId).orElse(null);
         }
-
+        model.addAttribute("stock", stock);
         model.addAttribute("colorList", colors);
         model.addAttribute("sizeList", sizes);
         model.addAttribute("cloth", cloth);
