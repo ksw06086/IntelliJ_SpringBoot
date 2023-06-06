@@ -344,7 +344,6 @@ function clothUpdate(){
         }
     });
 }
-
 // File Checkbox 선택시 동작 함수
 function baseMainFileUpdateYN(){
     const baseMainFileYN = document.getElementById("baseMainFileYN");
@@ -370,6 +369,57 @@ function baseSubFileUpdateYN(){
         subImagesDiv.className = 'd-none';
     }
 }
+
+// Cloth 상품 삭제하기
+function clothDel() {
+    const clothIds = document.getElementsByName("clothIds"); // 화면에 있는 모든 Checkbox(clothIds)
+    let clothDelList = []; // 삭제된 clothIds
+
+    // checkBox에 체크되었는지 확인 후 삭제
+    for (let i = 0; i < clothIds.length; i++) {
+        if(clothIds[i].checked === true){
+            clothDelAjax(clothIds[i].value);
+            clothDelList.push(clothIds[i].value);
+        }
+    }
+
+    // 삭제되었음을 alert 띄워줌
+    alert(clothDelList + "번 상품이 삭제되었습니다.");
+
+    // 화면에서 해당 요소 삭제해줌
+    for (let i = 0; i < clothDelList.length; i++) {
+        document.getElementById(clothDelList[i]).remove();
+    }
+
+    // cloth 1개 삭제하는 Ajax 함수
+    function clothDelAjax(clothId){
+        $.ajax({
+            type: 'DELETE',
+            url: '/api/cloths/' + clothId,
+            success: (result) => {
+                //AJAX 성공시 실행 코드
+            }, error:function(e) {
+                alert("error: " + e);
+            }
+        });
+    }
+}
+// 상품 checkbox 한번에 체크 함수
+function allClothCheck() {
+    const clothCheckAll = document.getElementById("clothCheckAll");
+    const clothIds = document.getElementsByName("clothIds");
+    // 해당 페이지의 모든 stock CheckBox에 체크
+    if(clothCheckAll.checked === true){
+        for (let i = 0; i < clothIds.length; i++) {
+            clothIds[i].checked = true;
+        }
+    } else {
+        for (let i = 0; i < clothIds.length; i++) {
+            clothIds[i].checked = false;
+        }
+    }
+}
+
 
 // *** 색상 관련 Script *** //
 // Color 추가하기
