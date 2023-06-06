@@ -46,7 +46,7 @@
                     <td class="text-center py-10">
                         <input type="hidden" name="clothId" id="clothId" th:value="${cloth.getClothId()}">
                         <input type="hidden" name="stockId" id="stockId" th:value="${stock.getStockId()}">
-                        <img th:src="|/uploadImages/${cloth.getFiles().get(0).getSavedNm()}|" alt="이미지 없음" class="wh-100px">
+                        <img th:src="|/host/uploadMainImageView/${cloth.getClothId()}|" alt="이미지 없음" class="wh-100px">
                     </td>
                     <td th:text="|[${cloth.getClothName()}]|">[멋있는 옷]</td>
                 </tr>

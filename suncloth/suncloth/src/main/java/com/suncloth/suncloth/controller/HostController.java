@@ -84,13 +84,21 @@ public class HostController {
         return "/host/product/host_productView";
     }
 
-    // 이미지 출력
-    @GetMapping("/uploadImageView/{clothId}")
+    // clothId로 메인 이미지 출력
+    @GetMapping("/uploadMainImageView/{clothId}")
     @ResponseBody
-    public Resource uploadImage(@PathVariable("clothId") Long id) throws IOException {
+    public Resource uploadMainImage(@PathVariable("clothId") Long id) throws IOException {
         Cloth cloth = clothRepository.findById(id).orElse(null);
         List<File> file = fileRepository.findByClothAndFileType(cloth, "main");
         return new UrlResource("file:" + file.get(0).getSavedPath());
+    }
+
+    // fileId로 이미지 출력
+    @GetMapping("/uploadImageView/{fileId}")
+    @ResponseBody
+    public Resource uploadImage(@PathVariable("fileId") Long id) throws IOException {
+        File file = fileRepository.findById(id).orElse(null);
+        return new UrlResource("file:" + file.getSavedPath());
     }
 
     /* 재고 */

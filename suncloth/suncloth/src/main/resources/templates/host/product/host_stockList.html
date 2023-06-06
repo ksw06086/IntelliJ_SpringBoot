@@ -20,7 +20,7 @@
     <div class="flex-fill">
         <div class="position-relative text-center w-95 mx-auto my-15 vertical-middle-all">
             <p class="fs-15 p-0 m-0">
-                <img th:src="|/uploadImages/${cloth.getFiles().get(0).getSavedNm()}|" alt="이미지 없음" class="wh-50px">
+                <img th:src="|/host/uploadMainImageView/${cloth.getClothId()}|" alt="이미지 없음" class="wh-50px">
                 <b th:text="|[ ${cloth.getClothName()} ] 재고관리|">[멋있는 옷] 재고관리</b></p>
             <p class="position-absolute m-0 top-50 end-0 translate-middle-y">
                 <button type="button" class="blueBaseBtn px-10 py-10">

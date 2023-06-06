@@ -149,7 +149,7 @@
                         <tr class = "text-center td-py10 td-px15" th:each="list:${clothList}" th:id="${list.getClothId()}">
                             <td><input type = "checkbox" name = "clothIds" th:value = "${list.getClothId()}"></td>
                             <td> <!-- th:if="${list.mainfile != null}" -->
-                                <img th:src="|/host/uploadImageView/${list.getClothId()}|" alt="이미지 없음"
+                                <img th:src="|/host/uploadMainImageView/${list.getClothId()}|" alt="이미지 없음"
                                      width = "50px" height = "60px">
                             </td>
                             <td th:text="${list.getClothId()}"></td>

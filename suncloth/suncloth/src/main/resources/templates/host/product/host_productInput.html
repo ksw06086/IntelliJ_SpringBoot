@@ -47,10 +47,11 @@
                     <td class="border-right-1-ccc">메인 이미지 업로드</td>
                     <td>
                         <input type="hidden" name="clothId" id="clothId" th:value="${cloth.getClothId()}">
+                        <input type="hidden" name="regDate" id="regDate" th:value="${cloth.getRegDate()}">
                         <input type="hidden" name="mainFileId" id="mainFileId" th:if="${mainFile != null}" th:value="${mainFile.get(0).getFileId()}">
                         <div class="d-flex">
                             <div>
-                                <img th:src="${mainFile != null}? '/uploadImages/'+${mainFile.get(0).getSavedNm()}" alt="이미지" id="mainImage" class="wh-100px"
+                                <img th:src="${mainFile != null}? '/host/uploadImageView/'+${mainFile.get(0).getFileId()}" alt="이미지" id="mainImage" class="wh-100px"
                                      th:classappend="${mainFile == null}?'d-none'"/>
                             </div>
                             <div class="d-flex flex-column align-self-center ms-1">
@@ -58,7 +59,8 @@
                                     <input type = "checkbox" id = "baseMainFileYN" th:onchange="baseMainFileUpdateYN()" checked>
                                     <label for="baseMainFileYN">이전 그림 그대로</label>
                                 </div>
-                                <div><input type = "file" id = "mainFile" th:class="${mainFile != null}?'d-none'" th:onchange="imageFileSelect(this.files[0])" required></div>
+                                <div><input type = "file" id = "mainFile" th:class="${mainFile != null}?'d-none'"
+                                            th:onchange="imageFileSelect(this.files[0])" th:required="${mainFile == null}?true"></div>
 
                             </div>
                         </div>
@@ -188,13 +190,13 @@
                             <div id="subImagesDiv" th:if="${subFile.size() > 0}">
                                 <th:block th:each="list:${subFile}">
                                     <input type="hidden" name="subFileIds" th:value="${list.getFileId()}">
-                                    <img th:src="|/uploadImages/${list.getSavedNm()}|" alt="서브이미지" class="wh-100px" src=""/>
+                                    <img th:src="|/host/uploadImageView/${list.getFileId()}|" alt="서브이미지" class="wh-100px" src=""/>
                                     <p th:text="|[${list.getSavedNm()}]|"></p>
                                 </th:block>
                             </div>
                             <!-- 이전 이미지 그대로 checkBox -->
-                            <div th:if="${subFile.size() > 0}">
-                                <input type = "checkbox" id = "baseSubFileYN" th:onchange="baseSubFileUpdateYN()" th:checked="${subFile.size() > 0}?true">
+                            <div th:class="${subFile.size() == 0}?'d-none'">
+                                <input type = "checkbox" id = "baseSubFileYN" th:onchange="baseSubFileUpdateYN()" checked>
                                 <label for="baseSubFileYN">이전 이미지 그대로</label>
                             </div>
                             <div><input type = "file" multiple="multiple" id="subFile" name = "subFile" th:class="${subFile.size() > 0}?'d-none'"></div>

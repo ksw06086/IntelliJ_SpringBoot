@@ -288,22 +288,22 @@ function clothUpdate(){
     const baseMainFileYN = document.getElementById("baseMainFileYN");
     const baseSubFileYN = document.getElementById("baseSubFileYN");
 
-    if(baseMainFileYN.checked === false) {
-        mainFileUpdate(clothId);
-    }
-    if(baseSubFileYN === false){
-        subFilesDel(clothId);
-        subFilesAdd(clothId);
-    }
-
+    // api/cloth에서 추가와 수정 둘다 가능함(save함수)
     $.ajax({
         type:"POST",
-        url: "/api/replaceCloth",
+        url: "/api/cloth",
         enctype: 'multipart/form-data',
         processData: false,
         contentType: false,
         data: clothInputForm,
         success: function(result){
+            if(baseMainFileYN.checked === false) {
+                mainFileUpdate(clothId.value);
+            }
+            if(baseSubFileYN.checked === false){
+                subFilesDel();
+                subFilesAdd(clothId.value);
+            }
             alert("상품이 수정되었습니다.");
             window.location.href="/host/productList";
         },
@@ -383,9 +383,11 @@ function baseMainFileUpdateYN(){
     const mainImage = document.getElementById("mainImage");
     if(baseMainFileYN.checked === true){
         mainFile.className = 'd-none';
+        mainFile.required = false;
         mainImage.className = 'wh-100px';
     } else {
         mainFile.className = '';
+        mainFile.required = true;
         mainImage.className = 'wh-100px d-none';
     }
 }
@@ -430,7 +432,7 @@ function mainFileUpdate(clothId) {
     const mainFileId = document.getElementById("mainFileId");
     const formData = new FormData();
     formData.append("mainImage", mainImageInput.files[0]);
-    formData.append("mainFileId", mainFileId);
+    formData.append("mainFileId", mainFileId.value);
     formData.append("clothId", clothId);
 
     // 메인 이미지 update 하기
@@ -476,7 +478,7 @@ function subFilesAdd(clothId) {
     })
 }
 // 서브 이미지 파일들 삭제
-function subFilesDel(clothId) {
+function subFilesDel() {
     const subFileIds = document.getElementsByName("subFileIds"); // subFileIds 서브이미지들
 
     // 서브 이미지 삭제

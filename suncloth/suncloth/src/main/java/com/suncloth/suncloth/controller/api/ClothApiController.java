@@ -60,18 +60,6 @@ public class ClothApiController {
         return clothRepository.save(newCloth);
     }
 
-    // PUT : Brand, SubCategory 에 맞게 한가지 Cloth 정보 삽입하기
-    @PutMapping("/cloth/{brandId}/{subCode}")
-    Cloth insertCloth(@RequestBody Cloth newCloth
-            , @PathVariable Long brandId
-            , @PathVariable Long subCode) {
-        SubCategory subCategory = subCategoryRepository.findById(subCode).orElse(null);
-        Brand brand = brandRepository.findById(brandId).orElse(null);
-        newCloth.setSubCategory(subCategory);
-        newCloth.setBrand(brand);
-        return clothRepository.save(newCloth);
-    }
-
     // Single item
 
     // GET : brandId 에 맞게 Cloth 정보 가져오기
