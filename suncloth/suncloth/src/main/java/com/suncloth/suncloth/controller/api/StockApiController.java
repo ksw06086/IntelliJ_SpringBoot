@@ -62,6 +62,32 @@ public class StockApiController {
         return stockRepository.save(newStock);
     }
 
+    // POST : Id에 맞게 한가지 Stock 정보만 갱신
+    @PostMapping("/newStock")
+    Stock updateStock(Stock newStock, Long colorCode, Long sizeCode) {
+
+        return stockRepository.findById(newStock.getStockId())
+                .map(stock -> {
+                    Color color = colorRepository.findById(colorCode).orElse(null);
+                    Size size = sizeRepository.findById(sizeCode).orElse(null);
+                    stock.setStockColor(color);
+                    stock.setStockSize(size);
+                    stock.setStockCount(newStock.getStockCount());
+                    stock.setStockMaxCount(newStock.getStockMaxCount());
+                    stock.setBuyPrice(newStock.getBuyPrice());
+                    stock.setSalePrice(newStock.getSalePrice());
+                    stock.setDeliDay(newStock.getDeliDay());
+                    stock.setDeliPrice(newStock.getDeliPrice());
+                    stock.setPlus(newStock.getPlus());
+                    stock.setTex(newStock.getTex());
+                    stock.setState(newStock.getState());
+                    return stockRepository.save(stock);
+                })
+                .orElseGet(() -> {
+                    return stockRepository.save(newStock);
+                });
+    }
+
     // Single item
 
     // GET : clothId 에 맞게 Stock 정보 가져오기
@@ -93,10 +119,14 @@ public class StockApiController {
 
     // PUT : Id에 맞게 한가지 Stock 정보만 갱신
     @PutMapping("/stock/{stockId}")
-    Stock replaceStock(@RequestBody Stock newStock, @PathVariable Long stockId) {
+    Stock replaceStock(@RequestBody Stock newStock,@RequestBody Long colorCode,@RequestBody Long sizeCode, @PathVariable Long stockId) {
 
         return stockRepository.findById(stockId)
                 .map(stock -> {
+                    Color color = colorRepository.findById(colorCode).orElse(null);
+                    Size size = sizeRepository.findById(sizeCode).orElse(null);
+                    stock.setStockColor(color);
+                    stock.setStockSize(size);
                     stock.setStockCount(newStock.getStockCount());
                     stock.setStockMaxCount(newStock.getStockMaxCount());
                     stock.setBuyPrice(newStock.getBuyPrice());

@@ -471,6 +471,34 @@ function stockAdd(){
     });
 }
 
+// Stock 재고 수정하기
+function stockUpdate(){
+    if(document.getElementById("basePay").checked === true) {
+        document.getElementById("deliPrice").value = 2500;
+    } else if(document.getElementById("free").checked === true) {
+        document.getElementById("deliPrice").value = 0;
+    }
+    const clothId = document.getElementById("clothId").value;
+    let stockInputForm = new FormData(document.getElementById("stockInputForm"));
+
+    $.ajax({
+        type:"POST",
+        url: "/api/newStock",
+        enctype: 'multipart/form-data',
+        processData: false,
+        contentType: false,
+        data: stockInputForm,
+        success: function(result){
+            alert("재고가 수정되었습니다.");
+            window.location.href="/host/stockList?clothId=" + clothId;
+        },
+        err: function(err){
+            console.log("err:", err);
+            alert("실패");
+        }
+    });
+}
+
 // *** 검색 관련 Script *** //
 // --- 날짜 관련 함수들 --- //
 /* 관련 함수 설명

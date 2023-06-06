@@ -26,8 +26,8 @@
                 <input type="submit" value="등록" class="blueBaseBtn px-10 py-10"
                        th:if="${stock.getStockCloth() == null}" th:onclick = "return stockAdd()">
                 <!-- 재고 수정 버튼 -->
-                <input type="button" value="수정" class="blueBaseBtn px-10 py-10"
-                       th:if="${stock.getStockCloth() != null}" onclick = "productForm.action = 'h_productupdatePro1'">
+                <input type="submit" value="수정" class="blueBaseBtn px-10 py-10"
+                       th:if="${stock.getStockCloth() != null}" th:onclick = "return stockUpdate()">
             </p>
         </div>
 
