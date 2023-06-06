@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -21,6 +22,8 @@ public class HostController {
     BrandRepository brandRepository;
     @Autowired
     MainCategoryRepository mainCategoryRepository;
+    @Autowired
+    SubCategoryRepository subCategoryRepository;
     @Autowired
     ClothRepository clothRepository;
     @Autowired
@@ -48,12 +51,27 @@ public class HostController {
     }
     // 상품 등록
     @GetMapping("/productInput")
-    public String productInput(Model model) {
+    public String productInput(Model model
+            , @RequestParam(required = false) Long clothId) {
         List<Brand> brands = brandRepository.findAll();
         List<MainCategory> mainCategories = mainCategoryRepository.findAll();
+        Cloth cloth = new Cloth();
+        List<File> mainFile = null;
+        List<File> subFile = new ArrayList<>();
+        List<SubCategory> subCategoryList = new ArrayList<>();
+        if(clothId != null) {
+            cloth = clothRepository.findById(clothId).orElse(null);
+            mainFile = fileRepository.findByClothAndFileType(cloth, "main");
+            subFile = fileRepository.findByClothAndFileType(cloth, "sub");
+            subCategoryList = subCategoryRepository.findByMainCategory((cloth != null)?cloth.getSubCategory().getMainCategory():null);
+        }
 
         model.addAttribute("brandList", brands);
         model.addAttribute("mainCategoryList", mainCategories);
+        model.addAttribute("cloth", cloth);
+        model.addAttribute("mainFile", mainFile);
+        model.addAttribute("subFile", subFile);
+        model.addAttribute("subCategoryList", subCategoryList);
 
         return "/host/product/host_productInput";
     }

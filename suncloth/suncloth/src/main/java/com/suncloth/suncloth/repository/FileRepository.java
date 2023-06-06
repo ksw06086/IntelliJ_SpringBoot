@@ -14,4 +14,7 @@ public interface FileRepository extends JpaRepository<File, Long> {
 
     // cloth_id를 기준으로 정보들 가져오기(where cloth_id = ?1)
     List<File> findByCloth(Cloth cloth);
+
+    // cloth_id와 fileType 기준으로 파일 정보 가져오기(where cloth_id = ?1 and file_type = ?2)
+    List<File> findByClothAndFileType(Cloth cloth, String fileType);
 }

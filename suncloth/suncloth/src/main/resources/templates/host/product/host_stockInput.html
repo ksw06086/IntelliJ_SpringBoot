@@ -18,16 +18,16 @@
         <aside th:replace="fragments/host_common :: sidebar('product')"></aside>
     </div>
     <div class="flex-fill">
-        <form method="post" id="stockInputForm" enctype="multipart/form-data">
+        <form method="post" id="stockInputForm" enctype="multipart/form-data" th:onsubmit="${stock.getStockCloth() == null}?'return stockAdd()':'return stockUpdate()'">
         <div class="position-relative text-center w-95 mx-auto my-15 vertical-middle-all">
             <p class="fs-15 p-0 m-0"><b th:text="|[${cloth.getClothName()}] 재고 상품 등록|"></b></p>
             <p class="position-absolute m-0 top-0 end-0">
                 <!-- 재고 등록 버튼 -->
                 <input type="submit" value="등록" class="blueBaseBtn px-10 py-10"
-                       th:if="${stock.getStockCloth() == null}" th:onclick = "return stockAdd()">
+                       th:if="${stock.getStockCloth() == null}">
                 <!-- 재고 수정 버튼 -->
                 <input type="submit" value="수정" class="blueBaseBtn px-10 py-10"
-                       th:if="${stock.getStockCloth() != null}" th:onclick = "return stockUpdate()">
+                       th:if="${stock.getStockCloth() != null}">
             </p>
         </div>
 

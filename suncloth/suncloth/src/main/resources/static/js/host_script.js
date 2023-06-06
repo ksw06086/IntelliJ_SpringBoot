@@ -306,6 +306,55 @@ function imageFileSelect(mainImage) {
     };
 }
 
+// Cloth 상품 수정하기
+function clothUpdate(){
+    let clothInputForm = new FormData(document.getElementById("clothInputForm"));
+
+    $.ajax({
+        type:"POST",
+        url: "/api/cloth",
+        enctype: 'multipart/form-data',
+        processData: false,
+        contentType: false,
+        data: clothInputForm,
+        success: function(result){
+            imageUpload(result.clothId);
+            alert("상품이 등록되었습니다.");
+            window.location.href="/host/productList";
+        },
+        err: function(err){
+            console.log("err:", err);
+            alert("실패");
+        }
+    });
+}
+
+// File Checkbox 선택시 동작 함수
+function baseMainFileUpdateYN(){
+    const baseMainFileYN = document.getElementById("baseMainFileYN");
+    const mainFile = document.getElementById("mainFile");
+    const mainImage = document.getElementById("mainImage");
+    if(baseMainFileYN.checked === true){
+        mainFile.className = 'd-none';
+        mainImage.className = 'wh-100px';
+    } else {
+        mainFile.className = '';
+        mainImage.className = 'wh-100px d-none';
+    }
+}
+function baseSubFileUpdateYN(){
+    const baseSubFileYN = document.getElementById("baseSubFileYN");
+    const subFile = document.getElementById("subFile");
+    const subImagesDiv = document.getElementById("subImagesDiv");
+    if(baseSubFileYN.checked === true){
+        subFile.className = 'd-none';
+        subImagesDiv.className = '';
+    } else {
+        subFile.className = '';
+        subImagesDiv.className = 'd-none';
+    }
+}
+
 // *** 색상 관련 Script *** //
 // Color 추가하기
 function colorAdd(){
@@ -442,7 +491,7 @@ function sizesGet(){
     });
 }
 
-// *** Cloth 상품 관련 Script *** //
+// *** Stock 상품 관련 Script *** //
 // Stock 재고 추가하기
 function stockAdd(){
     if(document.getElementById("basePay").checked === true) {

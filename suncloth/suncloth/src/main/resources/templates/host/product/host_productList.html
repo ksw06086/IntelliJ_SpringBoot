@@ -156,7 +156,7 @@
                             <td th:text="${list.getSubCategory().getSubName()}"></td>
                             <!-- 상세 페이지 -->
                             <td class="text-start">
-                                <a th:href="@{/host/productView(name='text')}"
+                                <a th:href="@{/host/productInput(clothId=${list.getClothId()})}"
                                    th:text="${list.getClothName()}"> <!--href = "h_productForm?num=${list.num}&number=${number+1}&pageNum=${pageNum}"-->
                                 </a></td>
                             <td th:text="|${list.getRegDate()}|">[[${#dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm')}]]</td>

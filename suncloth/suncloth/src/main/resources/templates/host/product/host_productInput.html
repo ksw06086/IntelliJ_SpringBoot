@@ -19,11 +19,16 @@
     </div>
     <div class="flex-fill">
         <form method="post" id="clothInputForm" enctype="multipart/form-data"
-              th:onsubmit = "return clothAdd()">
+              th:onsubmit = "${cloth.getSubCategory() == null}?'return clothAdd()':'return clothUpdate()'">
         <div class="position-relative text-center w-95 mx-auto my-15 vertical-middle-all">
             <p class="fs-15 p-0 m-0"><b>판매상품관리</b></p>
             <p class="position-absolute m-0 top-0 end-0">
-                <input type="submit" value="등록" class="blueBaseBtn px-10 py-10">
+                <!-- 상품 등록 버튼 -->
+                <input type="submit" value="등록" class="blueBaseBtn px-10 py-10"
+                       th:if="${cloth.getSubCategory() == null}">
+                <!-- 상품 등록 버튼 -->
+                <input type="submit" value="수정" class="blueBaseBtn px-10 py-10"
+                       th:if="${cloth.getSubCategory() != null}">
             </p>
         </div>
 
@@ -41,8 +46,21 @@
                 <tr>
                     <td class="border-right-1-ccc">메인 이미지 업로드</td>
                     <td>
-                        <img src="" alt="이미지" id="mainImage" class="wh-100px d-none"/>
-                        <input type = "file" id = "mainFile" th:onchange="imageFileSelect(this.files[0])" required>
+                        <div class="d-flex">
+                            <div>
+                                <img th:src="${mainFile != null}? '/uploadImages/'+${mainFile.get(0).getSavedNm()}" alt="이미지" id="mainImage" class="wh-100px"
+                                     th:classappend="${mainFile == null}?'d-none'"/>
+                            </div>
+                            <div class="d-flex flex-column align-self-center ms-1">
+                                <div th:class="${mainFile == null}?'d-none'">
+                                    <input type = "checkbox" id = "baseMainFileYN" th:onchange="baseMainFileUpdateYN()" checked>
+                                    <label for="baseMainFileYN">이전 그림 그대로</label>
+                                </div>
+                                <div><input type = "file" id = "mainFile" th:class="${mainFile != null}?'d-none'" th:onchange="imageFileSelect(this.files[0])" required></div>
+
+                            </div>
+                        </div>
+
                     </td>
                 </tr>
                 <!-- mainCategory 추가/삭제 -->
@@ -87,11 +105,20 @@
                         <select th:onchange = "subCategoriesGet(this.value)" class="mainCategoriesSelector" id="mainCategorySelector" required>
                             <option value = "">1차 카테고리</option>
                             <th:block th:if="${mainCategoryList.size() > 0}">
-                                <option th:each="list:${mainCategoryList}" th:value="${list.getMainCode()}">[[${list.getMainName()}]]</option>
+                                <option th:each="list:${mainCategoryList}" th:value="${list.getMainCode()}"
+                                        th:selected="${cloth.getSubCategory() != null && cloth.getSubCategory().getMainCategory().getMainCode() == list.getMainCode()}?true">
+                                    [[${list.getMainName()}]]
+                                </option>
                             </th:block>
                         </select>
                         <select class="subCategoriesSelector" id="subCategorySelector" name="subCategoryId" required>
                             <option value = "">2차 카테고리</option>
+                            <th:block th:if="${subCategoryList.size() > 0}">
+                                <option th:each="list:${subCategoryList}" th:value="${list.getSubCode()}"
+                                        th:selected="${cloth.getSubCategory() != null && cloth.getSubCategory().getSubCode() == list.getSubCode()}?true">
+                                    [[${list.getSubName()}]]
+                                </option>
+                            </th:block>
                         </select>
                     </td>
                 </tr>
@@ -100,7 +127,7 @@
                 <tr>
                     <td><label for="clothName">상품명 *</label></td>
                     <td>
-                        <input type = "text" id="clothName" name = "clothName" required>
+                        <input type = "text" id="clothName" name = "clothName" th:value="${cloth.getClothName()}" required>
                     </td>
                 </tr>
 
@@ -111,7 +138,10 @@
                         <select name = "brandId" id="brandId" required>
                             <option value = "">브랜드 선택</option>
                             <th:block th:if="${brandList.size() > 0}">
-                                <option th:each="list:${brandList}" th:value="${list.getBrandId()}">[[${list.getBrandName()}]]</option>
+                                <option th:each="list:${brandList}" th:value="${list.getBrandId()}"
+                                        th:selected="${cloth.getBrand() != null && cloth.getBrand().getBrandId() == list.getBrandId()}?true">
+                                    [[${list.getBrandName()}]]
+                                </option>
                             </th:block>
                         </select>
                     </td>
@@ -121,11 +151,11 @@
                 <tr>
                     <td>아이콘</td>
                     <td>
-                        <input type = "radio" name = "icon" id = "hot" value = "hot">
+                        <input type = "radio" name = "icon" id = "hot" value = "hot" th:checked="${cloth.getIcon() == 'hot'}?true">
                         <label for = "hot">hot</label>&emsp;
-                        <input type = "radio" name = "icon" id = "minPrice" value = "minPrice">
+                        <input type = "radio" name = "icon" id = "minPrice" value = "minPrice" th:checked="${cloth.getIcon() == 'minPrice'}?true">
                         <label for = "minPrice">최저가</label>&emsp;
-                        <input type = "radio" name = "icon" id = "best" value = "best">
+                        <input type = "radio" name = "icon" id = "best" value = "best" th:checked="${cloth.getIcon() == 'best'}?true">
                         <label for = "best">best</label>
                     </td>
                 </tr>
@@ -143,14 +173,30 @@
                 <!-- 상품 설명 Box -->
                 <tr>
                     <td colspan = "2">
-                        <textarea rows="20" cols="95" name="content" class="w-100 resize-vertical border-0"></textarea>
+                        <textarea rows="20" cols="95" name="content" class="w-100 resize-vertical border-0" th:text="${cloth.getContent()}"></textarea>
                     </td>
                 </tr>
 
                 <!-- 상품 이미지 SubFile 추가 -->
                 <tr>
                     <td>첨부파일(다중 선택 가능)</td>
-                    <td><input type = "file" multiple="multiple" id="subFile" name = "subFile"></td>
+                    <td>
+                        <div class="d-flex flex-column align-self-center">
+                            <!-- 서브 이미지 정보 출력 div -->
+                            <div id="subImagesDiv" th:if="${subFile.size() > 0}">
+                                <th:block th:each="list:${subFile}">
+                                    <img th:src="|/uploadImages/${list.getSavedNm()}|" alt="서브이미지" class="wh-100px" src=""/>
+                                    <p th:text="|[${list.getSavedNm()}]|"></p>
+                                </th:block>
+                            </div>
+                            <!-- 이전 이미지 그대로 checkBox -->
+                            <div th:if="${subFile.size() > 0}">
+                                <input type = "checkbox" id = "baseSubFileYN" th:onchange="baseSubFileUpdateYN()" th:checked="${subFile.size() > 0}?true">
+                                <label for="baseSubFileYN">이전 이미지 그대로</label>
+                            </div>
+                            <div><input type = "file" multiple="multiple" id="subFile" name = "subFile" th:class="${subFile.size() > 0}?'d-none'"></div>
+                        </div>
+                    </td>
                 </tr>
 
                 <!-- With Item 선택하기 -->
