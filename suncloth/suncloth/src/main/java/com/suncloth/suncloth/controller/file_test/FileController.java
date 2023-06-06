@@ -39,10 +39,16 @@ public class FileController {
     public String uploadFile(@RequestParam("file") MultipartFile file
             , @RequestParam("files") List<MultipartFile> files
             , @RequestParam("cloth") Cloth cloth) throws IOException {
-        fileService.saveFile(file, "main", cloth);
+        File mainFile = fileService.saveFile(file);
+        mainFile.setFileType("main");
+        mainFile.setCloth(cloth);
+        fileRepository.save(mainFile);
 
         for (MultipartFile multipartFile : files) {
-            fileService.saveFile(multipartFile, "sub", cloth);
+            File subFile = fileService.saveFile(multipartFile);
+            subFile.setFileType("sub");
+            subFile.setCloth(cloth);
+            fileRepository.save(subFile);
         }
 
         return "/file/upload";

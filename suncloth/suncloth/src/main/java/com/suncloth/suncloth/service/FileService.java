@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -25,9 +26,9 @@ public class FileService {
 
     private final FileRepository fileRepository;
 
-    public void saveFile(MultipartFile files, String fileType, Cloth cloth) throws IOException {
+    public File saveFile(MultipartFile files) throws IOException {
         if (files.isEmpty()) {
-            return;
+            return null;
         }
 
         // 원래 파일 이름 추출
@@ -50,15 +51,11 @@ public class FileService {
                 .orgNm(origName)
                 .savedNm(savedName)
                 .savedPath(savedPath)
-                .fileType(fileType)
-                .cloth(cloth)
                 .build();
 
         // 실제로 로컬에 uuid를 파일명으로 저장
         files.transferTo(new java.io.File(savedPath));
 
-        // 데이터베이스에 파일 정보 저장
-        File savedFile = fileRepository.save(file);
-
+        return file;
     }
 }

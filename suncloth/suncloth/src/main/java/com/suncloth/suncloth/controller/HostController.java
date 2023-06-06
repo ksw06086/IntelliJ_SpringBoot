@@ -4,12 +4,13 @@ import com.suncloth.suncloth.model.*;
 import com.suncloth.suncloth.repository.*;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,6 +82,15 @@ public class HostController {
             , @RequestParam(required = false) String name) {
         model.addAttribute("name", name);
         return "/host/product/host_productView";
+    }
+
+    // 이미지 출력
+    @GetMapping("/uploadImageView/{clothId}")
+    @ResponseBody
+    public Resource uploadImage(@PathVariable("clothId") Long id) throws IOException {
+        Cloth cloth = clothRepository.findById(id).orElse(null);
+        List<File> file = fileRepository.findByClothAndFileType(cloth, "main");
+        return new UrlResource("file:" + file.get(0).getSavedPath());
     }
 
     /* 재고 */

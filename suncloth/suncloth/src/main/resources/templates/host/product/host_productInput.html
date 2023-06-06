@@ -46,6 +46,8 @@
                 <tr>
                     <td class="border-right-1-ccc">메인 이미지 업로드</td>
                     <td>
+                        <input type="hidden" name="clothId" id="clothId" th:value="${cloth.getClothId()}">
+                        <input type="hidden" name="mainFileId" id="mainFileId" th:if="${mainFile != null}" th:value="${mainFile.get(0).getFileId()}">
                         <div class="d-flex">
                             <div>
                                 <img th:src="${mainFile != null}? '/uploadImages/'+${mainFile.get(0).getSavedNm()}" alt="이미지" id="mainImage" class="wh-100px"
@@ -185,6 +187,7 @@
                             <!-- 서브 이미지 정보 출력 div -->
                             <div id="subImagesDiv" th:if="${subFile.size() > 0}">
                                 <th:block th:each="list:${subFile}">
+                                    <input type="hidden" name="subFileIds" th:value="${list.getFileId()}">
                                     <img th:src="|/uploadImages/${list.getSavedNm()}|" alt="서브이미지" class="wh-100px" src=""/>
                                     <p th:text="|[${list.getSavedNm()}]|"></p>
                                 </th:block>

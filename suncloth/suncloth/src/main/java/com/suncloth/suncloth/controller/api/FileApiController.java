@@ -48,6 +48,12 @@ public class FileApiController {
             return fileRepository.findByOrgNm(orgNm);
         }
     }
+    // GET : cloth_id 에 맞는 File들 정보만 가져오기
+    @GetMapping("/files/{cloth_id}")
+    List<File> oneAndMany(@PathVariable Long cloth_id) {
+        Cloth cloth = clothRepository.findById(cloth_id).orElse(null);
+        return fileRepository.findByCloth(cloth);
+    }
     // end::get-aggregate-root[]
 
     /*
@@ -83,12 +89,18 @@ public class FileApiController {
             , @RequestParam(value = "clothId", required = false) long clothId) {
         try {
             Cloth cloth = clothRepository.findById(clothId).orElse(null);
-            fileService.saveFile(file, "main", cloth);
+
+            File mainFile = fileService.saveFile(file);
+            mainFile.setFileType("main");
+            mainFile.setCloth(cloth);
+            fileRepository.save(mainFile);
 
             if (files != null) {
                 for (MultipartFile multipartFile : files) {
-                    fileService.saveFile(multipartFile, "sub", cloth);
-                    System.out.println(multipartFile);
+                    File subFile = fileService.saveFile(multipartFile);
+                    subFile.setFileType("sub");
+                    subFile.setCloth(cloth);
+                    fileRepository.save(subFile);
                 }
             }
             return "성공";
@@ -96,6 +108,65 @@ public class FileApiController {
             throw new RuntimeException(e);
         }
     }
+
+    // POST : mainImageFile 테이블에 삽입하기
+    @PostMapping("/mainFile")
+    public String newMainFile(@RequestParam("mainImage") MultipartFile file
+            , @RequestParam("clothId") long clothId) {
+        try {
+            Cloth cloth = clothRepository.findById(clothId).orElse(null);
+
+            File mainFile = fileService.saveFile(file);
+            mainFile.setFileType("main");
+            mainFile.setCloth(cloth);
+            fileRepository.save(mainFile);
+
+            return "성공";
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // POST : mainImageFile 수정하기
+    @PostMapping("/replaceMainFile")
+    public String replaceMainFile(@RequestParam("mainImage") MultipartFile file
+            , @RequestParam(value = "mainFileId", required = false) long mainFileId
+            , @RequestParam("clothId") long clothId) {
+        try {
+            Cloth cloth = clothRepository.findById(clothId).orElse(null);
+
+            File mainFile = fileService.saveFile(file);
+            mainFile.setFileId(mainFileId);
+            mainFile.setFileType("main");
+            mainFile.setCloth(cloth);
+            fileRepository.save(mainFile);
+
+            return "성공";
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // POST : subImageFile 추가하기
+    @Transactional
+    @PostMapping("/subFile")
+    public String newSubFile(@RequestParam("subImages") List<MultipartFile> files
+            , @RequestParam("clothId") long clothId) {
+        try {
+            Cloth cloth = clothRepository.findById(clothId).orElse(null);
+
+            for (MultipartFile multipartFile : files) {
+                File subFile = fileService.saveFile(multipartFile);
+                subFile.setFileType("sub");
+                subFile.setCloth(cloth);
+                fileRepository.save(subFile);
+            }
+            return "성공";
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     // PUT : cloth_id에 맞게 한가지 file 정보 삽입하기
     @PutMapping("/file/{cloth_id}")
@@ -106,13 +177,6 @@ public class FileApiController {
     }
 
     // Single item
-
-    // GET : cloth_id 에 맞는 File들 정보만 가져오기
-    @GetMapping("/files/{cloth_id}")
-    List<File> oneAndMany(@PathVariable Long cloth_id) {
-        Cloth cloth = clothRepository.findById(cloth_id).orElse(null);
-        return fileRepository.findByCloth(cloth);
-    }
 
     // GET : Id에 맞게 한가지 File 정보만 가져오기
     @GetMapping("/file/{fileId}")
@@ -142,5 +206,12 @@ public class FileApiController {
     @DeleteMapping("/files/{fileId}")
     void deleteFile(@PathVariable Long fileId) {
         fileRepository.deleteById(fileId);
+    }
+
+    // 관리자일 경우에만 삭제가 가능하고, ID에 맞는 한가지의 subFile 만 삭제
+    @Secured("ROLE_ADMIN")
+    @DeleteMapping("/subFiles/{subFileId}")
+    void deleteSubFile(@PathVariable Long subFileId) {
+        fileRepository.deleteById(subFileId);
     }
 }
