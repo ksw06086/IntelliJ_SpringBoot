@@ -564,38 +564,53 @@ function stockUpdate(){
     });
 }
 
-// 브랜드 삭제하기
-function StockDel() {
-    const brandIds = document.getElementsByName("brandIds"); // 화면에 있는 모든 Checkbox(brandIds)
-    let brandDelList = []; // 삭제된 brandIds
+// Stock 재고 삭제하기
+function stockDel() {
+    const stockIds = document.getElementsByName("stockIds"); // 화면에 있는 모든 Checkbox(stockIds)
+    let stockDelList = []; // 삭제된 stockIds
 
     // checkBox에 체크되었는지 확인 후 삭제
-    for (let i = 0; i < brandIds.length; i++) {
-        if(brandIds[i].checked === true){
-            brandDelAjax(brandIds[i].value);
-            brandDelList.push(brandIds[i].value);
+    for (let i = 0; i < stockIds.length; i++) {
+        if(stockIds[i].checked === true){
+            stockDelAjax(stockIds[i].value);
+            stockDelList.push(stockIds[i].value);
         }
     }
 
     // 삭제되었음을 alert 띄워줌
-    alert(brandDelList + "번 브랜드가 삭제되었습니다.");
+    alert(stockDelList + "번 재고가 삭제되었습니다.");
 
     // 화면에서 해당 요소 삭제해줌
-    for (let i = 0; i < brandDelList.length; i++) {
-        document.getElementById(brandDelList[i]).remove();
+    for (let i = 0; i < stockDelList.length; i++) {
+        document.getElementById(stockDelList[i]).remove();
     }
 
-    // brand 1개 삭제하는 Ajax 함수
-    function brandDelAjax(brandId){
+    // stock 1개 삭제하는 Ajax 함수
+    function stockDelAjax(stockId){
         $.ajax({
             type: 'DELETE',
-            url: '/api/brands/' + brandId,
+            url: '/api/stocks/' + stockId,
             success: (result) => {
                 //AJAX 성공시 실행 코드
             }, error:function(e) {
                 alert("error: " + e);
             }
         });
+    }
+}
+// 재고 checkbox 한번에 체크 함수
+function allStockCheck() {
+    const stockCheckAll = document.getElementById("stockCheckAll");
+    const stockIds = document.getElementsByName("stockIds");
+    // 해당 페이지의 모든 stock CheckBox에 체크
+    if(stockCheckAll.checked === true){
+        for (let i = 0; i < stockIds.length; i++) {
+            stockIds[i].checked = true;
+        }
+    } else {
+        for (let i = 0; i < stockIds.length; i++) {
+            stockIds[i].checked = false;
+        }
     }
 }
 
