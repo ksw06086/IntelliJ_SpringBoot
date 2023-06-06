@@ -90,6 +90,22 @@ function brandDel() {
     }
 }
 
+// 브랜드 checkbox 한번에 체크 함수
+function allBrandCheck() {
+    const brandCheckAll = document.getElementById("brandCheckAll");
+    const brandIds = document.getElementsByName("brandIds");
+    // 해당 페이지의 모든 brand CheckBox에 체크
+    if(brandCheckAll.checked === true){
+        for (let i = 0; i < brandIds.length; i++) {
+            brandIds[i].checked = true;
+        }
+    } else {
+        for (let i = 0; i < brandIds.length; i++) {
+            brandIds[i].checked = false;
+        }
+    }
+}
+
 // 브랜드 HP 입력 확인(쓰지 않고 표시만 해주는 방향으로 생각 바뀜 혹시 몰라 남겨둠)
 function brandHPInput(hp) {
     const brandHPDiv = document.getElementById("brandHPDiv");
@@ -546,6 +562,41 @@ function stockUpdate(){
             alert("실패");
         }
     });
+}
+
+// 브랜드 삭제하기
+function StockDel() {
+    const brandIds = document.getElementsByName("brandIds"); // 화면에 있는 모든 Checkbox(brandIds)
+    let brandDelList = []; // 삭제된 brandIds
+
+    // checkBox에 체크되었는지 확인 후 삭제
+    for (let i = 0; i < brandIds.length; i++) {
+        if(brandIds[i].checked === true){
+            brandDelAjax(brandIds[i].value);
+            brandDelList.push(brandIds[i].value);
+        }
+    }
+
+    // 삭제되었음을 alert 띄워줌
+    alert(brandDelList + "번 브랜드가 삭제되었습니다.");
+
+    // 화면에서 해당 요소 삭제해줌
+    for (let i = 0; i < brandDelList.length; i++) {
+        document.getElementById(brandDelList[i]).remove();
+    }
+
+    // brand 1개 삭제하는 Ajax 함수
+    function brandDelAjax(brandId){
+        $.ajax({
+            type: 'DELETE',
+            url: '/api/brands/' + brandId,
+            success: (result) => {
+                //AJAX 성공시 실행 코드
+            }, error:function(e) {
+                alert("error: " + e);
+            }
+        });
+    }
 }
 
 // *** 검색 관련 Script *** //
