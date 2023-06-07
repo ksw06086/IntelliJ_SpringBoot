@@ -96,7 +96,7 @@ create table brand_tbl(
     brand_id   int GENERATED ALWAYS as IDENTITY,
     brand_name varchar2(50) not null,
     reg_date   date DEFAULT sysdate, -- 등록일
-    hp varchar2(50),
+    hp varchar2(50) default '',
     CONSTRAINT brand_brandid_pk_excption PRIMARY key(brand_id)
 );
 
@@ -116,15 +116,15 @@ create table file_tbl(
 create table cloth_tbl (
     cloth_id int GENERATED ALWAYS as IDENTITY,
     cloth_name varchar2(50) not null,
-    content varchar2(255) DEFAULT '내용 없음',
+    content varchar2(255) DEFAULT ' ',
     sub_code int,
     brand_id int,
-    icon varchar2(30),
-    with_item_ids varchar2(100),
+    icon varchar2(30) default ' ',
+    with_item_ids varchar2(100) default ' ',
     reg_date Date default sysdate,
     CONSTRAINT cloth_clothid_pk_excption PRIMARY key(cloth_id),
-    FOREIGN KEY(sub_code) references sub_category_tbl(sub_code),
-    FOREIGN key(brand_id) references brand_tbl(brand_id)
+    FOREIGN KEY(sub_code) references sub_category_tbl(sub_code) on delete cascade,
+    FOREIGN key(brand_id) references brand_tbl(brand_id) on delete cascade
 );
 
 /************ 재고 관련 Table ***********/

@@ -269,9 +269,9 @@ function clothAdd(){
         contentType: false,
         data: clothInputForm,
         success: function(result){
+            alert("상품이 등록되었습니다.");
             mainFileAdd(result.clothId);
             subFilesAdd(result.clothId);
-            alert("상품이 등록되었습니다.");
             window.location.href="/host/productList";
         },
         err: function(err){
@@ -485,9 +485,6 @@ function subFilesDel() {
     for (let i = 0; i < subFileIds.length; i++) {
         subFileDelAjax(subFileIds[i].value);
     }
-
-    // 삭제되었음을 alert 띄워줌
-    alert(subFileIds.values() + "번 서브 이미지가 삭제되었습니다.");
 
     // subFile 1개 삭제하는 Ajax 함수
     function subFileDelAjax(subFileId){
@@ -790,4 +787,22 @@ function dateMonth6(){ // 6개월
     document.searchForm.dayNum.value = 4;
 }
 
+// --- 상품 검색 --- //
+function clothsGet(){
+    const clothName = "로시";
+    const icon = "";
+    const brandId = document.getElementById("brandId").value;
 
+    $.ajax({
+        type: 'GET',
+        url: '/api/cloths?brandId=' + brandId,
+        success: (result) => {
+            alert(result);
+            result.forEach(data => {
+                alert(data.clothName);
+            })
+        }, error:function(e) {
+            alert("error: " + e);
+        }
+    });
+}

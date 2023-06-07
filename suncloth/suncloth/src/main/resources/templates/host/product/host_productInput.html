@@ -46,8 +46,8 @@
                 <tr>
                     <td class="border-right-1-ccc">메인 이미지 업로드</td>
                     <td>
-                        <input type="hidden" name="clothId" id="clothId" th:value="${cloth.getClothId()}">
-                        <input type="hidden" name="regDate" id="regDate" th:value="${cloth.getRegDate()}">
+                        <input type="hidden" name="clothId" id="clothId" th:value="${cloth.getClothId()}" th:if="${cloth.getSubCategory() != null}">
+                        <input type="hidden" name="regDate" id="regDate" th:value="${cloth.getRegDate()}" th:if="${cloth.getSubCategory() != null}">
                         <input type="hidden" name="mainFileId" id="mainFileId" th:if="${mainFile != null}" th:value="${mainFile.get(0).getFileId()}">
                         <div class="d-flex">
                             <div>
@@ -207,7 +207,7 @@
                 <!-- With Item 선택하기 -->
                 <tr>
                     <td class="text-center py-10">
-                        <input type = "hidden" name = "withItemIds" value = "">
+                        <input type = "hidden" name = "withItemIds" value = " ">
                         <div id = "image" class="bg-secondary-subtle wh-100px mx-auto">
                             No image
                         </div>

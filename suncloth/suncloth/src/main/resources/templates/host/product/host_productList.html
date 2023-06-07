@@ -55,7 +55,7 @@
                     <td>브랜드</td>
                     <td>
                         <select name = "brandId" id="brandId" class="w-15">
-                            <option value = "">전체</option>
+                            <option value = "0">전체</option>
                             <th:block th:if="${brandList.size() > 0}">
                                 <option th:each="list:${brandList}" th:value="${list.getBrandId()}">[[${list.getBrandName()}]]</option>
                             </th:block>
@@ -117,7 +117,7 @@
 
             <!-- 버튼 리스트(Button List Block) -->
             <div class="w-100 text-center mt-10 mb-20">
-                <input type = "submit" value = "검색" class="blackBaseButton w-15 py-10 border-0 ">
+                <input type = "button" value = "검색" class="blackBaseButton w-15 py-10 border-0 " th:onclick="clothsGet()">
             </div>
         </form>
 

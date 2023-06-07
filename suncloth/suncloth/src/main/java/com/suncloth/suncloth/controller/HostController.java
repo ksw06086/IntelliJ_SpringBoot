@@ -76,13 +76,6 @@ public class HostController {
 
         return "/host/product/host_productInput";
     }
-    // 상품 수정
-    @GetMapping("/productView")
-    public String productView(Model model
-            , @RequestParam(required = false) String name) {
-        model.addAttribute("name", name);
-        return "/host/product/host_productView";
-    }
 
     // clothId로 메인 이미지 출력
     @GetMapping("/uploadMainImageView/{clothId}")
