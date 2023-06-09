@@ -790,12 +790,19 @@ function dateMonth6(){ // 6개월
 // --- 상품 검색 --- //
 function clothsGet(){
     const clothName = "로시";
-    const icon = "";
+    const iconList = [];
+    document.getElementsByName("icon").forEach(icon => {
+        if(icon.checked){
+            iconList.push(icon.value);
+        }
+    });
     const brandId = document.getElementById("brandId").value;
+    const mainCategoryId = document.getElementById("mainCategorySelector").value;
+    const subCategoryId = document.getElementById("subCategorySelector").value;
 
     $.ajax({
         type: 'GET',
-        url: '/api/cloths?brandId=' + brandId,
+        url: '/api/cloths?brandId=' + brandId + '&mainCategoryId=' + mainCategoryId + '&subCategoryId=' + subCategoryId + "&icons=" + iconList,
         success: (result) => {
             alert(result);
             result.forEach(data => {

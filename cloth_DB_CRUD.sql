@@ -8,6 +8,7 @@ select * from cloth_tbl;
 select * from color_tbl;
 select * from size_tbl;
 select * from stock_tbl;
+select * from dual;
 
 delete user_tbl;
 delete refund_acc_tbl;

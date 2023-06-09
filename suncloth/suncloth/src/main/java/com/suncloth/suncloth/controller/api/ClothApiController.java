@@ -39,21 +39,17 @@ public class ClothApiController {
     // GET : Cloth 테이블 정보 가져오기
     @GetMapping("/cloths")
     List<Cloth> all(@RequestParam(required = false, defaultValue = "") String clothName
-            , @RequestParam(required = false, defaultValue = "") String icon
-            , @RequestParam(required = false) Long brandId) {
+            , @RequestParam(required = false) List<String> icons
+            , @RequestParam(required = false) Long brandId
+            , @RequestParam(required = false) Long mainCategoryId
+            , @RequestParam(required = false) Long subCategoryId) {
         System.out.println("clothName : " + clothName);
-        System.out.println("icon : " + icon);
+        System.out.println("icons : " + icons);
         System.out.println("brandId : " + brandId);
-        if(brandId != null){
-            Brand brand = brandRepository.findById(brandId).orElse(null);
-            System.out.println("brand : " + brand);
-            return clothRepository.findByQuery2(brandId);
-        } else if(StringUtils.isEmpty(clothName) || StringUtils.isEmpty(icon)){
-            System.out.println("null : ");
-            return clothRepository.findAll();
-        } else {
-            return clothRepository.findByQuery1(clothName, icon);
-        }
+        System.out.println("mainCategoryId : " + mainCategoryId);
+        System.out.println("subCategoryId : " + subCategoryId);
+        if(icons.size() == 0) { icons = null; }
+        return clothRepository.findByQuery1(clothName, brandId, mainCategoryId, subCategoryId, icons);
     }
     // end::get-aggregate-root[]
 

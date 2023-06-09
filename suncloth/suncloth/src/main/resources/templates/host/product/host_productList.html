@@ -55,7 +55,7 @@
                     <td>브랜드</td>
                     <td>
                         <select name = "brandId" id="brandId" class="w-15">
-                            <option value = "0">전체</option>
+                            <option value = "">전체</option>
                             <th:block th:if="${brandList.size() > 0}">
                                 <option th:each="list:${brandList}" th:value="${list.getBrandId()}">[[${list.getBrandName()}]]</option>
                             </th:block>
