@@ -33,7 +33,21 @@
                 <input type = "hidden" name = "pageNum" value = "${pageNum}"/>
 
                 <!-- BrandList Top Menu -->
-                <div th:replace="fragments/host_common :: boardTopList"></div>
+                <div class="d-flex">
+                    <!-- 현재 가져온 브랜드가 총 몇개이고 그 중 몇개가 한페이지에 출력이 되어있는지 확인 -->
+                    <div class="me-auto pt-20 px-15 pb-12">
+                        <b th:text="| 검색 ${brandList.getNumberOfElements()}건 / 총 ${brandList.getTotalElements()}건 |"></b>
+                    </div>
+
+                    <!-- 출력 수 제한 및 정렬을 위해 select시 목록의 변화가 일어나야 하는 부분 -->
+                    <div class="pt-20 px-15 pb-12">
+                        <select id="blockNum" name="blockNum" class="py-1 px-1 fs-8" onchange = "blockchange();">
+                            <option value="10">10개씩 출력</option>
+                            <option value="30">30개씩 출력</option>
+                            <option value="50">50개씩 출력</option>
+                        </select>
+                    </div>
+                </div>
 
                 <!-- 브랜드 목록 Block -->
                 <table class="table text-center fs-75 w-98 mx-auto bg-white border-bottom-1-ccc border-top-1-ccc td-border-bottom-1-ccc vertical-middle-all a-tag-css">
@@ -49,7 +63,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <th:block th:if="${brandList.size() > 0}">
+                    <th:block th:if="${brandList.getSize() > 0}">
                         <tr class = "text-center td-py10 td-px15" th:each="list:${brandList}" th:id="${list.getBrandId()}">
                             <td><input type = "checkbox" name="brandIds" th:value = "${list.getBrandId()}"></td>
                             <td>[[${list.getBrandId()}]]</td>
@@ -61,7 +75,7 @@
                             <td>[[${list.getRegDate()}]]</td>
                         </tr>
                     </th:block>
-                    <tr class = "text-center td-py10 td-px15" th:if="${brandList.size() == 0}">
+                    <tr class = "text-center td-py10 td-px15" th:if="${brandList.getSize() == 0}">
                       <td colspan = "5">
                         브랜드가 없습니다. 브랜드를 등록해주세요.
                       </td>
@@ -79,20 +93,15 @@
                     <!-- Paging Process -->
                     <div>
                         <ul class="pagination justify-content-center my-0">
-                            <li class="page-item disabled">
-                                <a class="page-link">&lt;</a>
+                            <li class="page-item" th:classappend="${1 == brandList.pageable.pageNumber+1} ? 'disabled'">
+                                <a class="page-link" th:href="@{/host/brandList(page=${brandList.pageable.pageNumber - 1})}">&lt;</a>
                             </li>
-                            <li class="page-item active">
-                                <a class="page-link" href="#">1</a>
+                            <li class="page-item" th:classappend="${i == brandList.pageable.pageNumber+1} ? 'disabled'"
+                                th:each="i : ${#numbers.sequence(startPage, endPage)}">
+                                <a class="page-link" th:href="@{/host/brandList(page=${i - 1})}" th:text="${i}">1</a>
                             </li>
-                            <li class="page-item" aria-current="page">
-                                <a class="page-link" href="#">2</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">3</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">&gt;</a>
+                            <li class="page-item" th:classappend="${brandList.totalPages == brandList.pageable.pageNumber+1} ? 'disabled'">
+                                <a class="page-link" th:href="@{/host/brandList(page=${brandList.pageable.pageNumber + 1})}">&gt;</a>
                             </li>
                         </ul>
                     </div>

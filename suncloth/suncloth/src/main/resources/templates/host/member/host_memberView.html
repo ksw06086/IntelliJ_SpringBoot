@@ -22,8 +22,7 @@
             <p class="fs-15 p-0 m-0"><b>회원관리</b></p>
             <p class="position-absolute m-0 top-0 end-0">
                 <!-- 저장 버튼 -->
-                <input type="button" value="저장" class="blueBaseBtn px-10 py-10"
-                       onclick = "productForm.action = 'h_productupdatePro1'">
+                <input type="button" value="저장" class="blueBaseBtn px-10 py-10" th:onclick="hostMemoUpdate()">
                 <!-- 탈퇴시키기 버튼 -->
                 <input type="button" value="탈퇴시키기" class="blueBaseBtn px-10 py-10"
                        onclick = "productForm.action = 'h_deletePro?id=${vo.id}&pageNum=${pageNum}'">
@@ -55,6 +54,8 @@
 
                 <!-- 회원 개인 정보 Block -->
                 <table class="w-97 mx-auto bg-white border-top-1-ccc border-bottom-1-ccc td-py15 td-px10 fs-8 td-border-bottom-1-ccc tdChild1-fw-bold tdChild1-bg-lightGray vertical-middle-all">
+                    <col style = "width:20%">
+                    <col>
                     <!-- 회원 : 회원구분 -->
                     <tr>
                         <td>회원구분</td>
@@ -98,9 +99,9 @@
 
                 <!-- 회원 활동 정보 Block -->
                 <table class="w-97 mx-auto bg-white border-top-1-ccc border-bottom-1-ccc td-py15 td-px10 td-border-bottom-1-ccc fs-8 vertical-middle-all">
-                    <col style = "width:15%">
+                    <col style = "width:20%">
                     <col>
-                    <col style = "width:15%">
+                    <col style = "width:20%">
                     <col>
                     <tr>
                         <td class="fw-bold bg-EAECEE">적립금</td>
@@ -155,11 +156,9 @@
 
                 <!-- 관리자메모 Block -->
                 <table class="w-97 mx-auto bg-white border-bottom-1-ccc border-top-1-ccc td-py15 td-px10 td-border-bottom-1-ccc fs-8 tdChild1-bg-lightGray tdChild1-fw-bold tdChild1-border-right-1-ccc vertical-middle-all">
-                    <col style = "width: 15%;">
-                    <col>
                     <!-- 관리자메모 Box -->
                     <tr>
-                        <td colspan = "2">
+                        <td>
                             <textarea rows="20" cols="95" class="w-100 resize-vertical border-0" name="hostMemo" th:value="${user.getHostMemo()}"></textarea>
                         </td>
                     </tr>

@@ -6,6 +6,9 @@ import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -41,13 +44,20 @@ public class HostController {
     /* 상품 */
     // 상품 리스트
     @GetMapping("/productList")
-    public String productList(Model model) {
+    public String productList(Model model
+            , @PageableDefault(size = 3)Pageable pageable) {
         List<Brand> brands = brandRepository.findAll();
         List<MainCategory> mainCategories = mainCategoryRepository.findAll();
-        List<Cloth> cloths = clothRepository.findAll();
+        Page<Cloth> cloths = clothRepository.findAll(pageable);
+
+        // 현재 아래 바를 1~5까지 보여주게 하기 위해서 끝에 4를 빼고 더해준 것
+        int startPage = Math.max(1, cloths.getPageable().getPageNumber()-4);
+        int endPage = Math.min(cloths.getTotalPages(), cloths.getPageable().getPageNumber()+4);
 
         model.addAttribute("brandList", brands);
         model.addAttribute("mainCategoryList", mainCategories);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
         model.addAttribute("clothList", cloths);
 
         return "/host/product/host_productList";
@@ -136,8 +146,14 @@ public class HostController {
     /* 브랜드 */
     // 브랜드 목록
     @GetMapping("/brandList")
-    public String brandList(Model model) {
-        List<Brand> brandList = brandRepository.findAll();
+    public String brandList(Model model
+            , @PageableDefault(size = 3)Pageable pageable) {
+        Page<Brand> brandList = brandRepository.findAll(pageable);
+        // 현재 아래 바를 1~5까지 보여주게 하기 위해서 끝에 4를 빼고 더해준 것
+        int startPage = Math.max(1, brandList.getPageable().getPageNumber()-4);
+        int endPage = Math.min(brandList.getTotalPages(), brandList.getPageable().getPageNumber()+4);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
         model.addAttribute("brandList", brandList);
         return "/host/product/host_brandList";
     }

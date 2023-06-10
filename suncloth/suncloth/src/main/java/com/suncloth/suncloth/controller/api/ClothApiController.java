@@ -8,6 +8,9 @@ import com.suncloth.suncloth.repository.*;
 import com.suncloth.suncloth.repository.querydsl.ClothRepositoryImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,22 +49,29 @@ public class ClothApiController {
 
     // GET : Cloth 테이블 정보 가져오기
     @GetMapping("/cloths")
-    List<Map<String, Object>> all(@RequestParam(required = false) String searchType       // 검색 타입
+    Map<String, Object> all(@RequestParam(required = false) String searchType       // 검색 타입
             , @RequestParam(required = false) String searchInput            // 검색 TextInput value
             , @RequestParam(required = false) List<String> icons            // 아이콘
             , @RequestParam(required = false) Long brandId                  // 브랜드 식별자
             , @RequestParam(required = false) Long mainCategoryId           // 메인 카테고리 식별자
             , @RequestParam(required = false) Long subCategoryId            // 서브 카테고리 식별자
             , @RequestParam(required = false) String firstDay               // 시작 날짜
-            , @RequestParam(required = false) String lastDay) {             // 끝 날짜
+            , @RequestParam(required = false) String lastDay                // 끝 날짜
+            , @PageableDefault(size = 3) Pageable pageable) {               // 페이지 객체
 
         Brand brand = brandRepository.findById(brandId).orElse(null);
         MainCategory mainCategory = mainCategoryRepository.findById(mainCategoryId).orElse(null);
         SubCategory subCategory = subCategoryRepository.findById(subCategoryId).orElse(null);
-        List<Cloth> clothList = clothRepositoyImpl.findSearchAll(searchType, searchInput, brand, mainCategory, subCategory, icons, firstDay, lastDay);
+
+        Page<Cloth> clothList = clothRepositoyImpl.findSearchAll(searchType, searchInput, brand, mainCategory, subCategory, icons, firstDay, lastDay, pageable);
+        // 현재 아래 바를 1~5까지 보여주게 하기 위해서 끝에 4를 빼고 더해준 것
+        int startPage = Math.max(1, clothList.getPageable().getPageNumber()-4);
+        int endPage = Math.min(clothList.getTotalPages(), clothList.getPageable().getPageNumber()+4);
+
+        // 각 프로퍼티 결과 출력
         System.out.println("searchType : " + searchType + ", searchInput : " + searchInput + ", icons : " + icons +
                 ", brand : " + brand + ", mainCategory : " + mainCategory + ", subCategory : " + subCategory +
-                ", firstDay : " + firstDay + ", lastDay : " + lastDay);
+                ", firstDay : " + firstDay + ", lastDay : " + lastDay + ", pageable : " + pageable);
 
         List<Map<String, Object>> clothMap = new ArrayList<>();
         for (Cloth cloth : clothList) {
@@ -70,7 +80,13 @@ public class ClothApiController {
             clothMap.get(clothMap.size()-1).put("brand", cloth.getBrand());
             clothMap.get(clothMap.size()-1).put("subCategory", cloth.getSubCategory());
         }
-        return clothMap;
+
+        Map<String, Object> pageMap = new HashMap<>();
+        pageMap.put("contentList", clothMap);
+        pageMap.put("pageObject", clothList);
+        pageMap.put("startPage", startPage);
+        pageMap.put("endPage", endPage);
+        return pageMap;
     }
     // end::get-aggregate-root[]
 

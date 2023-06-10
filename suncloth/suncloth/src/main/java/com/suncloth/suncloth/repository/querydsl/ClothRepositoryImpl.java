@@ -26,10 +26,27 @@ public class ClothRepositoryImpl {
 
     //** 상품 검색 **//
     QCloth cloth = QCloth.cloth;
-    public List<Cloth> findSearchAll(String searchType, String searchInput
+    public Page<Cloth> findSearchAll(String searchType, String searchInput
             , Brand brand, MainCategory mainCategory, SubCategory subCategory
-            , List<String> icons, String firstDay, String lastDay) {
-        JPAQuery<Cloth> query = queryFactory.selectFrom(cloth)
+            , List<String> icons, String firstDay, String lastDay, Pageable pageable) {
+        List<Cloth> content = queryFactory
+                .select(cloth)
+                .from(cloth)
+                .where(
+                        searchInputContains(searchType, searchInput),
+                        brandEq(brand),
+                        mainCategoryEq(mainCategory),
+                        subCategoryEq(subCategory),
+                        iconIn(icons),
+                        dateBetween(firstDay, lastDay)
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        JPAQuery<Cloth> contentCount = queryFactory
+                .select(cloth)
+                .from(cloth)
                 .where(
                         searchInputContains(searchType, searchInput),
                         brandEq(brand),
@@ -39,16 +56,14 @@ public class ClothRepositoryImpl {
                         dateBetween(firstDay, lastDay)
                 );
                 // 페이지 관련 추가시
-                /*.offset(pageable.getOffset())
-                .limit(pageable.getPageSize() + 1)
-                .orderBy(makeOrderSpecifiers(member, pageable));;*/
+                /*.orderBy(makeOrderSpecifiers(member, pageable));;*/
 
         // offset : select 된 결과에서 가져올 row 시작지점, 기본은 0
         // limit : 몇개 가져올 것인지
         // fetch() : 리스트를 결과로 반환, fetchOne() : 단건 조회, fetchFirst() : 처음 한건 가져옴
         // fetchResults() : 페이징을 위해 total contents 가져옴<이건 써봐야 알 듯>, fetchCount() : 개수 가져옴 Long 반환
         // orderBy(객체.멤버변수.desc()/asc().nullsLast()/nullsFirst()<널 가장 나중/먼저>, ...) : 정렬
-        return query.fetch();
+        return PageableExecutionUtils.getPage(content, pageable, contentCount::fetchCount);
     }
 
     // 검색 Text 비교
