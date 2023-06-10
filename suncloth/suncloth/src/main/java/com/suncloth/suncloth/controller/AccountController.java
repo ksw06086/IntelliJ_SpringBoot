@@ -4,12 +4,18 @@ import com.suncloth.suncloth.model.RefundAccount;
 import com.suncloth.suncloth.model.User;
 import com.suncloth.suncloth.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Collection;
 
 @Controller
 @RequestMapping("/account")
@@ -21,6 +27,17 @@ public class AccountController {
     @GetMapping("/login")
     public String login() {
         return "account/guest_login";
+    }
+
+    // 로그인 완료(방문 횟수 증가)
+    @GetMapping("/loginComplete")
+    public String loginComplete() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails userDetails = (UserDetails)principal;
+        String username = userDetails.getUsername();
+        userService.userVisitCntPlus(username);
+
+        return "redirect:/main";
     }
 
     @GetMapping("/register")

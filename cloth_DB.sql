@@ -33,6 +33,9 @@ create table user_tbl(
     reg_date DATE DEFAULT sysdate,
     birth_day Date,
     birth_type VARCHAR2(20),
+    usable_plus int default 0,
+    visit_cnt int default 0,
+    host_memo clob,
     enabled number(1),
     CONSTRAINT pk_user_id PRIMARY key(id),
     constraint uk_username unique(username)

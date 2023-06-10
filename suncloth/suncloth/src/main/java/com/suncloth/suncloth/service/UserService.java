@@ -39,4 +39,12 @@ public class UserService {
         refundAccount.setUser(savedUser);
         refundAccRepository.save(refundAccount);
     }
+
+    // guest 로그인 시 방문횟수(visitCnt) 1개 증가시키기
+    public void userVisitCntPlus(String username){
+        User user = userRepository.findByUsername(username);
+        System.out.println("여기 옴");
+        user.setVisitCnt(user.getVisitCnt() + 1);
+        userRepository.save(user);
+    }
 }

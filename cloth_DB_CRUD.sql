@@ -1,4 +1,6 @@
 select * from user_tbl;
+select * from role_tbl;
+select * from user_role;
 select * from refund_acc_tbl;
 select * from main_category_tbl;
 select * from sub_category_tbl;
@@ -7,8 +9,6 @@ select * from file_tbl;
 select * from cloth_tbl;
 select * from color_tbl;
 select * from size_tbl;
-select * from stock_tbl;
-select * from dual;
 
 delete user_tbl;
 delete refund_acc_tbl;

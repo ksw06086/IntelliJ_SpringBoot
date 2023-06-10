@@ -35,6 +35,8 @@ public class HostController {
     SizeRepository sizeRepository;
     @Autowired
     StockRepository stockRepository;
+    @Autowired
+    UserRepository userRepository;
 
     /* 상품 */
     // 상품 리스트
@@ -162,12 +164,17 @@ public class HostController {
     /* 회원 */
     // 회원 목록
     @GetMapping("/memberList")
-    public String memberList() {
+    public String memberList(Model model) {
+        List<User> userList = userRepository.findByUsernameNot("host");
+        model.addAttribute("userList", userList);
         return "/host/member/host_memberList";
     }
     // 회원 수정
     @GetMapping("/memberView")
-    public String memberView() {
+    public String memberView(Model model
+            , @RequestParam(required = false) String username) {
+        User user = userRepository.findByUsername(username);
+        model.addAttribute("user", user);
         return "/host/member/host_memberView";
     }
 

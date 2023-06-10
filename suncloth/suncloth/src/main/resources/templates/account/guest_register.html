@@ -173,7 +173,7 @@
         <!-- BirthDay -->
         <tr>
             <th scope="row">
-                <label class="ms-2 col-form-label"> BirthDay</label>
+                <label class="ms-2 col-form-label"> <span class="text-danger">*</span> BirthDay</label>
             </th>
             <td>
                 <div class="mx-3 d-flex">
@@ -342,7 +342,7 @@
     let mediumPassword = new RegExp('(((?=.*[a-z])|(?=.*[A-Z]))(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,}))');
 
     // *** 휴대폰 번호 정규식 ***
-    let regPhone = /^01([0|1|2|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
+    let regPhone = /^01([0|1|2|7|8|9])?-([0-9]{3,4})?-([0-9]{4})$/;
 
     // ID 중복검사
     function idCheck(id){
@@ -422,7 +422,7 @@
     function SMSFormal(){
         const keyCheckForm = document.getElementById("keyCheckForm");
         const keyHiddenInput = document.getElementById("keyNumber");
-        const hp = document.getElementById("hpInput").value;
+        let hp = document.getElementById("hpInput").value;
         if(!regPhone.test(hp)){
             alert("번호입력이 잘못되었습니다. 다시 입력해주세요.(ex 010-1234-5678)");
         } else {

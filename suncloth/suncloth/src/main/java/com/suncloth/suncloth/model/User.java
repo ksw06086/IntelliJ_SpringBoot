@@ -39,6 +39,9 @@ public class User {
     private Date regDate;           // Register Date
     private Date birthDay = null;   // BirthDay
     private String birthType = null;// BirthType
+    private int usablePlus;         // 현재 User가 사용가능한 적립금
+    private int visitCnt;           // 방문 횟수
+    private String hostMemo;        // 관리자 메모
     private int enabled;            // User 권한
 
     // 권한 테이블과 조인함
