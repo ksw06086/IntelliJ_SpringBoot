@@ -310,6 +310,7 @@ function clothUpdate(){
         err: function(err){
             console.log("err:", err);
             alert("실패");
+            return false;
         }
     });
 }
@@ -455,7 +456,7 @@ function mainFileUpdate(clothId) {
 function subFilesAdd(clothId) {
     const subImageInput = document.getElementById("subFile");
     const formData = new FormData();
-    if(subImageInput.files.length === 0){ return ; } // 서브 이미지 파일 선택 안했으면 그냥 넘기기
+    if(subImageInput.files.length === 0){ return false; } // 서브 이미지 파일 선택 안했으면 그냥 넘기기
     for (let i = 0; i < subImageInput.files.length; i++) {
         // formData 에 'subImages' 이라는 키값으로 subImageFile 값을 append 시킨다.
         formData.append('subImages', subImageInput.files[i]);
