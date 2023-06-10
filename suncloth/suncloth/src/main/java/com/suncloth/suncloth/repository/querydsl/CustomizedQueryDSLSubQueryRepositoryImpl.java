@@ -1,4 +1,4 @@
-package com.suncloth.suncloth.repository;
+package com.suncloth.suncloth.repository.querydsl;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.ExpressionUtils;

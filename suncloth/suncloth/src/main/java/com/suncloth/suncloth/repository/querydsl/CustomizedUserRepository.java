@@ -1,4 +1,4 @@
-package com.suncloth.suncloth.repository;
+package com.suncloth.suncloth.repository.querydsl;
 
 import com.suncloth.suncloth.model.User;
 import org.springframework.stereotype.Repository;

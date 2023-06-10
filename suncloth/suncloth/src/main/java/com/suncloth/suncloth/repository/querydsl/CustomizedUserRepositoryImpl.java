@@ -1,4 +1,4 @@
-package com.suncloth.suncloth.repository;
+package com.suncloth.suncloth.repository.querydsl;
 
 import com.querydsl.jpa.impl.JPAQuery;
 import com.suncloth.suncloth.model.QUser;

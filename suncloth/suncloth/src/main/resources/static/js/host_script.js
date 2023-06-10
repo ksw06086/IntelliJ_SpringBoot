@@ -167,7 +167,7 @@ function mainCategoriesGet(){
 
             // 1. mainCategoriesSelector Clear
             for (let i = 0; i < allMainCategoryByClass.length; i++) {
-                allMainCategoryByClass[i].innerHTML = `<option value = "">1차 카테고리</option>`;
+                allMainCategoryByClass[i].innerHTML = `<option value = "0">메인 카테고리</option>`;
             }
             // 2. mainCategoriesSelector Option 추가
             result.forEach(data => {
@@ -239,7 +239,7 @@ function subCategoriesGet(mainCode){
 
             // 1. mainCategoriesSelector Clear
             for (let i = 0; i < allSubCategoryByClass.length; i++) {
-                allSubCategoryByClass[i].innerHTML = `<option value = "">2차 카테고리</option>`;
+                allSubCategoryByClass[i].innerHTML = `<option value = "0">서브 카테고리</option>`;
             }
             // 2. mainCategoriesSelector Option 추가
             result.forEach(data => {
@@ -789,7 +789,8 @@ function dateMonth6(){ // 6개월
 
 // --- 상품 검색 --- //
 function clothsGet(){
-    const clothName = "로시";
+    const searchType = document.getElementById("searchType").value;
+    const searchInput = document.getElementById("searchInput").value;
     const iconList = [];
     document.getElementsByName("icon").forEach(icon => {
         if(icon.checked){
@@ -799,17 +800,39 @@ function clothsGet(){
     const brandId = document.getElementById("brandId").value;
     const mainCategoryId = document.getElementById("mainCategorySelector").value;
     const subCategoryId = document.getElementById("subCategorySelector").value;
+    const firstDay = document.getElementById("firstDay").value;
+    const lastDay = document.getElementById("lastDay").value;
 
     $.ajax({
         type: 'GET',
-        url: '/api/cloths?brandId=' + brandId + '&mainCategoryId=' + mainCategoryId + '&subCategoryId=' + subCategoryId + "&icons=" + iconList,
+        url: '/api/cloths?searchType=' + searchType + '&searchInput=' + searchInput + '&brandId=' + brandId +
+            '&mainCategoryId=' + mainCategoryId + '&subCategoryId=' + subCategoryId +
+            "&icons=" + iconList + "&firstDay=" + firstDay + "&lastDay=" + lastDay,
         success: (result) => {
-            alert(result);
+            //AJAX 성공시 실행 코드(* mainCategoriesSelector Class)
+            const productListTBody = document.getElementById("productListTBody");
+            productListTBody.innerHTML = '';
             result.forEach(data => {
-                alert(data.clothName);
+                // tr 태그
+                const tr = document.createElement('tr');
+                tr.className = "text-center td-py10 td-px15";
+                tr.id = data.clothId;
+                // td 태그 추가
+                tr.innerHTML =  '<td><input type = "checkbox" name = "clothIds" value = "' + data.cloth.clothId + '"></td>' +
+                                '<td>' +
+                                    '<img src="/host/uploadMainImageView/' + data.cloth.clothId + '" alt="이미지 없음" width = "50px" height = "60px">' +
+                                '</td>' +
+                                '<td>' + data.cloth.clothId + '</td>' +
+                                '<td>' + data.subCategory.subName + '</td>' +
+                                '<td class="text-start">' +
+                                    '<a href="/host/productInput?clothId=' + data.cloth.clothId + '">' + data.cloth.clothName +
+                                    '</a></td>' +
+                                '<td>' + data.cloth.regDate + '</td>' +
+                                '<td><a href="/host/stockList?clothId=' + data.cloth.clothId +'"><input type = "button" value = "재고 관리" name = "csInput" class="whiteButton"/></a></td>';
+                productListTBody.append(tr);
             })
         }, error:function(e) {
-            alert("error: " + e);
+            alert("검색 조건이 올바르지 않습니다. 재확인 후 검색해주세요.");
         }
     });
 }

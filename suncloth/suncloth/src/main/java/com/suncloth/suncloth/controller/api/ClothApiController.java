@@ -4,52 +4,73 @@ import com.suncloth.suncloth.model.Brand;
 import com.suncloth.suncloth.model.Cloth;
 import com.suncloth.suncloth.model.MainCategory;
 import com.suncloth.suncloth.model.SubCategory;
-import com.suncloth.suncloth.repository.BrandRepository;
-import com.suncloth.suncloth.repository.ClothRepository;
-import com.suncloth.suncloth.repository.MainCategoryRepository;
-import com.suncloth.suncloth.repository.SubCategoryRepository;
-import io.micrometer.common.util.StringUtils;
+import com.suncloth.suncloth.repository.*;
+import com.suncloth.suncloth.repository.querydsl.ClothRepositoryImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
 @Slf4j
 public class ClothApiController {
     @Autowired
+    private final MainCategoryRepository mainCategoryRepository;
+    @Autowired
     private final SubCategoryRepository subCategoryRepository;
     @Autowired
     private final BrandRepository brandRepository;
     @Autowired
     private final ClothRepository clothRepository;
+    @Autowired
+    private final ClothRepositoryImpl clothRepositoyImpl;
 
-    ClothApiController(SubCategoryRepository subCategoryRepository
+    ClothApiController(MainCategoryRepository mainCategoryRepository
+            ,SubCategoryRepository subCategoryRepository
             , ClothRepository clothRepository
-            , BrandRepository brandRepository) {
+            , BrandRepository brandRepository
+            , ClothRepositoryImpl clothRepositoyImpl) {
+        this.mainCategoryRepository = mainCategoryRepository;
         this.subCategoryRepository = subCategoryRepository;
         this.clothRepository = clothRepository;
         this.brandRepository = brandRepository;
+        this.clothRepositoyImpl = clothRepositoyImpl;
     }
 
     // GET : Cloth 테이블 정보 가져오기
     @GetMapping("/cloths")
-    List<Cloth> all(@RequestParam(required = false, defaultValue = "") String clothName
-            , @RequestParam(required = false) List<String> icons
-            , @RequestParam(required = false) Long brandId
-            , @RequestParam(required = false) Long mainCategoryId
-            , @RequestParam(required = false) Long subCategoryId) {
-        System.out.println("clothName : " + clothName);
-        System.out.println("icons : " + icons);
-        System.out.println("brandId : " + brandId);
-        System.out.println("mainCategoryId : " + mainCategoryId);
-        System.out.println("subCategoryId : " + subCategoryId);
-        if(icons.size() == 0) { icons = null; }
-        return clothRepository.findByQuery1(clothName, brandId, mainCategoryId, subCategoryId, icons);
+    List<Map<String, Object>> all(@RequestParam(required = false) String searchType       // 검색 타입
+            , @RequestParam(required = false) String searchInput            // 검색 TextInput value
+            , @RequestParam(required = false) List<String> icons            // 아이콘
+            , @RequestParam(required = false) Long brandId                  // 브랜드 식별자
+            , @RequestParam(required = false) Long mainCategoryId           // 메인 카테고리 식별자
+            , @RequestParam(required = false) Long subCategoryId            // 서브 카테고리 식별자
+            , @RequestParam(required = false) String firstDay               // 시작 날짜
+            , @RequestParam(required = false) String lastDay) {             // 끝 날짜
+
+        Brand brand = brandRepository.findById(brandId).orElse(null);
+        MainCategory mainCategory = mainCategoryRepository.findById(mainCategoryId).orElse(null);
+        SubCategory subCategory = subCategoryRepository.findById(subCategoryId).orElse(null);
+        List<Cloth> clothList = clothRepositoyImpl.findSearchAll(searchType, searchInput, brand, mainCategory, subCategory, icons, firstDay, lastDay);
+        System.out.println("searchType : " + searchType + ", searchInput : " + searchInput + ", icons : " + icons +
+                ", brand : " + brand + ", mainCategory : " + mainCategory + ", subCategory : " + subCategory +
+                ", firstDay : " + firstDay + ", lastDay : " + lastDay);
+
+        List<Map<String, Object>> clothMap = new ArrayList<>();
+        for (Cloth cloth : clothList) {
+            clothMap.add(new HashMap<>());
+            clothMap.get(clothMap.size()-1).put("cloth", cloth);
+            clothMap.get(clothMap.size()-1).put("brand", cloth.getBrand());
+            clothMap.get(clothMap.size()-1).put("subCategory", cloth.getSubCategory());
+        }
+        return clothMap;
     }
     // end::get-aggregate-root[]
 
