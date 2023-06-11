@@ -166,4 +166,42 @@ create table stock_tbl (
     FOREIGN KEY(size_code) references size_tbl(size_code) on delete cascade,
     FOREIGN key(cloth_id) references cloth_tbl(cloth_id) on delete cascade
 );
-    
+
+/************ 게시판 관련 Table ***********/
+create table board_tbl(
+    num    int GENERATED ALWAYS as IDENTITY,    -- 글번호
+    user_id int,                                -- 작성자
+    content_state   varchar2(50),               -- 문의 관련 상태 표시
+    pwd     VARCHAR2(30),                       -- 비밀번호
+    subject     clob not null,                  -- 글제목
+    content     clob,                           -- 글 내용
+    file1   clob,                               -- 이미지 파일
+    textType varchar2(10),
+    ref     int DEFAULT 0,                      -- 답변글 그룹화 아이디 -- 답변글번호로서 원글번호와 일치해야 한다.
+    ref_step      int DEFAULT 0,                -- 답변글 그룹 스텝(행)
+    ref_level     int DEFAULT 0,                -- 답변글 그룹 레벨(들여쓰기)
+    reg_date      date DEFAULT sysdate,         -- 작성일
+    ip          VARCHAR2(15),                   -- ip
+    writestate varchar2(50) default '답변대기',  -- 답변여부
+    fwnum int default 0,                        -- 이전 글
+    nextnum int default 0,                      -- 다음 글
+    board_state varchar2(50),                   -- 게시판 상태
+    CONSTRAINT board_num_pk_excption PRIMARY key(num),
+    FOREIGN KEY(user_id) references user_tbl(id) on delete cascade
+);
+
+/** 게시판 이미지파일(board_file_tbl) Table **/
+REM 현재 상품 이미지파일을 미리 만들어놔서 새로 테이블을 만들었다. 이래서 계획이 그렇게 중요하다
+REM ** 중요 !! 다음에 만들 때는 **
+REM 1) 파일 테이블에 상품과 게시판을 구분하는 컬럼을 만들고 
+REM 2) 외래키를 따로 만들지 말고 각 테이블 id값 넣어주는 컬럼을 만들어서 queryDsl이나 nativeQuery로 결과 가져와줌
+create table board_file_tbl(
+    file_id  int GENERATED ALWAYS as IDENTITY,
+    org_nm clob,
+    saved_nm clob, 
+    saved_path clob,
+    board_id int,
+    file_type varchar2(20),
+    CONSTRAINT board_file_id_pk_excption PRIMARY key(file_id),
+    FOREIGN KEY(board_id) references board_tbl(num) on delete cascade
+);
