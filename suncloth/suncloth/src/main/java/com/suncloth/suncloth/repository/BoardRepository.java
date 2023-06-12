@@ -4,6 +4,7 @@ import com.suncloth.suncloth.model.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.sql.Date;
 import java.util.List;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
@@ -23,5 +24,9 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     where b.ref = :num
     """)
     Long findByMaxRefStep(Long num);
+
+    Long countByBoardState(String boardState);
+
+    Long countByBoardStateAndRegDateAfter(String boardState, Date regDate);
 
 }

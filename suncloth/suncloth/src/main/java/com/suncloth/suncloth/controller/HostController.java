@@ -13,7 +13,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 @Controller
@@ -209,7 +213,23 @@ public class HostController {
     /* 운영 */
     // 모든 게시판 리스트
     @GetMapping("/boardAllList")
-    public String boardAllList() {
+    public String boardAllList(Model model) {
+        // 오늘 날짜
+        GregorianCalendar calendar = (GregorianCalendar) GregorianCalendar.getInstance();
+        Date today = new Date(calendar.get(Calendar.YEAR)-1900, calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
+
+        // 오늘 추가된 게시물 개수
+        model.addAttribute("noticeNewCnt", boardRepository.countByBoardStateAndRegDateAfter("NOTICE", today));
+        model.addAttribute("FAQNewCnt", boardRepository.countByBoardStateAndRegDateAfter("FAQ", today));
+        model.addAttribute("QnANewCnt", boardRepository.countByBoardStateAndRegDateAfter("Q&A", today));
+        model.addAttribute("reviewNewCnt", boardRepository.countByBoardStateAndRegDateAfter("REVIEW", today));
+
+        // 총 게시물 개수
+        model.addAttribute("noticeCnt", boardRepository.countByBoardState("NOTICE"));
+        model.addAttribute("FAQCnt", boardRepository.countByBoardState("FAQ"));
+        model.addAttribute("QnACnt", boardRepository.countByBoardState("Q&A"));
+        model.addAttribute("reviewCnt", boardRepository.countByBoardState("REVIEW"));
+
         return "/host/board/host_boardAllList";
     }
     // 게시판 리스트
@@ -221,7 +241,7 @@ public class HostController {
         model.addAttribute("boardList", boardList);
         return "/host/board/host_boardList";
     }
-    // 게시판 등록
+    // 게시판 등록/수정
     @GetMapping("/boardInput")
     public String boardInput(Model model
             , @RequestParam(required = false) String name
@@ -237,14 +257,6 @@ public class HostController {
         model.addAttribute("files", files);
         model.addAttribute("name", name);
         return "/host/board/host_boardInput";
-    }
-
-    // 게시판 수정/삭제
-    @GetMapping("/boardView")
-    public String boardView(Model model
-            , @RequestParam(required = false) String name) {
-        model.addAttribute("name", name);
-        return "/host/board/host_boardView";
     }
 
     /* 통계 */
