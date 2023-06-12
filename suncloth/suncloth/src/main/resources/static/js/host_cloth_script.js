@@ -650,6 +650,13 @@ function clothsGet(){
                 const tr = document.createElement('tr');
                 tr.className = "text-center td-py10 td-px15";
                 tr.id = data.clothId;
+                // icon 체크
+                let icon = '';
+                if(data.mainCategory.mainName == 'onlySuncloth'){ icon += '<img src="/icon/only.png" alt="이미지 없음" width = "45px" height = "18px">'}
+                if(data.cloth.icon == 'best'){ icon += '<img src="/icon/best.png" alt="이미지 없음" width = "45px" height = "18px">'}
+                if(data.cloth.icon == 'hot'){ icon += '<img src="/icon/hot.png" alt="이미지 없음" width = "45px" height = "18px">'}
+                if(data.cloth.icon == 'minPrice'){ icon += '<img src="/icon/minPrice.png" alt="이미지 없음" width = "30px" height = "30px">'}
+                if(data.cloth.regDate == new Date()){ icon += '<img src="/icon/minPrice.png" alt="이미지 없음" width = "30px" height = "30px">'}
                 // td 태그 추가
                 tr.innerHTML =  '<td><input type = "checkbox" name = "clothIds" value = "' + data.cloth.clothId + '"></td>' +
                                 '<td>' +
@@ -657,7 +664,7 @@ function clothsGet(){
                                 '</td>' +
                                 '<td>' + data.cloth.clothId + '</td>' +
                                 '<td>' + data.subCategory.subName + '</td>' +
-                                '<td class="text-start">' +
+                                '<td class="text-start">' + icon +
                                     '<a href="/host/productInput?clothId=' + data.cloth.clothId + '">' + data.cloth.clothName +
                                     '</a></td>' +
                                 '<td>' + data.cloth.regDate + '</td>' +
@@ -711,6 +718,13 @@ function clothPaging(page){
                 const tr = document.createElement('tr');
                 tr.className = "text-center td-py10 td-px15";
                 tr.id = data.clothId;
+                // icon 체크
+                let icon = '';
+                if(data.mainCategory.mainName == 'onlySuncloth'){ icon += '<img src="/icon/only.png" alt="이미지 없음" width = "45px" height = "18px">'}
+                if(data.cloth.icon == 'best'){ icon += '<img src="/icon/best.png" alt="이미지 없음" width = "45px" height = "18px">'}
+                if(data.cloth.icon == 'hot'){ icon += '<img src="/icon/hot.png" alt="이미지 없음" width = "45px" height = "18px">'}
+                if(data.cloth.icon == 'minPrice'){ icon += '<img src="/icon/minPrice.png" alt="이미지 없음" width = "30px" height = "30px">'}
+                if(data.cloth.regDate == new Date()){ icon += '<img src="/icon/minPrice.png" alt="이미지 없음" width = "30px" height = "30px">'}
                 // td 태그 추가
                 tr.innerHTML =  '<td><input type = "checkbox" name = "clothIds" value = "' + data.cloth.clothId + '"></td>' +
                     '<td>' +
@@ -718,7 +732,7 @@ function clothPaging(page){
                     '</td>' +
                     '<td>' + data.cloth.clothId + '</td>' +
                     '<td>' + data.subCategory.subName + '</td>' +
-                    '<td class="text-start">' +
+                    '<td class="text-start">' + icon +
                     '<a href="/host/productInput?clothId=' + data.cloth.clothId + '">' + data.cloth.clothName +
                     '</a></td>' +
                     '<td>' + data.cloth.regDate + '</td>' +

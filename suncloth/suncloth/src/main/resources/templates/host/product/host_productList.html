@@ -170,6 +170,16 @@
                             <td th:text="${list.getSubCategory().getSubName()}"></td>
                             <!-- 상세 페이지 -->
                             <td class="text-start">
+                                <img th:src="|/icon/only.png|" alt="이미지 없음" width = "45px" height = "18px"
+                                     th:if="${list.getSubCategory().getMainCategory().getMainName() == 'onlySuncloth'}">
+                                <img th:src="|/icon/best.png|" alt="이미지 없음" width = "45px" height = "18px"
+                                     th:if="${list.getIcon() == 'best'}">
+                                <img th:src="|/icon/hot.png|" alt="이미지 없음" width = "45px" height = "18px"
+                                     th:if="${list.getIcon() == 'hot'}">
+                                <img th:src="|/icon/new.png|" alt="이미지 없음" width = "30px" height = "30px"
+                                     th:if="${list.getRegDate() == #dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+                                <img th:src="|/icon/minPrice.png|" alt="이미지 없음" width = "30px" height = "30px"
+                                     th:if="${list.getIcon() == 'minPrice'}">
                                 <a th:href="@{/host/productInput(clothId=${list.getClothId()})}"
                                    th:text="${list.getClothName()}"> <!--href = "h_productForm?num=${list.num}&number=${number+1}&pageNum=${pageNum}"-->
                                 </a></td>

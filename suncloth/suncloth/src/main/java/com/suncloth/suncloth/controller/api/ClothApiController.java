@@ -79,6 +79,7 @@ public class ClothApiController {
             clothMap.get(clothMap.size()-1).put("cloth", cloth);
             clothMap.get(clothMap.size()-1).put("brand", cloth.getBrand());
             clothMap.get(clothMap.size()-1).put("subCategory", cloth.getSubCategory());
+            clothMap.get(clothMap.size()-1).put("mainCategory", cloth.getSubCategory().getMainCategory());
         }
 
         Map<String, Object> pageMap = new HashMap<>();
