@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface MainCategoryRepository extends JpaRepository<MainCategory, Long> {
     // Main Category 이름을 기준으로 정보들 가져오기(where main_name = ?1)
-    List<MainCategory> findByMainName(String mainName);
+    MainCategory findByMainName(String mainName);
 }

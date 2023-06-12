@@ -51,7 +51,7 @@
                         <input type="hidden" name="mainFileId" id="mainFileId" th:if="${mainFile != null}" th:value="${mainFile.get(0).getFileId()}">
                         <div class="d-flex">
                             <div>
-                                <img th:src="${mainFile != null}? '/host/uploadImageView/'+${mainFile.get(0).getFileId()}" alt="이미지" id="mainImage" class="wh-100px"
+                                <img th:src="${mainFile != null}? '/uploadImageView/'+${mainFile.get(0).getFileId()}" alt="이미지" id="mainImage" class="wh-100px"
                                      th:classappend="${mainFile == null}?'d-none'"/>
                             </div>
                             <div class="d-flex flex-column align-self-center ms-1">
@@ -190,7 +190,7 @@
                             <div id="subImagesDiv" th:if="${subFile.size() > 0}">
                                 <th:block th:each="list:${subFile}">
                                     <input type="hidden" name="subFileIds" th:value="${list.getFileId()}">
-                                    <img th:src="|/host/uploadImageView/${list.getFileId()}|" alt="서브이미지" class="wh-100px" src=""/>
+                                    <img th:src="|/uploadImageView/${list.getFileId()}|" alt="서브이미지" class="wh-100px" src=""/>
                                     <p th:text="|[${list.getOrgNm()}]|"></p>
                                 </th:block>
                             </div>

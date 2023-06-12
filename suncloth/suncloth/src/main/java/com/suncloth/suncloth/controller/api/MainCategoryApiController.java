@@ -26,11 +26,7 @@ public class MainCategoryApiController {
     // GET : MainCategory 테이블 정보 가져오기
     @GetMapping("/mainCategories")
     List<MainCategory> all(@RequestParam(required = false, defaultValue = "") String mainName) {
-        if(StringUtils.isEmpty(mainName)){
-            return repository.findAll();
-        } else {
-            return repository.findByMainName(mainName);
-        }
+        return repository.findAll();
     }
     // end::get-aggregate-root[]
 

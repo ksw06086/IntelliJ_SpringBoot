@@ -1,16 +1,39 @@
 package com.suncloth.suncloth.controller;
 
+import com.suncloth.suncloth.model.BoardFile;
+import com.suncloth.suncloth.model.Cloth;
+import com.suncloth.suncloth.model.File;
+import com.suncloth.suncloth.repository.BoardFileRepository;
+import com.suncloth.suncloth.repository.BoardRepository;
+import com.suncloth.suncloth.repository.ClothRepository;
+import com.suncloth.suncloth.repository.FileRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 
 @Controller
 public class HomeController {
+
+
+    @Autowired
+    ClothRepository clothRepository;
+    @Autowired
+    FileRepository fileRepository;
+    @Autowired
+    BoardFileRepository boardFileRepository;
+
     @GetMapping
     public String index() {
         return "index";
@@ -51,6 +74,33 @@ public class HomeController {
     public String hostMain() {
         return "host_main";
     }
+
+    // clothId로 메인 이미지 출력
+    @GetMapping("/uploadMainImageView/{clothId}")
+    @ResponseBody
+    public Resource uploadMainImage(@PathVariable("clothId") Long id) throws IOException {
+        Cloth cloth = clothRepository.findById(id).orElse(null);
+        List<File> file = fileRepository.findByClothAndFileType(cloth, "main");
+        return new UrlResource("file:" + file.get(0).getSavedPath());
+    }
+
+    // fileId로 이미지 출력
+    @GetMapping("/uploadImageView/{fileId}")
+    @ResponseBody
+    public Resource uploadImage(@PathVariable("fileId") Long id) throws IOException {
+        File file = fileRepository.findById(id).orElse(null);
+        return new UrlResource("file:" + file.getSavedPath());
+    }
+
+
+    // fileId로 게시판 이미지 출력
+    @GetMapping("/uploadBoardImageView/{fileId}")
+    @ResponseBody
+    public Resource uploadBoardImage(@PathVariable("fileId") Long id) throws IOException {
+        BoardFile boardFile = boardFileRepository.findById(id).orElse(null);
+        return new UrlResource("file:" + boardFile.getSavedPath());
+    }
+
 
     // sc5Form
 //    @GetMapping("/sc5Form")

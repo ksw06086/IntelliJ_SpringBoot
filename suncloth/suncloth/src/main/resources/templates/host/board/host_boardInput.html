@@ -159,7 +159,7 @@
                                 <div id="boardImagesDiv" th:if="${files.size() > 0}">
                                     <th:block th:each="list:${files}">
                                         <input type="hidden" name="boardFileIds" th:value="${list.getFileId()}">
-                                        <img th:src="|/host/uploadBoardImageView/${list.getFileId()}|" alt="게시판이미지" class="wh-100px" src=""/>
+                                        <img th:src="|/uploadBoardImageView/${list.getFileId()}|" alt="게시판이미지" class="wh-100px" src=""/>
                                         <p th:text="|[${list.getOrgNm()}]|"></p>
                                     </th:block>
                                 </div>

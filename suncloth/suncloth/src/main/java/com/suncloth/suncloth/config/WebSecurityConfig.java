@@ -27,7 +27,7 @@ public class WebSecurityConfig {
         http
                 .csrf().disable() // 이거 하면 보안에 취약하나 테스트 원활히 가능, 이거 없으면 추가,수정이 어려움
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/", "/main", "/css/**", "/account/register", "/account/register_finish", "/api/**", "/smsApi/**").permitAll()
+                        .requestMatchers("/", "/main", "/upload**","/css/**", "/account/register", "/account/register_finish", "/api/**", "/smsApi/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form

@@ -660,7 +660,7 @@ function clothsGet(){
                 // td 태그 추가
                 tr.innerHTML =  '<td><input type = "checkbox" name = "clothIds" value = "' + data.cloth.clothId + '"></td>' +
                                 '<td>' +
-                                    '<img src="/host/uploadMainImageView/' + data.cloth.clothId + '" alt="이미지 없음" width = "50px" height = "60px">' +
+                                    '<img src="/uploadMainImageView/' + data.cloth.clothId + '" alt="이미지 없음" width = "50px" height = "60px">' +
                                 '</td>' +
                                 '<td>' + data.cloth.clothId + '</td>' +
                                 '<td>' + data.subCategory.subName + '</td>' +
@@ -728,7 +728,7 @@ function clothPaging(page){
                 // td 태그 추가
                 tr.innerHTML =  '<td><input type = "checkbox" name = "clothIds" value = "' + data.cloth.clothId + '"></td>' +
                     '<td>' +
-                    '<img src="/host/uploadMainImageView/' + data.cloth.clothId + '" alt="이미지 없음" width = "50px" height = "60px">' +
+                    '<img src="/uploadMainImageView/' + data.cloth.clothId + '" alt="이미지 없음" width = "50px" height = "60px">' +
                     '</td>' +
                     '<td>' + data.cloth.clothId + '</td>' +
                     '<td>' + data.subCategory.subName + '</td>' +
