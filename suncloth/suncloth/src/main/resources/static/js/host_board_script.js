@@ -27,6 +27,7 @@ function boardAdd(){
 function boardUpdate(){
     let boardInputForm = new FormData(document.getElementById("boardInputForm"));
     const boardState = document.getElementById("boardState").value;
+    const boardSubject = document.getElementById("boardSubject").value;
     const boardNum = document.getElementById("boardNum");
     const baseBoardFileYN = document.getElementById("baseBoardFileYN");
 
@@ -43,7 +44,7 @@ function boardUpdate(){
                 boardFilesDel();
                 boardFilesAdd(boardNum.value);
             }
-            alert("상품이 수정되었습니다.");
+            alert(boardSubject + "게시글이 수정되었습니다.");
             window.location.href="/host/boardList?name=" + boardState;
         },
         err: function(err){
@@ -54,32 +55,32 @@ function boardUpdate(){
     });
 }
 
-// Cloth 상품 삭제하기
+// Board 게시판 삭제하기
 function boardDel() {
-    const clothIds = document.getElementsByName("clothIds"); // 화면에 있는 모든 Checkbox(clothIds)
-    let clothDelList = []; // 삭제된 clothIds
+    const boardNums = document.getElementsByName("boardNums"); // 화면에 있는 모든 Checkbox(boardNums)
+    let boardDelList = []; // 삭제된 clothIds
 
     // checkBox에 체크되었는지 확인 후 삭제
-    for (let i = 0; i < clothIds.length; i++) {
-        if(clothIds[i].checked === true){
-            clothDelAjax(clothIds[i].value);
-            clothDelList.push(clothIds[i].value);
+    for (let i = 0; i < boardNums.length; i++) {
+        if(boardNums[i].checked === true){
+            boardDelAjax(boardNums[i].value);
+            boardDelList.push(boardNums[i].value);
         }
     }
 
     // 삭제되었음을 alert 띄워줌
-    alert(clothDelList + "번 상품이 삭제되었습니다.");
+    alert(boardDelList + "번 게시글이 삭제되었습니다.");
 
     // 화면에서 해당 요소 삭제해줌
-    for (let i = 0; i < clothDelList.length; i++) {
-        document.getElementById(clothDelList[i]).remove();
+    for (let i = 0; i < boardDelList.length; i++) {
+        document.getElementById(boardDelList[i]).remove();
     }
 
-    // cloth 1개 삭제하는 Ajax 함수
-    function clothDelAjax(clothId){
+    // board 1개 삭제하는 Ajax 함수
+    function boardDelAjax(boardNum){
         $.ajax({
             type: 'DELETE',
-            url: '/api/cloths/' + clothId,
+            url: '/api/boards/' + boardNum,
             success: (result) => {
                 //AJAX 성공시 실행 코드
             }, error:function(e) {
@@ -88,18 +89,18 @@ function boardDel() {
         });
     }
 }
-// 상품 checkbox 한번에 체크 함수
+// Board checkbox 한번에 체크 함수
 function allBoardCheck() {
-    const clothCheckAll = document.getElementById("clothCheckAll");
-    const clothIds = document.getElementsByName("clothIds");
+    const boardCheckAll = document.getElementById("boardCheckAll");
+    const boardNums = document.getElementsByName("boardNums");
     // 해당 페이지의 모든 stock CheckBox에 체크
-    if(clothCheckAll.checked === true){
-        for (let i = 0; i < clothIds.length; i++) {
-            clothIds[i].checked = true;
+    if(boardCheckAll.checked === true){
+        for (let i = 0; i < boardNums.length; i++) {
+            boardNums[i].checked = true;
         }
     } else {
-        for (let i = 0; i < clothIds.length; i++) {
-            clothIds[i].checked = false;
+        for (let i = 0; i < boardNums.length; i++) {
+            boardNums[i].checked = false;
         }
     }
 }

@@ -20,7 +20,7 @@
     <div class="flex-fill">
         <form method="post" id="stockInputForm" enctype="multipart/form-data" th:onsubmit="${stock.getStockCloth() == null}?'return stockAdd()':'return stockUpdate()'">
         <div class="position-relative text-center w-95 mx-auto my-15 vertical-middle-all">
-            <p class="fs-15 p-0 m-0"><b th:text="|[${cloth.getClothName()}] 재고 상품 등록|"></b></p>
+            <p class="fs-15 p-0 m-0"><b th:text="|[${cloth.getClothName()}] 재고 상품 관리|"></b></p>
             <p class="position-absolute m-0 top-0 end-0">
                 <!-- 재고 등록 버튼 -->
                 <input type="submit" value="등록" class="blueBaseBtn px-10 py-10"

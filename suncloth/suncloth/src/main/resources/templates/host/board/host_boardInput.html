@@ -26,16 +26,13 @@
                    th:if="${board.getBoardUser() != null && board.getBoardUser().getUsername() == 'host'}">
             <input type="hidden" name="regDate" id="regDate" th:value="${board.getRegDate()}"
                    th:if="${board.getBoardUser() != null && board.getBoardUser().getUsername() == 'host'}">
-            <p class="fs-15 p-0 m-0"><b>[[${name}]] 게시글 등록</b></p>
+            <p class="fs-15 p-0 m-0"><b>[[${name}]] 게시글 관리</b></p>
             <p class="position-absolute m-0 top-0 end-0">
                 <!-- 게시글 등록 버튼 -->
                 <input type="submit" value="등록" class="blueBaseBtn px-10 py-10"
                        th:if="${board.getBoardUser() == null || board.getBoardUser().getUsername() != 'host'}">
                 <!-- 게시글 수정 버튼 -->
-                <input type="submit" value="수정" class="blueBaseBtn px-10 py-10"
-                       th:if="${board.getBoardUser() != null && board.getBoardUser().getUsername() == 'host'}">
-                <!-- 게시글 삭제 버튼 -->
-                <input type="button" value="삭제" class="blueBaseBtn px-10 py-10"
+                <input type="submit" value="저장" class="blueBaseBtn px-10 py-10"
                        th:if="${board.getBoardUser() != null && board.getBoardUser().getUsername() == 'host'}">
             </p>
         </div>
@@ -137,9 +134,9 @@
                 </tr>
                 <!-- 게시글의 제목 -->
                 <tr>
-                    <td><label for="subject">제목</label></td>
+                    <td><label for="boardSubject">제목</label></td>
                     <td>
-                        <input type = "text" id = "subject" name = "subject" th:value="${board.getSubject()}"
+                        <input type = "text" id = "boardSubject" name = "subject" th:value="${board.getSubject()}"
                                placeholder = "제목" maxlength = "400" class="w-50" required>
                     </td>
                 </tr>
@@ -162,7 +159,7 @@
                                 <div id="boardImagesDiv" th:if="${files.size() > 0}">
                                     <th:block th:each="list:${files}">
                                         <input type="hidden" name="boardFileIds" th:value="${list.getFileId()}">
-                                        <img th:src="|/host/uploadImageView/${list.getFileId()}|" alt="게시판이미지" class="wh-100px" src=""/>
+                                        <img th:src="|/host/uploadBoardImageView/${list.getFileId()}|" alt="게시판이미지" class="wh-100px" src=""/>
                                         <p th:text="|[${list.getOrgNm()}]|"></p>
                                     </th:block>
                                 </div>

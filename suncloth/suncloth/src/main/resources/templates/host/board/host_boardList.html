@@ -142,7 +142,7 @@
                     <thead>
                     <tr class="fw-bold border-0 td-py25 td-px15">
                         <td>
-                            <input type = "checkbox" name = "prdCheck" id = "prdCheckAll"  value = "전체선택">
+                            <input type = "checkbox" name = "boardAllCheck" id = "boardCheckAll"  value = "전체선택">
                         </td>
                         <td>번호</td>
                         <td th:if="${name == 'FAQ' || name == 'Q&A'}" th:text="${name == 'FAQ'}?'분류':'질문유형'">분류 또는 질문유형</td>
@@ -155,14 +155,14 @@
                     <tbody>
                     <th:block th:if="${boardList.size() > 0}">
                     <tr class = "text-center td-py10 td-px15" th:each="list:${boardList}" th:id="${list.getNum()}">
-                        <td><input type = "checkbox" name = "prdChecks" th:value="${list.getNum()}"></td>
+                        <td><input type = "checkbox" name = "boardNums" th:value="${list.getNum()}"></td>
                         <td th:text="${list.getNum()}">1</td>
                         <td th:if="${name == 'FAQ' || name == 'Q&A'}"
                             th:text="${list.getContentState()}">회원등급 또는 상품문의</td>
                         <td class="text-start">
                             <!-- Q&A일 경우에 사용자글과 관리자답글(이미지 추가) 구분짓기 -->
                             <a th:if="${name == 'Q&A'}" th:text="${list.getSubject()}"
-                               th:href="${#authentication.getName()} != 'host' ? @{/host/boardView(name=${name})} : @{/board/boardView(name='Q&A(HOST)')}">
+                               th:href="${#authentication.getName() == list.getBoardUser().getUsername()} ? @{/host/boardInput(name=${name}, boardNum=${list.getNum()})} : @{/board/boardView(name='Q&A(HOST)')}">
                                 <th:block th:if="${list.getRefLevel() > 0}">
                                     &nbsp;<img src = "${project}ascloimage/re.png" width = "20" height = "15">
                                 </th:block> <!-- 답글인 경우 이미지 출력 -->
@@ -170,7 +170,7 @@
                             </a>
                             <!-- Q&A가 아닐 경우 이거 출력 -->
                             <a th:if="${name != 'Q&A'}" th:text="${list.subject}"
-                               th:href="${name == 'REVIEW'}? @{/board/boardView(name='REVIEW')} : @{/host/boardView(name=${name})}">
+                               th:href="${name == 'REVIEW'}? @{/board/boardView(name='REVIEW')} : @{/host/boardInput(name=${name}, boardNum=${list.getNum()})}">
                                 오늘 이 옷 너무 예뻐요
                             </a></td>
                         <td th:text="${list.getBoardUser().getUsername()}">kim</td>
@@ -189,7 +189,33 @@
                 </table>
 
                 <!-- BoardList Bottom Menu -->
-                <div th:replace="fragments/host_common :: boardBottomList(name='board')"></div>
+                <div class="position-relative w-98 pt-10 mx-auto">
+                    <!-- 삭제 버튼 Block -->
+                    <div class="position-absolute top-0 left-0">
+                        <input type = "button" value = "선택삭제" class="blackButton px-15" th:onclick="boardDel()">
+                    </div>
+
+                    <!-- Paging Process -->
+                    <div>
+                        <ul class="pagination justify-content-center my-0">
+                            <li class="page-item disabled">
+                                <a class="page-link">&lt;</a>
+                            </li>
+                            <li class="page-item active">
+                                <a class="page-link" href="#">1</a>
+                            </li>
+                            <li class="page-item" aria-current="page">
+                                <a class="page-link" href="#">2</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">3</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">&gt;</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </form>
         </section>
     </div>

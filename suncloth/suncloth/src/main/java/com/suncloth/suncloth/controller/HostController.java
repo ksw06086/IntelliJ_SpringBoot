@@ -109,6 +109,15 @@ public class HostController {
         return new UrlResource("file:" + file.getSavedPath());
     }
 
+
+    // fileId로 게시판 이미지 출력
+    @GetMapping("/uploadBoardImageView/{fileId}")
+    @ResponseBody
+    public Resource uploadBoardImage(@PathVariable("fileId") Long id) throws IOException {
+        BoardFile boardFile = boardFileRepository.findById(id).orElse(null);
+        return new UrlResource("file:" + boardFile.getSavedPath());
+    }
+
     /* 재고 */
     // 재고 리스트
     @GetMapping("/stockList")
