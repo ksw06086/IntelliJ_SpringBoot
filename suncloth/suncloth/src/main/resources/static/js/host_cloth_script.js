@@ -365,142 +365,6 @@ function allClothCheck() {
     }
 }
 
-// *** File 관련 Script *** //
-// 메인이미지 선택시 미리보기
-function imageFileSelect(mainImage) {
-    const preview = document.getElementById('mainImage');
-    const reader = new FileReader();
-    reader.readAsDataURL(mainImage);
-    reader.onload = (e) => {
-        preview.src = e.target.result;
-        preview.className = "wh-100px";
-    };
-}
-
-// File Checkbox 선택시 동작 함수
-function baseMainFileUpdateYN(){
-    const baseMainFileYN = document.getElementById("baseMainFileYN");
-    const mainFile = document.getElementById("mainFile");
-    const mainImage = document.getElementById("mainImage");
-    if(baseMainFileYN.checked === true){
-        mainFile.className = 'd-none';
-        mainFile.required = false;
-        mainImage.className = 'wh-100px';
-    } else {
-        mainFile.className = '';
-        mainFile.required = true;
-        mainImage.className = 'wh-100px d-none';
-    }
-}
-function baseSubFileUpdateYN(){
-    const baseSubFileYN = document.getElementById("baseSubFileYN");
-    const subFile = document.getElementById("subFile");
-    const subImagesDiv = document.getElementById("subImagesDiv");
-    if(baseSubFileYN.checked === true){
-        subFile.className = 'd-none';
-        subImagesDiv.className = '';
-    } else {
-        subFile.className = '';
-        subImagesDiv.className = 'd-none';
-    }
-}
-
-// 메인 이미지 파일 삽입
-function mainFileAdd(clothId) {
-    const mainImageInput = document.getElementById("mainFile");
-    const formData = new FormData();
-    formData.append("mainImage", mainImageInput.files[0]);
-    formData.append("clothId", clothId);
-
-    // 메인 이미지 update 하기
-    $.ajax({
-        type:"POST",
-        url: "/api/mainFile",
-        processData: false,
-        contentType: false,
-        data: formData,
-        success: function(result){
-            alert("메인이미지 삽입 성공");
-        },
-        err: function(err){
-            alert("메인이미지 삽입 실패");
-        }
-    })
-}
-// 메인 이미지 파일 수정
-function mainFileUpdate(clothId) {
-    const mainImageInput = document.getElementById("mainFile");
-    const mainFileId = document.getElementById("mainFileId");
-    const formData = new FormData();
-    formData.append("mainImage", mainImageInput.files[0]);
-    formData.append("mainFileId", mainFileId.value);
-    formData.append("clothId", clothId);
-
-    // 메인 이미지 update 하기
-    $.ajax({
-        type:"POST",
-        url: "/api/replaceMainFile",
-        processData: false,
-        contentType: false,
-        data: formData,
-        success: function(result){
-            alert("메인이미지 수정 성공");
-        },
-        err: function(err){
-            alert("메인이미지 수정 실패");
-        }
-    })
-}
-
-// 서브 이미지 파일들 삽입
-function subFilesAdd(clothId) {
-    const subImageInput = document.getElementById("subFile");
-    const formData = new FormData();
-    if(subImageInput.files.length === 0){ return false; } // 서브 이미지 파일 선택 안했으면 그냥 넘기기
-    for (let i = 0; i < subImageInput.files.length; i++) {
-        // formData 에 'subImages' 이라는 키값으로 subImageFile 값을 append 시킨다.
-        formData.append('subImages', subImageInput.files[i]);
-    }
-    formData.append("clothId", clothId);
-
-    // 서브 이미지 재삽입하기
-    $.ajax({
-        type:"POST",
-        url: "/api/subFile",
-        processData: false,
-        contentType: false,
-        data: formData,
-        success: function(result){
-            alert("서브이미지 삽입 성공");
-        },
-        err: function(err){
-            alert("서브이미지 삽입 실패");
-        }
-    })
-}
-// 서브 이미지 파일들 삭제
-function subFilesDel() {
-    const subFileIds = document.getElementsByName("subFileIds"); // subFileIds 서브이미지들
-
-    // 서브 이미지 삭제
-    for (let i = 0; i < subFileIds.length; i++) {
-        subFileDelAjax(subFileIds[i].value);
-    }
-
-    // subFile 1개 삭제하는 Ajax 함수
-    function subFileDelAjax(subFileId){
-        $.ajax({
-            type: 'DELETE',
-            url: '/api/subFiles/' + subFileId,
-            success: (result) => {
-                //AJAX 성공시 실행 코드
-            }, error:function(e) {
-                alert("error: " + e);
-            }
-        });
-    }
-}
-
 // *** 색상 관련 Script *** //
 // Color 추가하기
 function colorAdd(){
@@ -744,57 +608,13 @@ function allStockCheck() {
     }
 }
 
-// *** 검색 관련 Script *** //
-// --- 날짜 관련 함수들 --- //
-/* 관련 함수 설명
-// 날짜
-var date = new Date();  현재
-var nowYear = date.getFullYear();
-var nowMonth = date.getMonth()+1;
-var nowDay = date.getDate();
-
-// 어제날짜
-var yesterDate = date.getTime() - (1*24*60*60*1000);
-date.setTime(yesterDate); // 이걸로 date가 하루 전으로 초기화 되어서 가져오기만 하면됨
-*/
-const todayDate = new Date(); /* 현재 날짜 */
-function dateToday(){ // 오늘
-    document.getElementById('lastDay').value = todayDate.toISOString().substring(0, 10);
-    document.getElementById('firstDay').value = todayDate.toISOString().substring(0, 10);
-    document.searchForm.dayNum.value = 0; // ?? 이거 모르겠음
-}
-function dateWeek(){ // 1주일
-    const date = new Date(); date.setDate(todayDate.getDate() - 7);
-    document.getElementById('lastDay').value = todayDate.toISOString().substring(0, 10);
-    document.getElementById('firstDay').value = date.toISOString().substring(0, 10);
-    document.searchForm.dayNum.value = 1; // ?? 이거 모르겠음
-}
-function dateMonth1(){ // 1개월
-    const date = new Date(); date.setDate(todayDate.getDate() - 30);
-    document.getElementById('lastDay').value = todayDate.toISOString().substring(0, 10);
-    document.getElementById('firstDay').value = date.toISOString().substring(0, 10);
-    document.searchForm.dayNum.value = 2; // ?? 이거 모르겠음
-}
-function dateMonth3(){ // 3개월
-    const date = new Date(); date.setDate(todayDate.getDate() - 90);
-    document.getElementById('lastDay').value = todayDate.toISOString().substring(0, 10);
-    document.getElementById('firstDay').value = date.toISOString().substring(0, 10);
-    document.searchForm.dayNum.value = 3;
-}
-function dateMonth6(){ // 6개월
-    const date = new Date(); date.setDate(todayDate.getDate() - 180);
-    document.getElementById('lastDay').value = todayDate.toISOString().substring(0, 10);
-    document.getElementById('firstDay').value = date.toISOString().substring(0, 10);
-    document.searchForm.dayNum.value = 4;
-}
-
 // *** 상품 검색 관련 Script *** //
-// --- 상품 검색 버튼 클릭 --- //
 let searchType = '상품명';                                      // 상품 검색 타입 (상품명, 상품번호)
 let searchInput = '';                                          // 상품 검색 텍스트(Text)
 let iconList = [];                                             // 아이콘 checkBox 리스트
 let brandId = 0, mainCategoryId = 0, subCategoryId = 0;        // 브랜드, 메인 카테고리, 서브 카테고리 ID
 let firstDay = '', lastDay = '';                               // 시작, 끝 날짜
+// --- 상품 검색 버튼 클릭 --- //
 function clothsGet(){
     // 검색 요소 Parameter 변수
     searchType = document.getElementById("searchType").value;
@@ -867,7 +687,6 @@ function clothsGet(){
         }
     });
 }
-
 // --- 페이지 넘기기 --- //
 function clothPaging(page){
     // ajax로 검색결과의 상품 가져와서 목록 Update
@@ -929,3 +748,7 @@ function clothPaging(page){
         }
     });
 }
+
+
+
+

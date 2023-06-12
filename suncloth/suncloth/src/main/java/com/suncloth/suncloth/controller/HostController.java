@@ -2,7 +2,6 @@ package com.suncloth.suncloth.controller;
 
 import com.suncloth.suncloth.model.*;
 import com.suncloth.suncloth.repository.*;
-import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -21,7 +20,7 @@ import java.util.List;
 @RequestMapping("/host")
 public class HostController {
 
-    // Repository 목록들 //
+    // *** Repository 목록들 ***//
     @Autowired
     BrandRepository brandRepository;
     @Autowired
@@ -40,6 +39,10 @@ public class HostController {
     StockRepository stockRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    BoardRepository boardRepository;
+    @Autowired
+    BoardFileRepository boardFileRepository;
 
     /* 상품 */
     // 상품 리스트
@@ -204,16 +207,29 @@ public class HostController {
     @GetMapping("/boardList")
     public String boardList(Model model
             , @RequestParam(required = false) String name) {
+        List<Board> boardList = boardRepository.findByBoardState(name);
         model.addAttribute("name", name);
+        model.addAttribute("boardList", boardList);
         return "/host/board/host_boardList";
     }
     // 게시판 등록
     @GetMapping("/boardInput")
     public String boardInput(Model model
-            , @RequestParam(required = false) String name) {
+            , @RequestParam(required = false) String name
+            , @RequestParam(required = false) Long boardNum) {
+        Board board = new Board();
+        List<BoardFile> files = new ArrayList<>();
+        if(boardNum != null) {
+            board = boardRepository.findById(boardNum).orElse(null);
+            files = boardFileRepository.findByBoard(board);
+        }
+
+        model.addAttribute("board", board);
+        model.addAttribute("files", files);
         model.addAttribute("name", name);
         return "/host/board/host_boardInput";
     }
+
     // 게시판 수정/삭제
     @GetMapping("/boardView")
     public String boardView(Model model

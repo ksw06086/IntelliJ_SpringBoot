@@ -145,8 +145,7 @@
                             <input type = "checkbox" name = "prdCheck" id = "prdCheckAll"  value = "전체선택">
                         </td>
                         <td>번호</td>
-                        <td th:if="${name == 'FAQ'}">분류</td>
-                        <td th:if="${name == 'Q&A'}">질문유형</td>
+                        <td th:if="${name == 'FAQ' || name == 'Q&A'}" th:text="${name == 'FAQ'}?'분류':'질문유형'">분류 또는 질문유형</td>
                         <td>제목</td>
                         <td>작성자</td>
                         <td>작성일</td>
@@ -154,46 +153,38 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <!--<th:block th:if="${srhCnt > 0}">-->
-                    <tr class = "text-center td-py10 td-px15"><!--th:each="list:${list}"-->
-                        <td><input type = "checkbox" name = "prdChecks" value = "${list.num}"></td>
-                        <td>${number}(${list.num})</td><!--<c:set var = "number" value = "${number-1}"/>-->
-                        <td th:if="${name == 'FAQ'}" th:text="|회원등급|">${list.state}</td>
-                        <td th:if="${name == 'Q&A'}" th:text="|상품문의|">${list.state}</td>
+                    <th:block th:if="${boardList.size() > 0}">
+                    <tr class = "text-center td-py10 td-px15" th:each="list:${boardList}" th:id="${list.getNum()}">
+                        <td><input type = "checkbox" name = "prdChecks" th:value="${list.getNum()}"></td>
+                        <td th:text="${list.getNum()}">1</td>
+                        <td th:if="${name == 'FAQ' || name == 'Q&A'}"
+                            th:text="${list.getContentState()}">회원등급 또는 상품문의</td>
                         <td class="text-start">
-                            <!-- REVIEW일 경우에 사용자 글로 이동 -->
-                            <a th:if="${name == 'REVIEW'}" th:text="|오늘 이 옷 너무 예뻐요|"
-                               th:href="@{/board/boardView(name='REVIEW')}">
-                                <!--href = "h_productForm?num=${list.num}&number=${number+1}&pageNum=${pageNum}"-->
-                                <th:block th:if="${list.ref_level > 0}">
-                                    &nbsp;<img src = "${project}ascloimage/re.png" width = "20" height = "15">
-                                </th:block> <!-- 답글인 경우 이미지 출력 -->
-                                ${list.subject}
-                            </a>
                             <!-- Q&A일 경우에 사용자글과 관리자답글(이미지 추가) 구분짓기 -->
-                            <a th:if="${name == 'Q&A'}" th:text="|오늘 이 옷 너무 예뻐요|"
+                            <a th:if="${name == 'Q&A'}" th:text="${list.getSubject()}"
                                th:href="${#authentication.getName()} != 'host' ? @{/host/boardView(name=${name})} : @{/board/boardView(name='Q&A(HOST)')}">
-                                <!--href = "h_productForm?num=${list.num}&number=${number+1}&pageNum=${pageNum}"-->
-                                <th:block th:if="${list.ref_level > 0}">
+                                <th:block th:if="${list.getRefLevel() > 0}">
                                     &nbsp;<img src = "${project}ascloimage/re.png" width = "20" height = "15">
                                 </th:block> <!-- 답글인 경우 이미지 출력 -->
-                                ${list.subject}
+                                오늘 이 옷 너무 예뻐요
                             </a>
-                            <!-- Q&A, REVIEW가 아닐 경우 이거 출력 -->
-                            <a th:if="${name != 'Q&A' && name != 'REVIEW'}" th:href="@{/host/boardView(name=${name})}"
-                               th:text="|오늘 이 옷 너무 예뻐요|"> <!--href = "h_productForm?num=${list.num}&number=${number+1}&pageNum=${pageNum}"-->
-                                ${list.subject}
+                            <!-- Q&A가 아닐 경우 이거 출력 -->
+                            <a th:if="${name != 'Q&A'}" th:text="${list.subject}"
+                               th:href="${name == 'REVIEW'}? @{/board/boardView(name='REVIEW')} : @{/host/boardView(name=${name})}">
+                                오늘 이 옷 너무 예뻐요
                             </a></td>
-                        <td th:text="${'kim'}">${list.id}</td>
-                        <td th:text="${#dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm')}">${list.reg_date}</td>
-                        <td th:if="${name == 'Q&A'}" th:text="|답변완료|">${list.writeState}</td>
+                        <td th:text="${list.getBoardUser().getUsername()}">kim</td>
+                        <td th:text="${list.getRegDate()}">[[#dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm')]]</td>
+                        <td th:if="${name == 'Q&A'}" th:text="${list.getWriteState()}">답변완료</td>
                     </tr>
-                    <!--</th:block>-->
-                    <!--<tr class = "text-center td-py10 td-px15">
-                      <td colspan = "10">
-                        게시글이 없습니다. 글을 작성해주세요!!
+                    </th:block>
+                    <th:block th:if="${boardList.size() == 0}">
+                    <tr class = "text-center td-py10 td-px15">
+                      <td th:colspan="${name == 'Q&A'}?7:(${name == 'FAQ'}?6:5)">
+                        등록된 게시글이 없습니다. 글을 작성해주세요!!
                       </td>
-                    </tr>-->
+                    </tr>
+                    </th:block>
                     </tbody>
                 </table>
 

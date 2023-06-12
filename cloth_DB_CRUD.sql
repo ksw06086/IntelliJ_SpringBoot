@@ -12,6 +12,17 @@ select * from size_tbl;
 select * from board_tbl;
 
 update user_role set role_id = 2 where user_id = 2;
+select * from cloth_tbl order by cloth_id desc;
+
+-- 이전글
+SELECT * FROM cloth_tbl
+	WHERE cloth_id = (SELECT prev_no FROM (SELECT cloth_id, LAG(cloth_id, 1, -1) OVER(ORDER BY cloth_id) AS prev_no FROM cloth_tbl) B
+WHERE cloth_id = 9);
+
+-- 다음글(partition BY cloth_name -> over 함수 내에서 그룹화 할 때 씀)
+SELECT * FROM cloth_tbl
+	WHERE cloth_id = (SELECT prev_no FROM (SELECT cloth_id, LEAD(cloth_id, 1, -1) OVER(ORDER BY cloth_id) AS prev_no FROM cloth_tbl) B
+WHERE cloth_id = 9);
 
 delete user_tbl;
 delete refund_acc_tbl;

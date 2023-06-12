@@ -1,5 +1,6 @@
 package com.suncloth.suncloth.service;
 
+import com.suncloth.suncloth.model.BoardFile;
 import com.suncloth.suncloth.model.Cloth;
 import com.suncloth.suncloth.model.File;
 import com.suncloth.suncloth.repository.FileRepository;
@@ -26,6 +27,7 @@ public class FileService {
 
     private final FileRepository fileRepository;
 
+    // 상품 이미지 업로드
     public File saveFile(MultipartFile files) throws IOException {
         if (files.isEmpty()) {
             return null;
@@ -57,5 +59,39 @@ public class FileService {
         files.transferTo(new java.io.File(savedPath));
 
         return file;
+    }
+
+    // 게시판 이미지 업로드
+    public BoardFile saveBoardFile(MultipartFile files) throws IOException {
+        if (files.isEmpty()) {
+            return null;
+        }
+
+        // 원래 파일 이름 추출
+        String origName = files.getOriginalFilename();
+
+        // 파일 이름으로 쓸 uuid 생성
+        String uuid = UUID.randomUUID().toString();
+
+        // 확장자 추출(ex : .png)
+        String extension = origName.substring(origName.lastIndexOf("."));
+
+        // uuid와 확장자 결합
+        String savedName = uuid + extension;
+
+        // 파일을 불러올 때 사용할 파일 경로
+        String savedPath = fileDir + savedName;
+
+        // 파일 엔티티 생성
+        BoardFile boardFile = BoardFile.builder()
+                .orgNm(origName)
+                .savedNm(savedName)
+                .savedPath(savedPath)
+                .build();
+
+        // 실제로 로컬에 uuid를 파일명으로 저장
+        files.transferTo(new java.io.File(savedPath));
+
+        return boardFile;
     }
 }

@@ -18,66 +18,82 @@
         <aside th:replace="fragments/host_common :: sidebar('board')"></aside>
     </div>
     <div class="flex-fill">
-        <form method="post" name="productForm" enctype="multipart/form-data">
+        <form method="POST" id="boardInputForm" enctype="multipart/form-data"
+              th:onsubmit="${board.getBoardUser() == null|| board.getBoardUser().getUsername() != 'host'}?'return boardAdd()':'return boardUpdate()'">
         <div class="position-relative text-center w-95 mx-auto my-15 vertical-middle-all">
+            <input type="hidden" name="boardState" id="boardState" th:value="${name}">
+            <input type="hidden" name="num" id="boardNum" th:value="${board.getNum()}"
+                   th:if="${board.getBoardUser() != null && board.getBoardUser().getUsername() == 'host'}">
+            <input type="hidden" name="regDate" id="regDate" th:value="${board.getRegDate()}"
+                   th:if="${board.getBoardUser() != null && board.getBoardUser().getUsername() == 'host'}">
             <p class="fs-15 p-0 m-0"><b>[[${name}]] 게시글 등록</b></p>
             <p class="position-absolute m-0 top-0 end-0">
+                <!-- 게시글 등록 버튼 -->
                 <input type="submit" value="등록" class="blueBaseBtn px-10 py-10"
-                       onclick = "javascript: productForm.action = 'h_productPro'">
+                       th:if="${board.getBoardUser() == null || board.getBoardUser().getUsername() != 'host'}">
+                <!-- 게시글 수정 버튼 -->
+                <input type="submit" value="수정" class="blueBaseBtn px-10 py-10"
+                       th:if="${board.getBoardUser() != null && board.getBoardUser().getUsername() == 'host'}">
+                <!-- 게시글 삭제 버튼 -->
+                <input type="button" value="삭제" class="blueBaseBtn px-10 py-10"
+                       th:if="${board.getBoardUser() != null && board.getBoardUser().getUsername() == 'host'}">
             </p>
         </div>
 
         <div class="bg-white w-95 mx-auto mb-20 pb-15">
             <!-- 작성된 게시글 정보 출력 : Q&A -->
             <th:block th:if="${name == 'Q&A'}">
-            <!-- 사용자 Q&A 정보 Title Block -->
-            <div class="w-97 mx-auto bg-white px-10 py-15">
-                <b>· 사용자 [[${name}]] 정보</b>
-            </div>
-            <!-- 사용자 Q&A 정보 : withItem -->
-            <table class="w-97 mx-auto bg-white border-top-1-ccc border-bottom-1-ccc td-py15 td-px10 fs-8 td-border-bottom-1-ccc tdChild1-fw-bold vertical-middle-all">
-                <col style = "width:20%">
-                <col>
-                <tr>
-                    <!-- prdImage block(image 클릭시 상품 선택 가능한 팝업 생성) -->
-                    <td rowspan = "2" class="text-center py-10 bg-EAECEE">
-                        <img src = "./ascloimage/jang1.jpg" width = "100px" height = "100px" class="align-middle">
-                    </td>
-                    <!-- prdTitle block -->
-                    <td><img src = "../ascloimage/n.png" width = "10px" height = "10px" class="align-middle"><br>
-                        장원영의 이쁜 티셔츠(3color)<br>
-                        KRW 37,000</td>
-                </tr>
-                <tr>
-                    <!-- product detail block(해당 상품의 페이지 보러가기) -->
-                    <td class="pb-15">
-                        <input type = "submit" name = "detailPrd" value = "상품 상세보기" class="fs-9 whiteButton">
-                    </td>
-                </tr>
-            </table>
-            <!-- 사용자 Q&A 정보 : 게시글 관련 정보 -->
-            <table class="w-97 mx-auto bg-white border-top-1-ccc border-bottom-1-ccc td-py15 td-px10 fs-8 td-border-bottom-1-ccc tdChild1-fw-bold tdChild1-bg-lightGray vertical-middle-all">
-                <col style = "width:20%">
-                <col>
-                <tr>
-                    <td>문의구분</td>
-                    <td th:text="|상품문의|">${vo.state}</td>
-                </tr>
-                <tr>
-                    <td>제목</td>
-                    <td th:text="|옷이 왜 이래여?|">${vo.subject}</td>
-                </tr>
+                <input type="hidden" name="refBoardNum" th:value="${board.getNum()}">
+                <input type="hidden" name="ref" th:value="${board.getNum()}">
+                <input type="hidden" name="refLevel" th:value="${board.getRefLevel()+1}">
+                <!-- 사용자 Q&A 정보 Title Block -->
+                <div class="w-97 mx-auto bg-white px-10 py-15">
+                    <b th:text="|'·' 사용자 ${board.getBoardUser().getUsername()} 정보|">· 사용자 kim 정보</b>
+                </div>
+                <!-- 사용자 Q&A 정보 : withItem -->
+                <table class="w-97 mx-auto bg-white border-top-1-ccc border-bottom-1-ccc td-py15 td-px10 fs-8 td-border-bottom-1-ccc tdChild1-fw-bold vertical-middle-all">
+                    <col style = "width:20%">
+                    <col>
+                    <tr>
+                        <!-- prdImage block(image 클릭시 상품 선택 가능한 팝업 생성) -->
+                        <td rowspan = "2" class="text-center py-10 bg-EAECEE">
+                            <img src = "./ascloimage/jang1.jpg" width = "100px" height = "100px" class="align-middle">
+                        </td>
+                        <!-- prdTitle block -->
+                        <td><img src = "../ascloimage/n.png" width = "10px" height = "10px" class="align-middle"><br>
+                            장원영의 이쁜 티셔츠(3color)<br>
+                            KRW 37,000</td>
+                    </tr>
+                    <tr>
+                        <!-- product detail block(해당 상품의 페이지 보러가기) -->
+                        <td class="pb-15">
+                            <input type = "submit" name = "detailPrd" value = "상품 상세보기" class="fs-9 whiteButton">
+                        </td>
+                    </tr>
+                </table>
+                <!-- 사용자 Q&A 정보 : 게시글 관련 정보 -->
+                <table class="w-97 mx-auto bg-white border-top-1-ccc border-bottom-1-ccc td-py15 td-px10 fs-8 td-border-bottom-1-ccc tdChild1-fw-bold tdChild1-bg-lightGray vertical-middle-all">
+                    <col style = "width:20%">
+                    <col>
+                    <tr>
+                        <td>문의구분</td>
+                        <td th:text="|${board.getContentState()}|">상품문의</td>
+                    </tr>
+                    <tr>
+                        <td>제목</td>
+                        <td th:text="|${board.getSubject()}|">옷이 왜 이래여?</td>
+                    </tr>
 
-                <tr>
-                    <td>작성자</td>
-                    <td><b th:text="|kim|">${vo.writer}</b></td>
-                </tr>
-            </table>
+                    <tr>
+                        <td>작성자</td>
+                        <td><b th:text="|${board.getBoardUser().getUsername()}|">kim</b></td>
+                    </tr>
+                </table>
             </th:block>
 
             <!-- 게시글 기본 정보 Title Block -->
             <div class="w-97 mx-auto bg-white px-10 py-15">
-                <b>·[[${name}]] 정보</b>
+                <b th:text="|'·' ${name} 정보|">·BoardName 정보</b>
             </div>
 
             <!-- 게시글 기본 정보 Input Block -->
@@ -87,25 +103,35 @@
                 <!-- 게시글의 작성자 -->
                 <tr>
                     <td>작성자</td>
-                    <td th:text="|관리자(host)|">관리자(${sessionScope.memId})</td>
+                    <td>
+                        <input type="hidden" name="username" th:value="${#authentication.getName()}">
+                        [[${#authentication.getName()}]]
+                    </td>
                 </tr>
                 <!-- 게시글의 분류 : FAQ -->
                 <tr th:if="${name == 'FAQ'}">
                     <td>판매상태</td>
                     <td>
-                        <input type = "radio" name = "state" id = "memberrank" value = "회원등급" checked>
-                        <label for = "memberrank">회원 등급</label>&emsp;
-                        <input type = "radio" name = "state" id = "prdinput" value = "상품등록">
-                        <label for = "prdinput">상품 등록</label>&emsp;
-                        <input type = "radio" name = "state" id = "order_pay" value = "주문/결제">
+                        <input type = "radio" name = "contentState" id = "memberRank" value = "회원등급"
+                               th:checked="${board.getContentState() == '회원등급' || board.getContentState() == null}?true">
+                        <label for = "memberRank">회원 등급</label>&emsp;
+                        <input type = "radio" name = "contentState" id = "prdInput" value = "상품등록"
+                               th:checked="${board.getContentState() == '상품등록'}?true">
+                        <label for = "prdInput">상품 등록</label>&emsp;
+                        <input type = "radio" name = "contentState" id = "order_pay" value = "주문/결제"
+                               th:checked="${board.getContentState() == '주문/결제'}?true">
                         <label for = "order_pay">주문/결제</label>&emsp;
-                        <input type = "radio" name = "state" id = "deli" value = "배송">
+                        <input type = "radio" name = "contentState" id = "deli" value = "배송"
+                               th:checked="${board.getContentState() == '배송'}?true">
                         <label for = "deli">배송</label>&emsp;
-                        <input type = "radio" name = "state" id = "refund" value = "환불">
+                        <input type = "radio" name = "contentState" id = "refund" value = "환불"
+                               th:checked="${board.getContentState() == '환불'}?true">
                         <label for = "refund">환불</label>&emsp;
-                        <input type = "radio" name = "state" id = "pluspay" value = "적립금">
-                        <label for = "pluspay">적립금</label>&emsp;
-                        <input type = "radio" name = "state" id = "other" value = "기타">
+                        <input type = "radio" name = "contentState" id = "plusPay" value = "적립금"
+                               th:checked="${board.getContentState() == '적립금'}?true">
+                        <label for = "plusPay">적립금</label>&emsp;
+                        <input type = "radio" name = "contentState" id = "other" value = "기타"
+                               th:checked="${board.getContentState() == '기타'}?true">
                         <label for = "other">기타</label>
                     </td>
                 </tr>
@@ -113,55 +139,56 @@
                 <tr>
                     <td><label for="subject">제목</label></td>
                     <td>
-                        <input type = "text" id = "subject" name = "subject"
-                               placeholder = "제목을 입력하세요!" maxlength = "400" required>
+                        <input type = "text" id = "subject" name = "subject" th:value="${board.getSubject()}"
+                               placeholder = "제목" maxlength = "400" class="w-50" required>
                     </td>
                 </tr>
                 <!-- 게시글의 내용 -->
                 <tr>
                     <td><label for="content">내용</label></td>
                     <td>
-                        <textarea rows="20" cols="95" name="content" id="content" class="w-100 resize-vertical border-0">글 내용을 입력하세요.</textarea>
+                        <textarea rows="20" cols="95" name="content" id="content" class="w-100 resize-vertical border-0"
+                                  th:text="${board.getContent()}">글 내용을 입력하세요.</textarea>
                     </td>
                 </tr>
 
-                <!-- 상품 이미지 file 추가 : notice, Q&A -->
+                <!-- 게시판 이미지 file 추가 : notice, Q&A -->
                 <th:block th:if="${name == 'NOTICE' || name == 'Q&A'}">
-                <tr>
-                    <td>첨부파일1</td>
-                    <td><input type = "file" name = "file1"></td>
-                </tr>
-                <tr>
-                    <td>첨부파일2</td>
-                    <td><input type = "file" name = "file2"></td>
-                </tr>
-                <tr>
-                    <td>첨부파일3</td>
-                    <td><input type = "file" name = "file3"></td>
-                </tr>
-                <tr>
-                    <td>첨부파일4</td>
-                    <td><input type = "file" name = "file4"></td>
-                </tr>
-                <tr>
-                    <td>첨부파일5</td>
-                    <td><input type = "file" name = "file5"></td>
-                </tr>
+                    <tr>
+                        <td>첨부파일(다중 선택 가능)</td>
+                        <td>
+                            <div class="d-flex flex-column align-self-center">
+                                <!-- 게시판 이미지 정보 출력 div -->
+                                <div id="boardImagesDiv" th:if="${files.size() > 0}">
+                                    <th:block th:each="list:${files}">
+                                        <input type="hidden" name="boardFileIds" th:value="${list.getFileId()}">
+                                        <img th:src="|/host/uploadImageView/${list.getFileId()}|" alt="게시판이미지" class="wh-100px" src=""/>
+                                        <p th:text="|[${list.getOrgNm()}]|"></p>
+                                    </th:block>
+                                </div>
+                                <!-- 이전 이미지 그대로 checkBox -->
+                                <div th:class="${files.size() == 0}?'d-none'">
+                                    <input type = "checkbox" id = "baseBoardFileYN" th:onchange="baseBoardFileUpdateYN()" th:checked="${files.size() > 0}?true">
+                                    <label for="baseBoardFileYN">이전 이미지 그대로</label>
+                                    <label th:if="${name == 'Q&A'}">(Q&A 답변등록일 경우 고객이 첨부한 이미지가 기존 이미지로 지정됩니다.)</label>
+                                </div>
+                                <div><input type = "file" multiple="multiple" id="boardFile" name = "boardFile" th:class="${files.size() > 0}?'d-none'"></div>
+                            </div>
+                        </td>
+                    </tr>
                 </th:block>
 
                 <!-- 비밀글 비밀번호 확인 부분 : Q&A -->
                 <th:block th:if="${name == 'Q&A'}">
                 <!-- Q&A 작성자의 글이 비밀글이면 관리자 답변글도 비밀글로 만듦 -->
-                <!--<c:if test="${vo.textType == 'close'}">-->
-                    <tr>
-                        <td><label for="userPwd">비밀번호</label></td>
-                        <td><input type = "password" id = "userPwd" name = "pwd" readonly value = "${vo.pwd}"></td>
-                    </tr>
-                    <input type = "hidden" name = "textType" value = "close">
-                <!--</c:if>
-                <c:if test="${vo.textType == 'open'}">-->
-                    <input type = "hidden" name = "textType" value = "open">
-                <!--</c:if>-->
+                // 비밀글일 경우
+                <tr th:if="${board.getTextType() == 'close'}">
+                    <td><label for="pwd">비밀번호</label></td>
+                    <td><input type = "password" id = "pwd" name = "pwd" th:value="${board.getPwd()}" readonly></td>
+                </tr>
+                <input type = "hidden" name = "textType" value = "close" th:if="${board.getTextType() == 'close'}">
+                // 공개글일 경우
+                <input type = "hidden" name = "textType" value = "open" th:if="${board.getTextType() == 'open'}">
                 </th:block>
             </table>
         </div>

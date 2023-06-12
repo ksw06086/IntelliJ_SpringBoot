@@ -66,4 +66,9 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
     private RefundAccount refundAccounts;
+
+    // 게시판 Board 테이블과 조인
+    @OneToMany(mappedBy = "boardUser", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Board> boards = new ArrayList<>();
 }

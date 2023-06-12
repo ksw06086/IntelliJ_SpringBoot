@@ -115,7 +115,7 @@
                 <tr>
                     <td>판매상태*</td>
                     <td>
-                        <input type = "radio" name = "state" id = "saleIng" value = "판매중" th:checked="${stock.getState() == '판매중' || stock.getTex() == null}?true">
+                        <input type = "radio" name = "state" id = "saleIng" value = "판매중" th:checked="${stock.getState() == '판매중' || stock.getState() == null}?true">
                         <label for = "saleIng">판매중</label>&emsp;
                         <input type = "radio" name = "state" id = "notStock" value = "품절" th:checked="${stock.getState() == '품절'}?true">
                         <label for = "notStock">품절</label>&emsp;
