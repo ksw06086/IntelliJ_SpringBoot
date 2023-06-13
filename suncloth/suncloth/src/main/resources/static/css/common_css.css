@@ -208,6 +208,7 @@
 .tdChild1-text-center td:nth-child(1){ text-align:center; }
 .tdChild1-bg-lightGray td:nth-child(1) { background-color:#EAECEE; }
 .tdChild1-fw-bold td:nth-child(1) { font-weight: bold; }
+.tdChild1-ps-10 td:nth-child(1) { padding-left: 10px; }
 .tdChild2-text-end td:nth-child(2){ text-align:right; }
 
 

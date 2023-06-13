@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -94,18 +96,27 @@ public class StockApiController {
         return stockRepository.findByStockCloth(cloth);
     }
 
-    // GET : colorCode 에 맞게 Stock 정보 가져오기
-    @GetMapping("/stocks/color/{colorCode}")
-    List<Stock> oneColorAndMany(@PathVariable Long colorCode) {
+    // GET : sizeCode 에 맞게 Stock 정보 가져오기
+    @GetMapping("/stocks/size")
+    List<Size> getSizeList(@RequestParam(required = false) Long colorCode
+            , @RequestParam(required = false) Long clothId) {
+        Cloth cloth = clothRepository.findById(clothId).orElse(null);
         Color color = colorRepository.findById(colorCode).orElse(null);
-        return stockRepository.findByStockColor(color);
+
+        return stockRepository.findSizeByStockColorAndStockCloth(color, cloth);
     }
 
     // GET : sizeCode 에 맞게 Stock 정보 가져오기
-    @GetMapping("/stocks/size/{sizeCode}")
-    List<Stock> oneSizeAndMany(@PathVariable Long sizeCode) {
+    @GetMapping("/stocks/color/size")
+    Map<String, Object> oneColorSizeAndOne(@RequestParam(required = false) Long colorCode
+            , @RequestParam(required = false) Long sizeCode) {
+        Color color = colorRepository.findById(colorCode).orElse(null);
         Size size = sizeRepository.findById(sizeCode).orElse(null);
-        return stockRepository.findByStockSize(size);
+        Stock stock = stockRepository.findByStockSizeAndStockColor(size, color);
+
+        Map<String, Object> stockMap = new HashMap<>();
+        stockMap.put("stock", stock); stockMap.put("color", color); stockMap.put("size", size);
+        return stockMap;
     }
 
     // GET : Id에 맞게 한가지 Stock 정보만 가져오기

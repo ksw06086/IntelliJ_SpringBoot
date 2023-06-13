@@ -91,11 +91,15 @@ public class GuestController {
         Cloth cloth = clothRepository.findById(clothId).orElse(null);
         List<File> mainFile = fileRepository.findByClothAndFileType(cloth, "main");
         List<File> subFile = fileRepository.findByClothAndFileType(cloth, "sub");
-        List<Stock> stockList = stockRepository.findByStockCloth(cloth);
+        List<Color> colorList = stockRepository.findColorByStockCloth(cloth);
+        for (Color color : colorList) {
+            System.out.println("color : " + color.getColorName());
+        }
 
         model.addAttribute("cloth", cloth);
         model.addAttribute("mainFile", mainFile.get(0));
         model.addAttribute("subFileList", subFile);
+        model.addAttribute("colorList", colorList);
         return "/guest/guest_productDetail";
     }
 

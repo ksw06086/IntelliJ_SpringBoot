@@ -16,48 +16,39 @@
                          class="rounded w-100" alt="상품 메인 이미지">
                 </div>
                 <div class="flex-fill buyingContent">
+                    <input type="hidden" id="clothId" th:value="${cloth.getClothId()}">
                     <h4 th:text="${cloth.getClothName()}">멋있는 옷</h4>
 
-                    <table class = "checklist">
+                    <table class = "checklist tdChild1-ps-10">
+                        <col style = "width:20%;">
+                        <col >
+                        <tbody>
                         <tr>
                             <td><b>판매가</b></td>
                             <td th:text="|KRW ${cloth.getBasePrice()}|"> KSW 15000 </td>
                         </tr>
                         <tr>
                             <td>색상</td>
-                            <td><select class="py-1" name = "colorSelect" onchange = "select_color();" >
-                                <option value = "">-[필수] 색상 선택-</option>
+                            <td><select class="py-1 w-50 colorsSelector" id="colorSelector" name = "colorCode"
+                                        th:onchange = "stockSizesGet()" required>
+                                <option value = "0">컬러 선택</option>
                                 <!-- 색상 DB에서 가져오는 방향으로 함 -->
-                                <option value = "${list.colorcode}">${list.colorname}</option>
+                                <th:block th:if="${colorList.size() > 0}">
+                                    <option th:each="list:${colorList}" th:value="${list.getColorCode()}">
+                                        [[${list.getColorName()}]]
+                                    </option>
+                                </th:block>
                             </select></td>
                         </tr>
                         <tr>
                             <td>사이즈</td>
-                            <td><select class="py-1" name = "sizeSelect" onchange = "select_size();">
-                                <option value = "">-[필수] 사이즈 선택-</option>
+                            <td><select class="py-1 w-50 sizesSelector" id="sizeSelector" name="sizeCode" th:onchange = "stockGet()" required>
+                                <option value = "0">사이즈 선택</option>
                             </select></td>
                         </tr>
+                        </tbody>
                         <!-- 이 부분 색상과 사이즈 선택 시 javascript로 출력해줌, 그 전까진 비워둠 -->
-                        <tr>
-                            <td colspan = "2"><hr></td>
-                        </tr>
-                        <tr>
-                            <td><b>color/size</b></td>
-                            <td>
-                                <input type = "hidden" name = "colorcode" value = "${svo.colorcode}">
-                                <input type = "hidden" name = "sizecode" value = "${svo.sizecode}">
-                                <b>${svo.colorname}</b>/<b>${svo.sizename}(${svo.count})</b>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><b>수량</b></td>
-                            <td><input type = "number" name = "count" min = "1" max = "${svo.maxcount}" value = "1" oninput = "priceplus(this.value);"></td>
-                        </tr>
-                        <tr>
-                            <td><b>가격</b></td>
-                            <td><input type = "hidden" name = "price" value = "${vo.saleprice}">
-                            <label>${vo.saleprice}</label></td>
-                        </tr>
+                        <tfoot id = "stockOrderAmountSelectBox" class="bg-body-tertiary border-all-1-ccc"></tfoot>
                         <!-- end -->
                     </table>
 
