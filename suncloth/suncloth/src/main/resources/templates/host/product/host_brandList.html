@@ -63,7 +63,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <th:block th:if="${brandList.getSize() > 0}">
+                    <th:block th:if="${brandList.getNumberOfElements() > 0}">
                         <tr class = "text-center td-py10 td-px15" th:each="list:${brandList}" th:id="${list.getBrandId()}">
                             <td><input type = "checkbox" name="brandIds" th:value = "${list.getBrandId()}"></td>
                             <td>[[${list.getBrandId()}]]</td>
@@ -75,7 +75,7 @@
                             <td>[[${list.getRegDate()}]]</td>
                         </tr>
                     </th:block>
-                    <tr class = "text-center td-py10 td-px15" th:if="${brandList.getSize() == 0}">
+                    <tr class = "text-center td-py10 td-px15" th:if="${brandList.getNumberOfElements() == 0}">
                       <td colspan = "5">
                         브랜드가 없습니다. 브랜드를 등록해주세요.
                       </td>

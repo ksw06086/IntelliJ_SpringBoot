@@ -65,7 +65,7 @@ public class ClothApiController {
 
         Page<Cloth> clothList = clothRepositoyImpl.findSearchAll(searchType, searchInput, brand, mainCategory, subCategory, icons, firstDay, lastDay, pageable);
         // 현재 아래 바를 1~5까지 보여주게 하기 위해서 끝에 4를 빼고 더해준 것
-        int startPage = Math.max(1, clothList.getPageable().getPageNumber()-4);
+        int startPage = Math.max(1, clothList.getPageable().getPageNumber()-1);
         int endPage = Math.min(clothList.getTotalPages(), clothList.getPageable().getPageNumber()+4);
 
         // 각 프로퍼티 결과 출력
@@ -87,6 +87,7 @@ public class ClothApiController {
         pageMap.put("pageObject", clothList);
         pageMap.put("startPage", startPage);
         pageMap.put("endPage", endPage);
+
         return pageMap;
     }
     // end::get-aggregate-root[]

@@ -154,12 +154,14 @@
                         <td>번호</td>
                         <td>카테고리</td>
                         <td>상품명</td>
+                        <td>기본가격</td>
+                        <td>배송비</td>
                         <td>등록일</td>
                         <td>판매상태</td>
                     </tr>
                     </thead>
                     <tbody id="productListTBody">
-                    <th:block th:if="${clothList.getSize() > 0}">
+                    <th:block th:if="${clothList.getNumberOfElements() > 0}">
                         <tr class = "text-center td-py10 td-px15" th:each="list:${clothList}" th:id="${list.getClothId()}">
                             <td><input type = "checkbox" name = "clothIds" th:value = "${list.getClothId()}"></td>
                             <td> <!-- th:if="${list.mainfile != null}" -->
@@ -170,25 +172,27 @@
                             <td th:text="${list.getSubCategory().getSubName()}"></td>
                             <!-- 상세 페이지 -->
                             <td class="text-start">
+                                <img th:src="|/icon/new.png|" alt="이미지 없음" width = "30px" height = "30px"
+                                     th:if="${#dates.format(list.getRegDate(), 'yyyy-MM-dd') == #dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
                                 <img th:src="|/icon/only.png|" alt="이미지 없음" width = "45px" height = "18px"
                                      th:if="${list.getSubCategory().getMainCategory().getMainName() == 'onlySuncloth'}">
                                 <img th:src="|/icon/best.png|" alt="이미지 없음" width = "45px" height = "18px"
                                      th:if="${list.getIcon() == 'best'}">
                                 <img th:src="|/icon/hot.png|" alt="이미지 없음" width = "45px" height = "18px"
                                      th:if="${list.getIcon() == 'hot'}">
-                                <img th:src="|/icon/new.png|" alt="이미지 없음" width = "30px" height = "30px"
-                                     th:if="${list.getRegDate() == #dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
                                 <img th:src="|/icon/minPrice.png|" alt="이미지 없음" width = "30px" height = "30px"
                                      th:if="${list.getIcon() == 'minPrice'}">
                                 <a th:href="@{/host/productInput(clothId=${list.getClothId()})}"
                                    th:text="${list.getClothName()}"> <!--href = "h_productForm?num=${list.num}&number=${number+1}&pageNum=${pageNum}"-->
                                 </a></td>
+                            <td th:text="${list.getBasePrice()}"></td>
+                            <td th:text="${list.getDeliPrice()}"></td>
                             <td th:text="|${list.getRegDate()}|">[[${#dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm')}]]</td>
                             <td><a th:href="@{/host/stockList(clothId=${list.getClothId()})}"><input type = "button" value = "재고 관리" name = "csInput" class="whiteButton"/></a></td>
                         </tr>
                     </th:block>
-                    <tr class = "text-center td-py10 td-px15" th:if="${clothList.getSize() == 0}">
-                      <td colspan = "7">
+                    <tr class = "text-center td-py10 td-px15" th:if="${clothList.getNumberOfElements() == 0}">
+                      <td colspan = "9">
                         등록된 상품이 없습니다. 상품을 등록해주세요.
                       </td>
                     </tr>

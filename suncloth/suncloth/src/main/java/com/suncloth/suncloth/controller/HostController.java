@@ -58,7 +58,7 @@ public class HostController {
         Page<Cloth> cloths = clothRepository.findAll(pageable);
 
         // 현재 아래 바를 1~5까지 보여주게 하기 위해서 끝에 4를 빼고 더해준 것
-        int startPage = Math.max(1, cloths.getPageable().getPageNumber()-4);
+        int startPage = Math.max(1, cloths.getPageable().getPageNumber()-1);
         int endPage = Math.min(cloths.getTotalPages(), cloths.getPageable().getPageNumber()+4);
 
         model.addAttribute("brandList", brands);

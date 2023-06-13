@@ -138,7 +138,6 @@
                         <td>컬러</td>
                         <td>사이즈</td>
                         <td>판매가격</td>
-                        <td>배송비</td>
                         <td>수량</td>
                         <td>최대구매수량</td>
                         <td>등록일</td>
@@ -156,7 +155,6 @@
                             <td th:text="${list.getStockColor().getColorName()}"></td>
                             <td th:text="${list.getStockSize().getSizeName()}"></td>
                             <td th:text="|KSW ${list.getSalePrice()}|"></td>
-                            <td th:text="${list.getDeliPrice()}"></td>
                             <td th:text="${list.getStockCount()}"></td>
                             <td th:text="${list.getStockMaxCount()}"></td>
                             <td th:text="|${list.getRegDate()}|">[[${#dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm')}]]</td>
@@ -164,8 +162,8 @@
                         </tr>
                     </th:block>
                     <tr class = "text-center td-py10 td-px15" th:if="${stockList.size() == 0}">
-                        <td colspan = "10">
-                            등록된 상품이 없습니다. 상품을 등록해주세요.
+                        <td colspan = "9">
+                            등록된 재고가 없습니다. 재고를 등록해주세요.
                         </td>
                     </tr>
                     </tbody>

@@ -259,6 +259,11 @@ function subCategoriesGet(mainCode){
 // *** Cloth 상품 관련 Script *** //
 // Cloth 상품 추가하기
 function clothAdd(){
+    if(document.getElementById("basePay").checked === true) {
+        document.getElementById("deliPrice").value = 2500;
+    } else if(document.getElementById("free").checked === true) {
+        document.getElementById("deliPrice").value = 0;
+    }
     let clothInputForm = new FormData(document.getElementById("clothInputForm"));
 
     $.ajax({
@@ -283,6 +288,11 @@ function clothAdd(){
 
 // Cloth 상품 수정하기
 function clothUpdate(){
+    if(document.getElementById("basePay").checked === true) {
+        document.getElementById("deliPrice").value = 2500;
+    } else if(document.getElementById("free").checked === true) {
+        document.getElementById("deliPrice").value = 0;
+    }
     let clothInputForm = new FormData(document.getElementById("clothInputForm"));
     const clothId = document.getElementById("clothId");
     const baseMainFileYN = document.getElementById("baseMainFileYN");
@@ -504,11 +514,6 @@ function sizesGet(){
 // *** Stock 상품 관련 Script *** //
 // Stock 재고 추가하기
 function stockAdd(){
-    if(document.getElementById("basePay").checked === true) {
-        document.getElementById("deliPrice").value = 2500;
-    } else if(document.getElementById("free").checked === true) {
-        document.getElementById("deliPrice").value = 0;
-    }
     const clothId = document.getElementById("clothId").value;
     let stockInputForm = new FormData(document.getElementById("stockInputForm"));
 
@@ -532,11 +537,6 @@ function stockAdd(){
 
 // Stock 재고 수정하기
 function stockUpdate(){
-    if(document.getElementById("basePay").checked === true) {
-        document.getElementById("deliPrice").value = 2500;
-    } else if(document.getElementById("free").checked === true) {
-        document.getElementById("deliPrice").value = 0;
-    }
     const clothId = document.getElementById("clothId").value;
     let stockInputForm = new FormData(document.getElementById("stockInputForm"));
 
@@ -667,6 +667,8 @@ function clothsGet(){
                                 '<td class="text-start">' + icon +
                                     '<a href="/host/productInput?clothId=' + data.cloth.clothId + '">' + data.cloth.clothName +
                                     '</a></td>' +
+                                '<td>' + data.cloth.basePrice + '</td>' +
+                                '<td>' + data.cloth.deliPrice + '</td>' +
                                 '<td>' + data.cloth.regDate + '</td>' +
                                 '<td><a href="/host/stockList?clothId=' + data.cloth.clothId +'"><input type = "button" value = "재고 관리" name = "csInput" class="whiteButton"/></a></td>';
                 productListTBody.append(tr);
@@ -735,6 +737,8 @@ function clothPaging(page){
                     '<td class="text-start">' + icon +
                     '<a href="/host/productInput?clothId=' + data.cloth.clothId + '">' + data.cloth.clothName +
                     '</a></td>' +
+                    '<td>' + data.cloth.basePrice + '</td>' +
+                    '<td>' + data.cloth.deliPrice + '</td>' +
                     '<td>' + data.cloth.regDate + '</td>' +
                     '<td><a href="/host/stockList?clothId=' + data.cloth.clothId +'"><input type = "button" value = "재고 관리" name = "csInput" class="whiteButton"/></a></td>';
                 productListTBody.append(tr);

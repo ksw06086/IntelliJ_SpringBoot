@@ -141,17 +141,6 @@
                     </td>
                 </tr>
 
-                <!-- 등록할 상품의 tax/notTax 선택 -->
-                <tr>
-                    <td>과세/비과세</td>
-                    <td>
-                        <input type = "radio" name = "tex" id = "tax" value = "과세" th:checked="${stock.getTex() == '과세' || stock.getTex() == null}?true">
-                        <label for = "tax">과세</label>&emsp;
-                        <input type = "radio" name = "tex" id = "notTax" value = "비과세" th:checked="${stock.getTex() == '비과세'}?true">
-                        <label for = "notTax">비과세</label>
-                    </td>
-                </tr>
-
                 <!-- 등록할 상품의 적립금 선택 -->
                 <tr>
                     <td>적립금</td>
@@ -188,40 +177,6 @@
                         <label for="buyPrice">매입가격 *</label></td>
                     <td>
                         <input type = "text" id="buyPrice" name = "buyPrice" th:value="${stock.getBuyPrice()}" required>원
-                    </td>
-                </tr>
-            </table>
-
-            <!-- 배송 관련 정보 Title Block -->
-            <div class="w-97 mx-auto bg-white px-10 py-15">
-                <b>·배송관련</b>
-            </div>
-
-            <!-- 배송 관련 정보 Input Block -->
-            <table class="w-97 mx-auto bg-white border-top-1-ccc border-bottom-1-ccc td-px10 td-py15 td-border-bottom-1-ccc fs-8 tdChild1-bg-lightGray tdChild1-fw-bold vertical-middle-all">
-                <col style = "width:20%;">
-                <col>
-
-                <!-- 예상배송소요일 설정 -->
-                <tr>
-                    <td><label for="deliDay">예상배송소요일 *</label></td>
-                    <td><input type = "text" id = "deliDay" name = "deliDay" th:value="${stock.getDeliDay()}" required>일</td>
-                </tr>
-
-                <!-- 배송비 설정 -->
-                <tr>
-                    <td>배송비 설정</td>
-                    <td>
-                        <input type = "radio" name = "deliPay" id = "basePay" value = "basePay"
-                               th:checked="${stock.getDeliPrice() == 2500 || stock.getDeliPrice() == null}?true">
-                        <label for = "basePay">기본 배송비</label><br>
-                        <input type = "radio" name = "deliPay" id = "free" value = "free"
-                               th:checked="${stock.getDeliPrice() == 0}?true">
-                        <label for = "free">무료</label><br>
-                        <input type = "radio" name = "deliPay" id = "plusDeliPay" value = "plusPay"
-                               th:checked="${stock.getDeliPrice() != 2500 && stock.getDeliPrice() != 0}?true">
-                        <label for = "plusDeliPay">사용자 지정</label>
-                        <input type = "text" id = "deliPrice" name = "deliPrice" th:value="${stock.getDeliPrice()}">원
                     </td>
                 </tr>
             </table>

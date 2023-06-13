@@ -1,11 +1,7 @@
 package com.suncloth.suncloth.controller;
 
-import com.suncloth.suncloth.model.Cloth;
-import com.suncloth.suncloth.model.MainCategory;
-import com.suncloth.suncloth.model.SubCategory;
-import com.suncloth.suncloth.repository.ClothRepository;
-import com.suncloth.suncloth.repository.MainCategoryRepository;
-import com.suncloth.suncloth.repository.SubCategoryRepository;
+import com.suncloth.suncloth.model.*;
+import com.suncloth.suncloth.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,7 +22,12 @@ public class GuestController {
     SubCategoryRepository subCategoryRepository;
     @Autowired
     ClothRepository clothRepository;
-
+    @Autowired
+    FileRepository fileRepository;
+    @Autowired
+    StockRepository stockRepository;
+    @Autowired
+    ColorRepository colorRepository;
 
     @GetMapping("/category")
     public String categoryPage(Model model
@@ -49,6 +50,13 @@ public class GuestController {
             clothList = clothRepository.findBySubCategory(subCategory);
             model.addAttribute("subCategoryName", subCategoryName);
         }
+
+        int clothOneBlockCnt = 4;                                               // 한 줄에 들어갈 상품의 개수
+        int clothLastBlockCnt = (clothList.size()+3)%clothOneBlockCnt;          // 마지막 줄에 들어갈 상품의 개수(1=0,2=1,...이 나오게 하기 위해 +3)
+        int clothBlockLineCnt = (clothList.size()+3)/clothOneBlockCnt;          // 줄 수(1=1,2=1,..,4=1이 나오게 하기 위해 +3)
+        model.addAttribute("clothOneBlockCnt", clothOneBlockCnt-1);
+        model.addAttribute("clothLastBlockCnt", clothLastBlockCnt);
+        model.addAttribute("clothBlockLineCnt", clothBlockLineCnt-1);
 
         model.addAttribute("mainCategory", mainCategory);
         model.addAttribute("subCategoryList", subCategoryList);
@@ -78,7 +86,16 @@ public class GuestController {
     }
 
     @GetMapping("/productDetail")
-    public String productDetail() {
+    public String productDetail(Model model
+            , @RequestParam(required = false) Long clothId) {
+        Cloth cloth = clothRepository.findById(clothId).orElse(null);
+        List<File> mainFile = fileRepository.findByClothAndFileType(cloth, "main");
+        List<File> subFile = fileRepository.findByClothAndFileType(cloth, "sub");
+        List<Stock> stockList = stockRepository.findByStockCloth(cloth);
+
+        model.addAttribute("cloth", cloth);
+        model.addAttribute("mainFile", mainFile.get(0));
+        model.addAttribute("subFileList", subFile);
         return "/guest/guest_productDetail";
     }
 

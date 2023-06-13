@@ -27,6 +27,10 @@ public class Cloth {
     private String clothName;           // 상품명
     private String content = " ";       // 상품 설명
     private String icon;                // 아이콘명
+    private String tex;                 // 관세,비관세 여부
+    private long deliDay;               // 배달소요날짜
+    private long deliPrice;             // 배달비 금액
+    private long basePrice;             // 상품기본 금액
     private String withItemIds = " ";   // 관련 상품들의 Id
     @CreationTimestamp                  // insert 될 때 현재 시간을 넣어줌
     private Date regDate;               // 상품 등록 날짜

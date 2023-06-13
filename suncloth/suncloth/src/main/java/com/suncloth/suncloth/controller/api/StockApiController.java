@@ -76,10 +76,7 @@ public class StockApiController {
                     stock.setStockMaxCount(newStock.getStockMaxCount());
                     stock.setBuyPrice(newStock.getBuyPrice());
                     stock.setSalePrice(newStock.getSalePrice());
-                    stock.setDeliDay(newStock.getDeliDay());
-                    stock.setDeliPrice(newStock.getDeliPrice());
                     stock.setPlus(newStock.getPlus());
-                    stock.setTex(newStock.getTex());
                     stock.setState(newStock.getState());
                     return stockRepository.save(stock);
                 })
@@ -131,10 +128,7 @@ public class StockApiController {
                     stock.setStockMaxCount(newStock.getStockMaxCount());
                     stock.setBuyPrice(newStock.getBuyPrice());
                     stock.setSalePrice(newStock.getSalePrice());
-                    stock.setDeliDay(newStock.getDeliDay());
-                    stock.setDeliPrice(newStock.getDeliPrice());
                     stock.setPlus(newStock.getPlus());
-                    stock.setTex(newStock.getTex());
                     stock.setState(newStock.getState());
                     return stockRepository.save(stock);
                 })

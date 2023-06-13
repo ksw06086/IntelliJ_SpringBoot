@@ -102,16 +102,32 @@
 
     <!-- 상품리스트(product List) -->
     <th:block th:if="${clothList.size() > 0}">
-    <div class="d-flex mx-5" th:each="blockNum : ${#numbers.sequence(0,clothList.size()/4)}">
-        <div class="card border-0 p-1" style="width: 25%;" th:each="clothNum : ${#numbers.sequence(0, ((blockNum == clothList.size()/4)?(clothList.size()%4)-1:3))}">
-            <a th:href="@{/guest/productDetail}">
-                <img th:src="|/uploadMainImageView/${clothList.get(clothNum+(blockNum*3)).getClothId()}|"
+    <div class="d-flex mx-5" th:each="blockNum : ${#numbers.sequence(0, clothBlockLineCnt)}">
+        <!-- ** 주의!! ** th:each는 0부터 시작하기 때문에 수에서 -1을 해야 함-->
+        <!-- ↓ (blockNum == clothBlockLineCnt) : 현재 라인이 마지막 라인인가? -->
+        <!-- ↓ clothLastBlockCnt:clothOneBlockCnt : 맞으면 마지막라인상품개수, 아니면 한라인최대상품개수 -->
+        <div class="card border-0 p-1" style="width: 25%;"
+             th:each="clothNum : ${#numbers.sequence(0, ((blockNum==clothBlockLineCnt)?clothLastBlockCnt:clothOneBlockCnt))}">
+            <!-- ↓ 한라인상품Index + (블럭라인Index * 한라인최대상품개수) : 상품 0~N까지 출력(0,4,8,...) -->
+            <a th:href="@{/guest/productDetail(clothId=${clothList.get(clothNum+(blockNum*(clothOneBlockCnt+1))).getClothId()})}">
+                <img th:src="|/uploadMainImageView/${clothList.get(clothNum+(blockNum*(clothOneBlockCnt+1))).getClothId()}|"
                      class="rounded w-100" alt="...">
             </a>
             <div class="card-body">
                 <p class="card-text">
-                    <span th:text="${clothList.get(clothNum+(blockNum*3)).getClothName()}">멋있는 옷</span><br>
-                    <span th:text="${clothList.get(clothNum+(blockNum*3)).getBrand().getBrandName()}">LG</span>
+                    <!-- ↓ 한라인상품Index + (블럭라인Index * 한라인최대상품개수) : 상품 0~N까지 출력(0,4,8,...) -->
+                    <img th:src="|/icon/new.png|" alt="이미지 없음" width = "30px" height = "30px"
+                         th:if="${#dates.format(clothList.get(clothNum+(blockNum*(clothOneBlockCnt+1))).getRegDate(), 'yyyy-MM-dd') == #dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+                    <img th:src="|/icon/only.png|" alt="이미지 없음" width = "45px" height = "18px"
+                         th:if="${clothList.get(clothNum+(blockNum*(clothOneBlockCnt+1))).getSubCategory().getMainCategory().getMainName() == 'onlySuncloth'}">
+                    <img th:src="|/icon/best.png|" alt="이미지 없음" width = "45px" height = "18px"
+                         th:if="${clothList.get(clothNum+(blockNum*(clothOneBlockCnt+1))).getIcon() == 'best'}">
+                    <img th:src="|/icon/hot.png|" alt="이미지 없음" width = "45px" height = "18px"
+                         th:if="${clothList.get(clothNum+(blockNum*(clothOneBlockCnt+1))).getIcon() == 'hot'}">
+                    <img th:src="|/icon/minPrice.png|" alt="이미지 없음" width = "30px" height = "30px"
+                         th:if="${clothList.get(clothNum+(blockNum*(clothOneBlockCnt+1))).getIcon() == 'minPrice'}">
+                    <span th:text="${clothList.get(clothNum+(blockNum*(clothOneBlockCnt+1))).getClothName()}">멋있는 옷</span><br>
+                    <span th:text="|KSW ${clothList.get(clothNum+(blockNum*(clothOneBlockCnt+1))).getBasePrice()}|">KSW 15000</span>
                 </p>
             </div>
         </div>

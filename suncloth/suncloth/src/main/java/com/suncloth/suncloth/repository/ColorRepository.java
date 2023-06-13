@@ -2,6 +2,7 @@ package com.suncloth.suncloth.repository;
 
 import com.suncloth.suncloth.model.Color;
 import com.suncloth.suncloth.model.MainCategory;
+import com.suncloth.suncloth.model.Stock;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

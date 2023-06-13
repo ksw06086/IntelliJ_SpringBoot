@@ -23,12 +23,9 @@ public class Stock {
     private String state;               // 재고 상태
     private long stockCount;            // 재고 수량
     private long stockMaxCount;         // 최대 구매 가능 수량
-    private String tex;                 // 관세,비관세 여부
     private long plus;                  // 적립금
     private long salePrice;             // 판매금액
     private long buyPrice;              // 원가금액
-    private long deliDay;               // 배달소요날짜
-    private long deliPrice;             // 배달비 금액
     @CreationTimestamp                  // insert 될 때 현재 시간을 넣어줌
     private Date regDate;               // 상품 등록 날짜
 
