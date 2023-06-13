@@ -71,4 +71,9 @@ public class User {
     @OneToMany(mappedBy = "boardUser", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Board> boards = new ArrayList<>();
+
+    // 장바구니 Cart 테이블과 조인
+    @OneToMany(mappedBy = "cartUser", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Cart> carts = new ArrayList<>();
 }

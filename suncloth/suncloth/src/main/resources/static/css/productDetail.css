@@ -7,18 +7,17 @@
     width: 50%;
     margin-top: 40px;
     margin-right: 5%;
-    padding-right: 5%;
 }
 
 .buyingContent {
     width: 50%;
-    margin-top: 40px;
+    margin-top: 60px;
     margin-left: 5%;
 }
 
 .checklist {
     width:100%;
-    margin-top: 20px;
+    margin-top: 30px;
 }
 
 .checklist tr td{

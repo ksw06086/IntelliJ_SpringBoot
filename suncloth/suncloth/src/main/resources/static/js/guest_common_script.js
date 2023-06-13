@@ -4,6 +4,7 @@ function clothSearch() {
     window.location.href="/guest/category?category=search&searchText=" + guestSearchText;
 }
 
+//*** ProductDetail ***//
 // 1) 선택한 컬러에 해당하는 재고의 사이즈 목록 가져오기
 function stockSizesGet() {
     const colorSelector = document.getElementById("colorSelector").value;
@@ -46,14 +47,13 @@ function stockGet() {
                   = '<tr class="border-top-1-ccc">' +
                     '    <td><b>color/size</b></td>' +
                     '    <td>' +
-                    '        <input type = "hidden" name = "colorcode" value = "' + result.color.colorCode + '">' +
-                    '        <input type = "hidden" name = "sizecode" value = "' + result.size.sizeCode + '">' +
+                    '        <input type = "hidden" id="stockId" value = "' + result.stock.stockId + '">' +
                     '        <b>' + result.color.colorName + '</b>/<b>' + result.size.sizeName + '</b>' +
                     '    </td>' +
                     '</tr>' +
                     '<tr>' +
                     '    <td><b>수량</b></td>' +
-                    '    <td><input type = "number" class="w-50 py-1" name = "count" min = "1"' +
+                    '    <td><input type = "number" class="w-50 py-1" id = "count" min = "1"' +
                     '               max = "' + result.stock.stockMaxCount + '"value = "1"' +
                     '               oninput = "detailPriceUpdate(this.value);"></td>' +
                     '</tr>' +
@@ -74,3 +74,28 @@ function detailPriceUpdate(count){
     const totalPrice = stockSalePrice*count;
     stockTotalPrice.innerHTML = totalPrice + '원';
 };
+
+//*** Cart ***//
+// 장바구니 추가
+function cartAdd() {
+    const stockId = document.getElementById("stockId").value;
+    const count = document.getElementById("count").value;
+    const formData = new FormData();
+    formData.append("stockId", stockId);
+    formData.append("count", count);
+
+    // 메인 이미지 update 하기
+    $.ajax({
+        type:"POST",
+        url: "/api/mainFile",
+        processData: false,
+        contentType: false,
+        data: formData,
+        success: function(result){
+            alert("메인이미지 삽입 성공");
+        },
+        err: function(err){
+            alert("메인이미지 삽입 실패");
+        }
+    })
+}

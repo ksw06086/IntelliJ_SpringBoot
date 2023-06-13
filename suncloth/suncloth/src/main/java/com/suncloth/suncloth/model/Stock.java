@@ -49,4 +49,9 @@ public class Stock {
     @JoinColumn(name = "size_code")
     @JsonIgnore
     private Size stockSize;
+
+    // Stock 과 연결된 Cart 들
+    @OneToMany(mappedBy = "cartStock", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Cart> carts = new ArrayList<>();
 }

@@ -169,6 +169,7 @@ create table stock_tbl (
 );
 
 /************ 게시판 관련 Table ***********/
+/** 게시판(board_tbl) Table **/
 create table board_tbl(
     num    int GENERATED ALWAYS as IDENTITY,    -- 글번호
     user_id int,                                -- 작성자
@@ -201,4 +202,16 @@ create table board_file_tbl(
     board_num int,
     CONSTRAINT board_file_id_pk_excption PRIMARY key(file_id),
     FOREIGN KEY(board_num) references board_tbl(num) on delete cascade
+);
+
+/************ 장바구니 관련 Table ***********/
+/** 장바구니(cart_tbl) Table **/
+create table cart_tbl(
+    cart_num int PRIMARY KEY,
+    user_id int not null,
+    stock_id int not null,
+    count int,
+    reg_date Date DEFAULT sysdate,
+    FOREIGN KEY(user_id) REFERENCES user_tbl(id) on delete cascade,
+    FOREIGN KEY(stock_id) REFERENCES stock_tbl(stock_id) on delete cascade
 );
