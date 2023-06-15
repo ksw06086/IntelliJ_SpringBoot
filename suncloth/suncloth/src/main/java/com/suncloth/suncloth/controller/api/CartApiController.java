@@ -65,7 +65,7 @@ public class CartApiController {
         newCart.setCartUser(user);
         newCart.setCartStock(stock);
 
-        System.out.println("cart : " + newCart);
+        System.out.println("cart : " + newCart.toString());
         return cartRepository.save(newCart);
     }
 
@@ -123,8 +123,8 @@ public class CartApiController {
                 });
     }
 
-    // 관리자일 경우에만 삭제가 가능하고, ID에 맞는 한가지의 Cart 만 삭제
-    @Secured("ROLE_ADMIN")
+    // 로그인 된 사용자일 경우에만 삭제가 가능하고, ID에 맞는 한가지의 Cart 만 삭제
+    @Secured("ROLE_USER")
     @DeleteMapping("/carts/{cartNum}")
     void deleteCart(@PathVariable Long cartNum) {
         cartRepository.deleteById(cartNum);

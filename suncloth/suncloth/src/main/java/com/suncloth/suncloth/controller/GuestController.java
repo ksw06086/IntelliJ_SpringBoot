@@ -3,6 +3,8 @@ package com.suncloth.suncloth.controller;
 import com.suncloth.suncloth.model.*;
 import com.suncloth.suncloth.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +19,8 @@ import java.util.List;
 public class GuestController {
 
     @Autowired
+    UserRepository userRepository;
+    @Autowired
     MainCategoryRepository mainCategoryRepository;
     @Autowired
     SubCategoryRepository subCategoryRepository;
@@ -28,6 +32,8 @@ public class GuestController {
     StockRepository stockRepository;
     @Autowired
     ColorRepository colorRepository;
+    @Autowired
+    CartRepository cartRepository;
 
     @GetMapping("/category")
     public String categoryPage(Model model
@@ -66,7 +72,16 @@ public class GuestController {
     }
 
     @GetMapping("/cartList")
-    public String cartList() {
+    public String cartList(Model model) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails userDetails = (UserDetails)principal;
+        String username = userDetails.getUsername();
+
+        User user = userRepository.findByUsername(username);
+        List<Cart> cartList = cartRepository.findByCartUser(user);
+
+        model.addAttribute("cartList", cartList);
+        model.addAttribute("user", user);
         return "/guest/guest_cartList";
     }
 

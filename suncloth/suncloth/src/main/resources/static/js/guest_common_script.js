@@ -87,15 +87,36 @@ function cartAdd() {
     // 메인 이미지 update 하기
     $.ajax({
         type:"POST",
-        url: "/api/mainFile",
+        url: "/api/cart",
         processData: false,
         contentType: false,
         data: formData,
         success: function(result){
-            alert("메인이미지 삽입 성공");
+            alert("장바구니에 해당 상품이 추가되었습니다.");
+            window.location.href="/guest/cartList";
         },
         err: function(err){
-            alert("메인이미지 삽입 실패");
+            alert("장바구니 추가 실패");
         }
     })
+}
+// 장바구니 삭제
+function cartDel(cartNum) {
+    if(confirm(cartNum + "번 장바구니를 정말 삭제하시겠습니까?")){
+        // cart 1개 삭제하는 Ajax 함수
+        $.ajax({
+            type: 'DELETE',
+            url: '/api/carts/' + cartNum,
+            success: (result) => {
+                //AJAX 성공시 실행 코드
+                alert(cartNum + "번 장바구니가 삭제되었습니다.");
+                // 화면에서 해당 요소 삭제해줌
+                document.getElementById(cartNum).remove();
+            }, error:function(e) {
+                alert("error: " + e);
+            }
+        });
+    } else {
+        alert(cartNum + '번 삭제가 취소되었습니다.');
+    }
 }
