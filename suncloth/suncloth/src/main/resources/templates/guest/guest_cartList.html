@@ -50,7 +50,11 @@
         <!-- 장바구니 목록이 있으면 -->
         <th:block th:if="${cartList.size() > 0}">
         <tr class="text-center" th:each="list:${cartList}" th:id="${list.getCartNum()}">
-            <td class="border-right-1-ccc"><input type = "checkbox" name = "cartNums"></td>
+            <td class="border-right-1-ccc">
+                <!-- value : 상품가격단가-수량-배송비용 -->
+                <input type = "checkbox" name = "cartNums" th:onchange="totalPriceUpdate()"
+                       th:value="|${list.getCartStock().getSalePrice()}-${list.getCount()}-${list.getCartStock().getStockCloth().getDeliPrice()}|">
+            </td>
             <td class="border-right-1-ccc">
                 <img th:src="|/uploadMainImageView/${list.getCartStock().getStockCloth().getClothId()}|"
                      width="50px" height="60px">
@@ -87,7 +91,7 @@
         <tr id="subtotal">
             <td colspan="9">
                 <p class="float-start ms-2">[기본배송]</p>
-                <p class="float-end me-2">상품구매금액 45000 + 배송비 3000 = 합계: KRW 48000</p>
+                <p class="float-end me-2" id="cartSelectTotalText">상품구매금액 0 + 배송비 0 = 합계: KRW 0</p>
             </td>
         </tr>
         <tr>
@@ -114,9 +118,9 @@
             <td>결제예정금액</td>
         </tr>
         <tr class="td-py25 fs-15">
-            <td>KRW 48000</td>
-            <td style = "border-left: 1px solid rgba(204, 204, 204,0.5);">+ KRW 3000</td>
-            <td style = "border-left: 1px solid rgba(204, 204, 204,0.5);">= KRW 45000</td>
+            <td id="totalSalePriceView" class="border-right-1-ccc">KRW 0</td>
+            <td id="totalDeliPriceView" class="border-right-1-ccc">+ KRW 0</td>
+            <td id="totalPriceView">= KRW 0</td>
         </tr>
     </table>
 

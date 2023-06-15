@@ -120,3 +120,30 @@ function cartDel(cartNum) {
         alert(cartNum + '번 삭제가 취소되었습니다.');
     }
 }
+// 장바구니 checkBox 버튼 클릭 시 totalPrice 바꿔주기
+function totalPriceUpdate() {
+    const cartSelectTotalText = document.getElementById("cartSelectTotalText"); // 상품구매금액 0 + 배송비 0 = 합계: KRW 0
+    const totalSalePriceView = document.getElementById("totalSalePriceView");   // Total 상품 금액
+    const totalDeliPriceView = document.getElementById("totalDeliPriceView");   // Total 배송비 금액
+    const totalPriceView = document.getElementById("totalPriceView");           // Total 구매 금액
+    const cartNums = document.getElementsByName("cartNums"); // 화면에 있는 모든 Checkbox(cartNums)
+    let totalSalePrice = 0, totalDeliPrice = 0, totalPrice = 0;
+
+    // checkBox에 체크되었는지 확인 후 삭제
+    for (let i = 0; i < cartNums.length; i++) {
+        if(cartNums[i].checked === true){
+            let cartPriceList = cartNums[i].value.split('-');
+            totalSalePrice  += cartPriceList[0] * cartPriceList[1]; // 상품단가 * 수량
+            totalDeliPrice  += parseInt(cartPriceList[2]);                    // 상품 배송비
+            totalPrice      += totalSalePrice + totalDeliPrice;     // 상품 가격 + 배송비
+        }
+    }
+
+    // Total 값 Text 띄워주기
+    cartSelectTotalText.innerText = '상품구매금액 ' + totalSalePrice +
+                                    ' + 배송비 ' + totalDeliPrice +
+                                    ' = 합계: KRW ' + totalPrice;
+    totalSalePriceView.innerText = 'KRW ' + totalSalePrice;
+    totalDeliPriceView.innerText = '+ KRW ' + totalDeliPrice;
+    totalPriceView.innerText = '= KRW ' + totalPrice;
+}
