@@ -36,7 +36,7 @@
         <col style="width:15%;">
         <tr class="td-border-bottom-1-ccc td-py10 text-center">
             <td>
-                <input type = "checkbox" id = "cartCheckAll" th:onchange="allClothCheck()" value = "전체선택">
+                <input type = "checkbox" id = "cartCheckAll" th:onchange="allCartCheck()" value = "전체선택">
             </td>
             <td>이미지</td>
             <td>상품정보</td>
@@ -53,7 +53,7 @@
             <td class="border-right-1-ccc">
                 <!-- value : 상품가격단가-수량-배송비용 -->
                 <input type = "checkbox" name = "cartNums" th:onchange="totalPriceUpdate()"
-                       th:value="|${list.getCartStock().getSalePrice()}-${list.getCount()}-${list.getCartStock().getStockCloth().getDeliPrice()}|">
+                       th:value="|${list.getCartStock().getSalePrice()}-${list.getCount()}-${list.getCartStock().getStockCloth().getDeliPrice()}-${list.getCartNum()}|">
             </td>
             <td class="border-right-1-ccc">
                 <img th:src="|/uploadMainImageView/${list.getCartStock().getStockCloth().getClothId()}|"
@@ -81,13 +81,11 @@
         </tr>
         </th:block>
         <!-- 장바구니 목록이 없으면 -->
-        <th:block th:if="${cartList.size() == 0}">
-        <tr class="text-center">
+        <tr class="text-center" id="cartSizeZeroMsg" th:classappend="${cartList.size() != 0}?'d-none'">
             <td colspan="9">
                 장바구니에 추가된 상품이 아직 없습니다.
             </td>
         </tr>
-        </th:block>
         <tr id="subtotal">
             <td colspan="9">
                 <p class="float-start ms-2">[기본배송]</p>
@@ -98,12 +96,12 @@
             <td colspan="9" class="text-end">
                 <!-- 삭제기능 구현시 정말 삭제할 것인지 되물어봐주어야 함 -> 사용자를 위한 기능 -->
                 <button  type="button" class="btn btn-light float-start" value="선택상품 삭제하기"
-                         id="checkDel">선택상품 삭제하기</button>
+                         id="checkDel" th:onclick="cartAllOrCheckDel('check')">선택상품 삭제하기</button>
                 <button type="button" class="btn btn-light float-start" value="선택상품 구매하기"
                         id="checkOrder">선택상품 구매하기</button>
                 <!-- 삭제기능 구현시 정말 삭제할 것인지 되물어봐주어야 함 -> 사용자를 위한 기능 -->
                 <button type="button" class="btn btn-light float-end" value="장바구니비우기"
-                        id="allDel">장바구니 비우기</button>
+                        id="allDel" th:onclick="cartAllOrCheckDel('all')">장바구니 비우기</button>
             </td>
         </tr>
     </table>

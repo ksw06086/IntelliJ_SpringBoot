@@ -120,6 +120,74 @@ function cartDel(cartNum) {
         alert(cartNum + '번 삭제가 취소되었습니다.');
     }
 }
+// 장바구니 checkbox 선택목록 삭제 Or 장바구니 비우기
+function cartAllOrCheckDel(switchStr) {
+    let msg = '';
+    if(switchStr === 'check'){ msg = "선택된 목록들을 정말 삭제하시겠습니까?" }
+    else if(switchStr === 'all'){ msg = "장바구니를 정말 비우시겠습니까?" }
+
+    if(confirm(msg)) {
+        const cartNums = document.getElementsByName("cartNums"); // 화면에 있는 모든 Checkbox(cartNums)
+        let cartDelList = []; // 삭제된 cartNums
+
+        // checkBox에 체크되었는지 확인 후 삭제
+        for (let i = 0; i < cartNums.length; i++) {
+            if (switchStr === 'check') {
+                if (cartNums[i].checked === true) {
+                    let cartValueList = cartNums[i].value.split('-');
+                    cartDelAjax(cartValueList[3]);
+                    cartDelList.push(cartValueList[3]);
+                }
+            } else if (switchStr === 'all') {
+                let cartValueList = cartNums[i].value.split('-');
+                cartDelAjax(cartValueList[3]);
+                cartDelList.push(cartValueList[3]);
+            }
+        }
+
+        // 삭제되었음을 alert 띄워줌
+        alert(cartDelList + "번 장바구니가 삭제되었습니다.");
+
+        // 장바구니의 모든 목록을 삭제해준 것이라면 장바구니 목록이 없다는 Text를 띄워줌
+        if(cartDelList.length === cartNums.length){
+            document.getElementById("cartSizeZeroMsg").className = 'text-center';
+        }
+
+        // 화면에서 해당 요소 삭제해줌
+        for (let i = 0; i < cartDelList.length; i++) {
+            document.getElementById(cartDelList[i]).remove();
+        }
+
+    }
+
+    // stock 1개 삭제하는 Ajax 함수
+    function cartDelAjax(cartNum){
+        $.ajax({
+            type: 'DELETE',
+            url: '/api/carts/' + cartNum,
+            success: (result) => {
+                //AJAX 성공시 실행 코드
+            }, error:function(e) {
+                alert("error: " + e);
+            }
+        });
+    }
+}
+// 장바구니 checkbox 한번에 체크 함수
+function allCartCheck() {
+    const cartCheckAll = document.getElementById("cartCheckAll");
+    const cartNums = document.getElementsByName("cartNums");
+    // 해당 페이지의 모든 stock CheckBox에 체크
+    if(cartCheckAll.checked === true){
+        for (let i = 0; i < cartNums.length; i++) {
+            cartNums[i].checked = true;
+        }
+    } else {
+        for (let i = 0; i < cartNums.length; i++) {
+            cartNums[i].checked = false;
+        }
+    }
+}
 // 장바구니 checkBox 버튼 클릭 시 totalPrice 바꿔주기
 function totalPriceUpdate() {
     const cartSelectTotalText = document.getElementById("cartSelectTotalText"); // 상품구매금액 0 + 배송비 0 = 합계: KRW 0
