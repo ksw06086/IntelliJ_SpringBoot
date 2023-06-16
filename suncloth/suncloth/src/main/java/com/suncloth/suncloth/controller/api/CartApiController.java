@@ -71,7 +71,10 @@ public class CartApiController {
 
     // POST : Id에 맞게 한가지 Cart 정보만 갱신
     @PostMapping("/newCart")
-    Cart updateCart(Cart newCart, Long stockId, String username) {
+    Cart updateCart(Cart newCart, Long stockId) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails userDetails = (UserDetails)principal;
+        String username = userDetails.getUsername();
 
         return cartRepository.findById(newCart.getCartNum())
                 .map(cart -> {

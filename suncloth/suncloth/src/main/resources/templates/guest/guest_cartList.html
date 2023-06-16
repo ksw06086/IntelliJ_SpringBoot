@@ -49,30 +49,40 @@
         </tr>
         <!-- 장바구니 목록이 있으면 -->
         <th:block th:if="${cartList.size() > 0}">
-        <tr class="text-center" th:each="list:${cartList}" th:id="${list.getCartNum()}">
-            <td class="border-right-1-ccc">
-                <!-- value : 상품가격단가-수량-배송비용 -->
-                <input type = "checkbox" name = "cartNums" th:onchange="totalPriceUpdate()"
-                       th:value="|${list.getCartStock().getSalePrice()}-${list.getCount()}-${list.getCartStock().getStockCloth().getDeliPrice()}-${list.getCartNum()}|">
+        <tr class="text-center" th:each="list:${cartList}" th:id="|tr_${list.getCartNum()}|">
+            <td class="border-right-1-ccc"><!-- checkBox -->
+                <input type = "checkbox" name = "cartNums" th:onchange="totalPriceUpdate()" th:id="${list.getCartNum()}"
+                       th:value="${list.getCartNum()}">
             </td>
-            <td class="border-right-1-ccc">
+            <td class="border-right-1-ccc"><!-- Image -->
                 <img th:src="|/uploadMainImageView/${list.getCartStock().getStockCloth().getClothId()}|"
                      width="50px" height="60px">
             </td>
-            <td class="border-right-1-ccc text-start">
+            <td class="border-right-1-ccc text-start"><!-- 상품명 -->
                 <b th:text="${list.getCartStock().getStockCloth().getClothName()}">아름다운 이미지</b><br>
                 <span class="color-gray"
                       th:text="|[옵션: ${list.getCartStock().getStockColor().getColorName()}/${list.getCartStock().getStockSize().getSizeName()}]|">
                     [옵션: Blue/M]</span>
             </td>
-            <td class="border-right-1-ccc"><b th:text="|KSW ${list.getCartStock().getSalePrice()}|">KRW 15000</b></td>
-            <td class="border-right-1-ccc"><b th:text="${list.getCount()}">3</b></td>
-            <td class="border-right-1-ccc" th:text="|${list.getCartStock().getPlus()}원|">500원</td>
-            <td class="border-right-1-ccc" th:text="|${list.getCartStock().getStockCloth().getDeliPrice()}원|">2500원</td>
+            <!-- oneProductSalePrice -->
+            <td class="border-right-1-ccc"><b th:text="|KSW ${list.getCartStock().getSalePrice()}|"
+                                              th:id="|salePrice_${list.getCartNum()}|">KRW 15000</b></td>
+            <!-- cartCount -->
+            <td class="border-right-1-ccc"><input type="number" th:id="|cartCount_${list.getCartNum()}|" th:value="${list.getCount()}"
+                                                  min="1" th:max="${list.getCartStock().getStockMaxCount()}"
+                                                  th:oninput="cartCountChange(this.id)"></td>
+            <!-- plus Pay -->
+            <td class="border-right-1-ccc" th:id="|plusPay_${list.getCartNum()}|"
+                th:text="|${list.getCartStock().getPlus() * list.getCount()}원|">500원</td>
+            <!-- deliPrice -->
+            <td class="border-right-1-ccc" th:id="|deliPrice_${list.getCartNum()}|"
+                th:text="|${list.getCartStock().getStockCloth().getDeliPrice()}원|">2500원</td>
+            <!-- TotalPrice -->
             <td class="border-right-1-ccc">
-                <b th:text="|KSW ${list.getCartStock().getSalePrice() * list.getCount() + list.getCartStock().getStockCloth().getDeliPrice()}|">
-                    KRW 45000</b>
+                <b th:text="|KSW ${list.getCartStock().getSalePrice() * list.getCount() + list.getCartStock().getStockCloth().getDeliPrice()}|"
+                   th:id="|totalPrice_${list.getCartNum()}|">KRW 45000</b>
             </td>
+            <!-- Button List -->
             <td>
                 <button type="button" class="btn btn-outline-dark w-100 fs-75">주문하기</button>
                 <!-- 삭제기능 구현시 정말 삭제할 것인지 되물어봐주어야 함 -> 사용자를 위한 기능 -->

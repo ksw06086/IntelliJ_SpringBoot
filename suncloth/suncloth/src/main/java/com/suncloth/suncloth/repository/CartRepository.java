@@ -15,5 +15,7 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
 
     // User 를 기준으로 정보들 가져오기(where user_id = ?1)
     List<Cart> findByCartUser(User user);
-
+    
+    // Stock과 User를 기준으로 정보들 가져오기(where stock_id = ?1 and user_id = ?2)
+    Cart findByCartStockAndCartUser(Stock stock, User user);
 }

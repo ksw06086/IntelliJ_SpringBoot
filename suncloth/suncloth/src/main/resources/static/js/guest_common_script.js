@@ -111,7 +111,7 @@ function cartDel(cartNum) {
                 //AJAX 성공시 실행 코드
                 alert(cartNum + "번 장바구니가 삭제되었습니다.");
                 // 화면에서 해당 요소 삭제해줌
-                document.getElementById(cartNum).remove();
+                document.getElementById('tr_' + cartNum).remove();
             }, error:function(e) {
                 alert("error: " + e);
             }
@@ -134,14 +134,14 @@ function cartAllOrCheckDel(switchStr) {
         for (let i = 0; i < cartNums.length; i++) {
             if (switchStr === 'check') {
                 if (cartNums[i].checked === true) {
-                    let cartValueList = cartNums[i].value.split('-');
-                    cartDelAjax(cartValueList[3]);
-                    cartDelList.push(cartValueList[3]);
+                    let cartNum = cartNums[i].value;
+                    cartDelAjax(cartNum);
+                    cartDelList.push(cartNum);
                 }
             } else if (switchStr === 'all') {
-                let cartValueList = cartNums[i].value.split('-');
-                cartDelAjax(cartValueList[3]);
-                cartDelList.push(cartValueList[3]);
+                let cartNum = cartNums[i].value;
+                cartDelAjax(cartNum);
+                cartDelList.push(cartNum);
             }
         }
 
@@ -155,7 +155,7 @@ function cartAllOrCheckDel(switchStr) {
 
         // 화면에서 해당 요소 삭제해줌
         for (let i = 0; i < cartDelList.length; i++) {
-            document.getElementById(cartDelList[i]).remove();
+            document.getElementById('tr_' + cartDelList[i]).remove();
         }
 
     }
@@ -190,19 +190,24 @@ function allCartCheck() {
 }
 // 장바구니 checkBox 버튼 클릭 시 totalPrice 바꿔주기
 function totalPriceUpdate() {
+    // 값을 넣어줄 Block 들
     const cartSelectTotalText = document.getElementById("cartSelectTotalText"); // 상품구매금액 0 + 배송비 0 = 합계: KRW 0
     const totalSalePriceView = document.getElementById("totalSalePriceView");   // Total 상품 금액
     const totalDeliPriceView = document.getElementById("totalDeliPriceView");   // Total 배송비 금액
     const totalPriceView = document.getElementById("totalPriceView");           // Total 구매 금액
+
+    // 값을 가져올 Block 들
     const cartNums = document.getElementsByName("cartNums"); // 화면에 있는 모든 Checkbox(cartNums)
     let totalSalePrice = 0, totalDeliPrice = 0, totalPrice = 0;
 
     // checkBox에 체크되었는지 확인 후 삭제
     for (let i = 0; i < cartNums.length; i++) {
         if(cartNums[i].checked === true){
-            let cartPriceList = cartNums[i].value.split('-');
-            totalSalePrice  += cartPriceList[0] * cartPriceList[1]; // 상품단가 * 수량
-            totalDeliPrice  += parseInt(cartPriceList[2]);                    // 상품 배송비
+            const salePrice = document.getElementById("salePrice_" + cartNums[i].value); // 장바구니 상품 단가 금액
+            const cartCount = document.getElementById("cartCount_" + cartNums[i].value); // 장바구니 상품 수량
+            const deliPrice = document.getElementById("deliPrice_" + cartNums[i].value); // 장바구니 상품 배송비
+            totalSalePrice  += salePrice * cartCount; // 상품단가 * 수량
+            totalDeliPrice  += deliPrice;             // 상품 배송비
             totalPrice      += totalSalePrice + totalDeliPrice;     // 상품 가격 + 배송비
         }
     }
@@ -214,4 +219,15 @@ function totalPriceUpdate() {
     totalSalePriceView.innerText = 'KRW ' + totalSalePrice;
     totalDeliPriceView.innerText = '+ KRW ' + totalDeliPrice;
     totalPriceView.innerText = '= KRW ' + totalPrice;
+}
+// 장바구니 numberInput 버튼 값 변경 시 totalPrice 바꿔주기
+function cartCountChange(updateCartNum) {
+    const cartCount = document.getElementById(updateCartNum).value;
+    const salePrice = document.getElementById("salePrice_" + (updateCartNum.split('_')[1])).textContent.split(' ')[1];
+    const deliPrice = document.getElementById("deliPrice_" + (updateCartNum.split('_')[1])).textContent.replace(/원/, '');
+    const totalPrice = document.getElementById("totalPrice_" + (updateCartNum.split('_')[1]));
+    const plusPay = salePrice/100;
+    const plusPayBlock = document.getElementById("plusPay_" + (updateCartNum.split('_')[1]));
+    totalPrice.innerText = 'KSW ' + (salePrice * cartCount + parseInt(deliPrice));
+    plusPayBlock.innerText = (plusPay * cartCount) + '원'; // 이거 에러뜸 고쳐야함
 }
