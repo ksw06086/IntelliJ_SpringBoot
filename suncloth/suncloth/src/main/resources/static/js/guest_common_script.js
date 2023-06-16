@@ -112,6 +112,8 @@ function cartDel(cartNum) {
                 alert(cartNum + "번 장바구니가 삭제되었습니다.");
                 // 화면에서 해당 요소 삭제해줌
                 document.getElementById('tr_' + cartNum).remove();
+                // Total Price 업데이트
+                totalPriceUpdate();
             }, error:function(e) {
                 alert("error: " + e);
             }
@@ -158,6 +160,9 @@ function cartAllOrCheckDel(switchStr) {
             document.getElementById('tr_' + cartDelList[i]).remove();
         }
 
+        // Total Price 업데이트
+        totalPriceUpdate();
+
     }
 
     // stock 1개 삭제하는 Ajax 함수
@@ -203,9 +208,9 @@ function totalPriceUpdate() {
     // checkBox에 체크되었는지 확인 후 삭제
     for (let i = 0; i < cartNums.length; i++) {
         if(cartNums[i].checked === true){
-            const salePrice = document.getElementById("salePrice_" + cartNums[i].value); // 장바구니 상품 단가 금액
-            const cartCount = document.getElementById("cartCount_" + cartNums[i].value); // 장바구니 상품 수량
-            const deliPrice = document.getElementById("deliPrice_" + cartNums[i].value); // 장바구니 상품 배송비
+            const salePrice = document.getElementById("salePrice_" + cartNums[i].value).textContent.split(' ')[1]; // 장바구니 상품 단가 금액
+            const cartCount = document.getElementById("cartCount_" + cartNums[i].value).value; // 장바구니 상품 수량
+            const deliPrice = parseInt(document.getElementById("deliPrice_" + cartNums[i].value).textContent.replace(/원/, '')); // 장바구니 상품 배송비
             totalSalePrice  += salePrice * cartCount; // 상품단가 * 수량
             totalDeliPrice  += deliPrice;             // 상품 배송비
             totalPrice      += totalSalePrice + totalDeliPrice;     // 상품 가격 + 배송비
@@ -229,5 +234,7 @@ function cartCountChange(updateCartNum) {
     const plusPay = salePrice/100;
     const plusPayBlock = document.getElementById("plusPay_" + (updateCartNum.split('_')[1]));
     totalPrice.innerText = 'KSW ' + (salePrice * cartCount + parseInt(deliPrice));
-    plusPayBlock.innerText = (plusPay * cartCount) + '원'; // 이거 에러뜸 고쳐야함
+    plusPayBlock.innerText = (plusPay * cartCount) + '원';
+
+    totalPriceUpdate();
 }
