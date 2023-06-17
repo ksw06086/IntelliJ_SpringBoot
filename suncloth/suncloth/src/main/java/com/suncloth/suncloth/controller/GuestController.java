@@ -119,7 +119,11 @@ public class GuestController {
     }
 
     @GetMapping("/orderForm")
-    public String orderForm() {
+    public String orderForm(Model model
+            , @RequestParam(required = false) List<Long> stockIds
+            , @RequestParam(required = false) List<Long> counts) {
+        System.out.println("stockIds : " + stockIds);
+        System.out.println("counts : " + counts);
         return "/guest/guest_orderForm";
     }
 

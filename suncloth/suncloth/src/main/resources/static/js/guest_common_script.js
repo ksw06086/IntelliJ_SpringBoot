@@ -74,6 +74,100 @@ function detailPriceUpdate(count){
     const totalPrice = stockSalePrice*count;
     stockTotalPrice.innerHTML = totalPrice + '원';
 };
+// 주문 페이지로 이동
+function orderFormMove() {
+    const stockIds = document.getElementsByName("stockIds"); // 재고 목록들(stockIds)
+    const counts = document.getElementsByName("counts"); // 주문할 수량 가져오기(counts)
+    if(stockIds.length === 0) { alert('구매할 목록이 선택되지 않았습니다.'); }
+    else {
+        let stockIdList = []; let countList = [];
+        for (let i = 0; i < stockIds.length; i++) {
+            stockIdList.push(stockIds[i].value); countList.push(counts[i].value);
+        }
+
+        window.location.href="/guest/orderForm?stockIds=" + stockIdList + "&counts=" + countList;
+    }
+}
+// 한개의 stock 정보를 가지고 주문페이지로 이동
+function stockOrderFormMove(cartNum) {
+    if(confirm(cartNum + "번 장바구니를 정말 삭제하시겠습니까?")){
+        // cart 1개 삭제하는 Ajax 함수
+        $.ajax({
+            type: 'DELETE',
+            url: '/api/carts/' + cartNum,
+            success: (result) => {
+                //AJAX 성공시 실행 코드
+                alert(cartNum + "번 장바구니가 삭제되었습니다.");
+                // 화면에서 해당 요소 삭제해줌
+                document.getElementById('tr_' + cartNum).remove();
+                // Total Price 업데이트
+                totalPriceUpdate();
+            }, error:function(e) {
+                alert("error: " + e);
+            }
+        });
+    } else {
+        alert(cartNum + '번 삭제가 취소되었습니다.');
+    }
+}
+// checkbox 선택 stockList 가지고 주문페이지로 이동
+function stockListOrderFormMove() {
+    let msg = '';
+    if(switchStr === 'check'){ msg = "선택된 목록들을 정말 삭제하시겠습니까?" }
+    else if(switchStr === 'all'){ msg = "장바구니를 정말 비우시겠습니까?" }
+
+    if(confirm(msg)) {
+        const cartNums = document.getElementsByName("cartNums"); // 화면에 있는 모든 Checkbox(cartNums)
+        let cartDelList = []; // 삭제된 cartNums
+
+        // checkBox에 체크되었는지 확인 후 삭제
+        for (let i = 0; i < cartNums.length; i++) {
+            if (switchStr === 'check') {
+                if (cartNums[i].checked === true) {
+                    let cartNum = cartNums[i].value;
+                    cartDelAjax(cartNum);
+                    cartDelList.push(cartNum);
+                }
+            } else if (switchStr === 'all') {
+                let cartNum = cartNums[i].value;
+                cartDelAjax(cartNum);
+                cartDelList.push(cartNum);
+            }
+        }
+
+        // 삭제되었음을 alert 띄워줌
+        alert(cartDelList + "번 장바구니가 삭제되었습니다.");
+
+        // 장바구니의 모든 목록을 삭제해준 것이라면 장바구니 목록이 없다는 Text를 띄워줌
+        if(cartDelList.length === cartNums.length){
+            document.getElementById("cartSizeZeroMsg").className = 'text-center';
+        }
+
+        // 화면에서 해당 요소 삭제해줌
+        for (let i = 0; i < cartDelList.length; i++) {
+            document.getElementById('tr_' + cartDelList[i]).remove();
+        }
+
+        // Total Price 업데이트
+        totalPriceUpdate();
+
+    }
+
+    // stock 1개 삭제하는 Ajax 함수
+    function cartDelAjax(cartNum){
+        $.ajax({
+            type: 'DELETE',
+            url: '/api/carts/' + cartNum,
+            success: (result) => {
+                //AJAX 성공시 실행 코드
+            }, error:function(e) {
+                alert("error: " + e);
+            }
+        });
+    }
+}
+
+
 
 //*** Cart ***//
 // 장바구니 추가

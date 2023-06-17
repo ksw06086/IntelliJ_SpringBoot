@@ -55,7 +55,8 @@
                     <!-- button List -->
                     <div class="mt-30">
                         <table class="w-100">
-                            <tr><td><a th:href="@{/guest/orderForm}" class="btn" id = "buyBtn">BUY IT NOW</a></td></tr>
+                            <tr><td><input type="button" value="BUY IT NOW" id = "buyBtn"
+                                           th:onclick="orderFormMove()"></td></tr>
                             <tr><td><input type = "button" value = "ADD TO CART" id = "cartAddBtn"
                                            th:onclick="cartAdd()"></td></tr>
                         </table>
