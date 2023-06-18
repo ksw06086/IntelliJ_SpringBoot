@@ -74,20 +74,6 @@ function detailPriceUpdate(count){
     const totalPrice = stockSalePrice*count;
     stockTotalPrice.innerHTML = totalPrice + '원';
 };
-// 주문 페이지로 이동
-function orderFormMove() {
-    const stockIds = document.getElementsByName("stockIds"); // 재고 목록들(stockIds)
-    const counts = document.getElementsByName("counts"); // 주문할 수량 가져오기(counts)
-    if(stockIds.length === 0) { alert('구매할 목록이 선택되지 않았습니다.'); }
-    else {
-        let stockIdList = []; let countList = [];
-        for (let i = 0; i < stockIds.length; i++) {
-            stockIdList.push(stockIds[i].value); countList.push(counts[i].value);
-        }
-
-        window.location.href="/guest/orderForm?stockIds=" + stockIdList + "&counts=" + countList;
-    }
-}
 // 한개의 stock 정보를 가지고 주문페이지로 이동
 function stockOrderFormMove(cartNum) {
     if(confirm(cartNum + "번 장바구니를 정말 삭제하시겠습니까?")){
