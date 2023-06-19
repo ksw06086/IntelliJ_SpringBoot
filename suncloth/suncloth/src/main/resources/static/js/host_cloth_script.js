@@ -359,21 +359,6 @@ function clothDel() {
         });
     }
 }
-// 상품 checkbox 한번에 체크 함수
-function allClothCheck() {
-    const clothCheckAll = document.getElementById("clothCheckAll");
-    const clothIds = document.getElementsByName("clothIds");
-    // 해당 페이지의 모든 stock CheckBox에 체크
-    if(clothCheckAll.checked === true){
-        for (let i = 0; i < clothIds.length; i++) {
-            clothIds[i].checked = true;
-        }
-    } else {
-        for (let i = 0; i < clothIds.length; i++) {
-            clothIds[i].checked = false;
-        }
-    }
-}
 
 // *** 색상 관련 Script *** //
 // Color 추가하기

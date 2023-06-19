@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/guest")
@@ -122,8 +124,30 @@ public class GuestController {
     public String orderForm(Model model
             , @RequestParam(required = false) List<Long> stockIds
             , @RequestParam(required = false) List<Long> counts) {
+
         System.out.println("stockIds : " + stockIds);
         System.out.println("counts : " + counts);
+
+        List<Map<String, Object>> orderMapList = new ArrayList<>();
+        Map<String, Object> orderMap = new HashMap<>();
+        orderMap.put("stock", stockRepository.findById(stockIds.get(0)).orElse(null));
+        orderMap.put("count", counts.get(0));
+        System.out.println("stock : " + orderMap.get("stock") + ", count : " + orderMap.get("count"));
+        orderMapList.add(orderMap);
+
+        if(stockIds.size() > 1) {
+            for (int i = 1; i < stockIds.size(); i++) {
+                orderMap.replace("stock", stockRepository.findById(stockIds.get(i)).orElse(null));
+                orderMap.replace("count", counts.get(i));
+                System.out.println("stock : " + orderMap.get("stock") + ", count : " + orderMap.get("count"));
+                orderMapList.add(orderMap);
+            }
+        }
+
+        System.out.println("orderMapList : " + orderMapList.size());
+
+        model.addAttribute("orderMapList", orderMapList);
+
         return "/guest/guest_orderForm";
     }
 

@@ -269,3 +269,7 @@ function cartCountChange(updateCartNum) {
 
     totalPriceUpdate();
 }
+
+
+
+
