@@ -51,6 +51,7 @@
         <th:block th:if="${cartList.size() > 0}">
         <tr class="text-center" th:each="list:${cartList}" th:id="|tr_${list.getCartNum()}|">
             <td class="border-right-1-ccc"><!-- checkBox -->
+                <input type="hidden" th:id="|stockId_${list.getCartNum()}|" th:value="${list.getCartStock().getStockId()}">
                 <input type = "checkbox" name = "cartNums" th:onchange="totalPriceUpdate()" th:id="${list.getCartNum()}"
                        th:value="${list.getCartNum()}">
             </td>
@@ -68,7 +69,7 @@
             <td class="border-right-1-ccc"><b th:text="|KSW ${list.getCartStock().getSalePrice()}|"
                                               th:id="|salePrice_${list.getCartNum()}|">KRW 15000</b></td>
             <!-- cartCount -->
-            <td class="border-right-1-ccc"><input type="number" th:id="|cartCount_${list.getCartNum()}|" th:value="${list.getCount()}"
+            <td class="border-right-1-ccc"><input type="number" th:id="|count_${list.getCartNum()}|" th:value="${list.getCount()}"
                                                   min="1" th:max="${list.getCartStock().getStockMaxCount()}"
                                                   th:oninput="cartCountChange(this.id)"></td>
             <!-- plus Pay -->
@@ -84,9 +85,11 @@
             </td>
             <!-- Button List -->
             <td>
-                <button type="button" class="btn btn-outline-dark w-100 fs-75">주문하기</button>
+                <button type="button" class="btn btn-outline-dark w-100 fs-75" th:onclick="stockOrderFormMove(this.value)"
+                        th:value="${list.getCartNum()}">주문하기</button>
                 <!-- 삭제기능 구현시 정말 삭제할 것인지 되물어봐주어야 함 -> 사용자를 위한 기능 -->
-                <button type="button" class="btn btn-outline-dark w-100 fs-75" th:onclick="cartDel(this.value)" th:value="${list.getCartNum()}">X 삭제</button>
+                <button type="button" class="btn btn-outline-dark w-100 fs-75" th:onclick="cartDel(this.value)"
+                        th:value="${list.getCartNum()}">X 삭제</button>
             </td>
         </tr>
         </th:block>
@@ -108,7 +111,7 @@
                 <button  type="button" class="btn btn-light float-start" value="선택상품 삭제하기"
                          id="checkDel" th:onclick="cartAllOrCheckDel('check')">선택상품 삭제하기</button>
                 <button type="button" class="btn btn-light float-start" value="선택상품 구매하기"
-                        id="checkOrder" th:onclick="orderFormMove()">선택상품 구매하기</button>
+                        id="checkOrder" th:onclick="stockListOrderFormMove()">선택상품 구매하기</button>
                 <!-- 삭제기능 구현시 정말 삭제할 것인지 되물어봐주어야 함 -> 사용자를 위한 기능 -->
                 <button type="button" class="btn btn-light float-end" value="장바구니비우기"
                         id="allDel" th:onclick="cartAllOrCheckDel('all')">장바구니 비우기</button>

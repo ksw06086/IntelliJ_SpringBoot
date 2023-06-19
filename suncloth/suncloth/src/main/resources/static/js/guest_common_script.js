@@ -43,17 +43,18 @@ function stockGet() {
         success: (result) => {
             //AJAX 성공시 실행 코드(* mainCategoriesSelector Class)
             const stockOrderAmountSelectBox = document.getElementById("stockOrderAmountSelectBox");
+            const buyBtn = document.getElementById("buyBtn").value = result.stock.stockId;
             stockOrderAmountSelectBox.innerHTML
                   = '<tr class="border-top-1-ccc">' +
                     '    <td><b>color/size</b></td>' +
                     '    <td>' +
-                    '        <input type = "hidden" id="stockId" value = "' + result.stock.stockId + '">' +
+                    '        <input type = "hidden" id="stockId_' + result.stock.stockId + '" value = "' + result.stock.stockId + '">' +
                     '        <b>' + result.color.colorName + '</b>/<b>' + result.size.sizeName + '</b>' +
                     '    </td>' +
                     '</tr>' +
                     '<tr>' +
                     '    <td><b>수량</b></td>' +
-                    '    <td><input type = "number" class="w-50 py-1" id = "count" min = "1"' +
+                    '    <td><input type = "number" class="w-50 py-1" id = "count_' + result.stock.stockId + '" min = "1"' +
                     '               max = "' + result.stock.stockMaxCount + '"value = "1"' +
                     '               oninput = "detailPriceUpdate(this.value);"></td>' +
                     '</tr>' +
@@ -75,85 +76,35 @@ function detailPriceUpdate(count){
     stockTotalPrice.innerHTML = totalPrice + '원';
 };
 // 한개의 stock 정보를 가지고 주문페이지로 이동
-function stockOrderFormMove(cartNum) {
-    if(confirm(cartNum + "번 장바구니를 정말 삭제하시겠습니까?")){
-        // cart 1개 삭제하는 Ajax 함수
-        $.ajax({
-            type: 'DELETE',
-            url: '/api/carts/' + cartNum,
-            success: (result) => {
-                //AJAX 성공시 실행 코드
-                alert(cartNum + "번 장바구니가 삭제되었습니다.");
-                // 화면에서 해당 요소 삭제해줌
-                document.getElementById('tr_' + cartNum).remove();
-                // Total Price 업데이트
-                totalPriceUpdate();
-            }, error:function(e) {
-                alert("error: " + e);
-            }
-        });
-    } else {
-        alert(cartNum + '번 삭제가 취소되었습니다.');
-    }
+function stockOrderFormMove(Num) {
+    if(Num === ''){ alert("구매할 상품을 선택해주세요."); return false; }
+
+    const stockId = document.getElementById("stockId_" + Num); // 재고 목록들(stockIds)
+    const count = document.getElementById("count_" + Num); // 주문할 수량 가져오기(counts)
+    let stockIdList = []; let countList = [];
+    stockIdList.push(stockId.value); countList.push(count.value);
+
+    window.location.href="/guest/orderForm?stockIds=" + stockIdList + "&counts=" + countList;
 }
 // checkbox 선택 stockList 가지고 주문페이지로 이동
 function stockListOrderFormMove() {
-    let msg = '';
-    if(switchStr === 'check'){ msg = "선택된 목록들을 정말 삭제하시겠습니까?" }
-    else if(switchStr === 'all'){ msg = "장바구니를 정말 비우시겠습니까?" }
+    const cartNums = document.getElementsByName("cartNums"); // 화면에 있는 모든 Checkbox(cartNums)
+    let stockIdList = []; let countList = [];
 
-    if(confirm(msg)) {
-        const cartNums = document.getElementsByName("cartNums"); // 화면에 있는 모든 Checkbox(cartNums)
-        let cartDelList = []; // 삭제된 cartNums
+    // checkBox에 체크되었는지 확인 후 stockIdList, countList 에 값 추가해주기
+    for (let i = 0; i < cartNums.length; i++) {
+        if (cartNums[i].checked === true) {
+            let cartNum = cartNums[i].value;
+            const stockId = document.getElementById("stockId_" + cartNum); // 재고 목록들(stockIds)
+            const count = document.getElementById("count_" + cartNum); // 주문할 수량 가져오기(counts)
 
-        // checkBox에 체크되었는지 확인 후 삭제
-        for (let i = 0; i < cartNums.length; i++) {
-            if (switchStr === 'check') {
-                if (cartNums[i].checked === true) {
-                    let cartNum = cartNums[i].value;
-                    cartDelAjax(cartNum);
-                    cartDelList.push(cartNum);
-                }
-            } else if (switchStr === 'all') {
-                let cartNum = cartNums[i].value;
-                cartDelAjax(cartNum);
-                cartDelList.push(cartNum);
-            }
+            stockIdList.push(stockId.value);
+            countList.push(count.value);
         }
-
-        // 삭제되었음을 alert 띄워줌
-        alert(cartDelList + "번 장바구니가 삭제되었습니다.");
-
-        // 장바구니의 모든 목록을 삭제해준 것이라면 장바구니 목록이 없다는 Text를 띄워줌
-        if(cartDelList.length === cartNums.length){
-            document.getElementById("cartSizeZeroMsg").className = 'text-center';
-        }
-
-        // 화면에서 해당 요소 삭제해줌
-        for (let i = 0; i < cartDelList.length; i++) {
-            document.getElementById('tr_' + cartDelList[i]).remove();
-        }
-
-        // Total Price 업데이트
-        totalPriceUpdate();
-
     }
 
-    // stock 1개 삭제하는 Ajax 함수
-    function cartDelAjax(cartNum){
-        $.ajax({
-            type: 'DELETE',
-            url: '/api/carts/' + cartNum,
-            success: (result) => {
-                //AJAX 성공시 실행 코드
-            }, error:function(e) {
-                alert("error: " + e);
-            }
-        });
-    }
+    window.location.href="/guest/orderForm?stockIds=" + stockIdList + "&counts=" + countList;
 }
-
-
 
 //*** Cart ***//
 // 장바구니 추가
@@ -289,7 +240,7 @@ function totalPriceUpdate() {
     for (let i = 0; i < cartNums.length; i++) {
         if(cartNums[i].checked === true){
             const salePrice = document.getElementById("salePrice_" + cartNums[i].value).textContent.split(' ')[1]; // 장바구니 상품 단가 금액
-            const cartCount = document.getElementById("cartCount_" + cartNums[i].value).value; // 장바구니 상품 수량
+            const cartCount = document.getElementById("count_" + cartNums[i].value).value; // 장바구니 상품 수량
             const deliPrice = parseInt(document.getElementById("deliPrice_" + cartNums[i].value).textContent.replace(/원/, '')); // 장바구니 상품 배송비
             totalSalePrice  += salePrice * cartCount; // 상품단가 * 수량
             totalDeliPrice  += deliPrice;             // 상품 배송비

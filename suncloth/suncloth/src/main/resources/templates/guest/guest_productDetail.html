@@ -55,10 +55,10 @@
                     <!-- button List -->
                     <div class="mt-30">
                         <table class="w-100">
-                            <tr><td><input type="button" value="BUY IT NOW" id = "buyBtn"
-                                           th:onclick="orderFormMove()"></td></tr>
-                            <tr><td><input type = "button" value = "ADD TO CART" id = "cartAddBtn"
-                                           th:onclick="cartAdd()"></td></tr>
+                            <tr><td><button type="button" id = "buyBtn"
+                                            th:onclick="stockOrderFormMove(this.value)">BUY IT NOW</button></td></tr>
+                            <tr><td><button type = "button" id = "cartAddBtn"
+                                            th:onclick="cartAdd()">ADD TO CART</button></td></tr>
                         </table>
                     </div>
 
