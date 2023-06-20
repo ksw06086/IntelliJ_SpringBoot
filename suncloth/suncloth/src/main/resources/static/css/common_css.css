@@ -98,6 +98,9 @@
 .fs-30px { font-size: 30px; }
 .fs-40px { font-size: 40px; }
 
+/* padding/margin 0 */
+.all-m-p-0 * { padding : 0; margin : 0;}
+
 /* padding */
 .p-5px { padding: 5px;}
 .px-6 { padding-left: 6px; padding-right: 6px; }

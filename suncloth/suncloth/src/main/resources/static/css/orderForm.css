@@ -31,34 +31,6 @@
     border-bottom: 1px solid #ccc;
 }
 
-.orderList {
-    text-align: center;
-    font-size: .7em;
-    width: 100%;
-}
-
-.orderListTitle td {
-    border-top: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
-    padding: 10px 0;
-}
-
-.orderListTitle * {
-    vertical-align: middle;
-}
-
-.optionText {
-    color: #282828;
-}
-
-.orderPrd td{
-    border-bottom: 1px solid #ccc;
-}
-
-.orderSubText td {
-    padding: 5px 0 0;
-}
-
 .deliTable, .messageTable, .totalTable,
 .mileageTable, .paymentTable {
     width:100%;
