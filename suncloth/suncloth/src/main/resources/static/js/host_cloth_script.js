@@ -90,22 +90,6 @@ function brandDel() {
     }
 }
 
-// 브랜드 checkbox 한번에 체크 함수
-function allBrandCheck() {
-    const brandCheckAll = document.getElementById("brandCheckAll");
-    const brandIds = document.getElementsByName("brandIds");
-    // 해당 페이지의 모든 brand CheckBox에 체크
-    if(brandCheckAll.checked === true){
-        for (let i = 0; i < brandIds.length; i++) {
-            brandIds[i].checked = true;
-        }
-    } else {
-        for (let i = 0; i < brandIds.length; i++) {
-            brandIds[i].checked = false;
-        }
-    }
-}
-
 // 브랜드 HP 입력 확인(쓰지 않고 표시만 해주는 방향으로 생각 바뀜 혹시 몰라 남겨둠)
 function brandHPInput(hp) {
     const brandHPDiv = document.getElementById("brandHPDiv");
@@ -575,21 +559,6 @@ function stockDel() {
                 alert("error: " + e);
             }
         });
-    }
-}
-// 재고 checkbox 한번에 체크 함수
-function allStockCheck() {
-    const stockCheckAll = document.getElementById("stockCheckAll");
-    const stockIds = document.getElementsByName("stockIds");
-    // 해당 페이지의 모든 stock CheckBox에 체크
-    if(stockCheckAll.checked === true){
-        for (let i = 0; i < stockIds.length; i++) {
-            stockIds[i].checked = true;
-        }
-    } else {
-        for (let i = 0; i < stockIds.length; i++) {
-            stockIds[i].checked = false;
-        }
     }
 }
 

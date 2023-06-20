@@ -36,7 +36,7 @@
         <col style="width:15%;">
         <tr class="td-border-bottom-1-ccc td-py10 text-center">
             <td>
-                <input type = "checkbox" id = "cartCheckAll" th:onchange="allCartCheck()" value = "전체선택">
+                <input type = "checkbox" id = "cartCheckAll" th:onchange="totalPriceUpdate('allCheck')" value = "전체선택">
             </td>
             <td>이미지</td>
             <td>상품정보</td>
@@ -49,11 +49,11 @@
         </tr>
         <!-- 장바구니 목록이 있으면 -->
         <th:block th:if="${cartList.size() > 0}">
-        <tr class="text-center" th:each="list:${cartList}" th:id="|tr_${list.getCartNum()}|">
+        <tr class="text-center" th:each="list:${cartList}" th:id="|tr_${list.getCartId()}|">
             <td class="border-right-1-ccc"><!-- checkBox -->
-                <input type="hidden" th:id="|stockId_${list.getCartNum()}|" th:value="${list.getCartStock().getStockId()}">
-                <input type = "checkbox" name = "cartNums" th:onchange="totalPriceUpdate()" th:id="${list.getCartNum()}"
-                       th:value="${list.getCartNum()}">
+                <input type="hidden" th:id="|stockId_${list.getCartId()}|" th:value="${list.getCartStock().getStockId()}">
+                <input type = "checkbox" name = "cartIds" th:onchange="totalPriceUpdate('oneCheck')" th:id="${list.getCartId()}"
+                       th:value="${list.getCartId()}">
             </td>
             <td class="border-right-1-ccc"><!-- Image -->
                 <img th:src="|/uploadMainImageView/${list.getCartStock().getStockCloth().getClothId()}|"
@@ -67,29 +67,29 @@
             </td>
             <!-- oneProductSalePrice -->
             <td class="border-right-1-ccc"><b th:text="|KSW ${list.getCartStock().getSalePrice()}|"
-                                              th:id="|salePrice_${list.getCartNum()}|">KRW 15000</b></td>
+                                              th:id="|salePrice_${list.getCartId()}|">KRW 15000</b></td>
             <!-- cartCount -->
-            <td class="border-right-1-ccc"><input type="number" th:id="|count_${list.getCartNum()}|" th:value="${list.getCount()}"
+            <td class="border-right-1-ccc"><input type="number" th:id="|count_${list.getCartId()}|" th:value="${list.getCount()}"
                                                   min="1" th:max="${list.getCartStock().getStockMaxCount()}"
                                                   th:oninput="cartCountChange(this.id)"></td>
             <!-- plus Pay -->
-            <td class="border-right-1-ccc" th:id="|plusPay_${list.getCartNum()}|"
+            <td class="border-right-1-ccc" th:id="|plusPay_${list.getCartId()}|"
                 th:text="|${list.getCartStock().getPlus() * list.getCount()}원|">500원</td>
             <!-- deliPrice -->
-            <td class="border-right-1-ccc" th:id="|deliPrice_${list.getCartNum()}|"
+            <td class="border-right-1-ccc" th:id="|deliPrice_${list.getCartId()}|"
                 th:text="|${list.getCartStock().getStockCloth().getDeliPrice()}원|">2500원</td>
             <!-- TotalPrice -->
             <td class="border-right-1-ccc">
                 <b th:text="|KSW ${list.getCartStock().getSalePrice() * list.getCount() + list.getCartStock().getStockCloth().getDeliPrice()}|"
-                   th:id="|totalPrice_${list.getCartNum()}|">KRW 45000</b>
+                   th:id="|totalPrice_${list.getCartId()}|">KRW 45000</b>
             </td>
             <!-- Button List -->
             <td>
                 <button type="button" class="btn btn-outline-dark w-100 fs-75" th:onclick="stockOrderFormMove(this.value)"
-                        th:value="${list.getCartNum()}">주문하기</button>
+                        th:value="${list.getCartId()}">주문하기</button>
                 <!-- 삭제기능 구현시 정말 삭제할 것인지 되물어봐주어야 함 -> 사용자를 위한 기능 -->
                 <button type="button" class="btn btn-outline-dark w-100 fs-75" th:onclick="cartDel(this.value)"
-                        th:value="${list.getCartNum()}">X 삭제</button>
+                        th:value="${list.getCartId()}">X 삭제</button>
             </td>
         </tr>
         </th:block>

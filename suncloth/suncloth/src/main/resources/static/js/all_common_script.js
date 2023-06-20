@@ -13,7 +13,6 @@ function allCheck(listName) {
         }
     }
 }
-
 /* checkbox 제거 시에 all 체크 제거 함수 */
 function allCheckRemove(listName) {
     const checkAllButton = document.getElementById(listName + "CheckAll");

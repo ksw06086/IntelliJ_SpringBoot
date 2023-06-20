@@ -21,7 +21,7 @@ import java.util.List;
 public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // => 자동증가
-    private long cartNum;               // 장바구니 목록 식별번호
+    private long cartId;                // 장바구니 목록 식별번호
     private long count;                 // 장바구니에 추가한 재고 수
     @CreationTimestamp                  // insert 될 때 현재 시간을 넣어줌
     private Date regDate;               // 장바구니 등록 날짜

@@ -148,7 +148,7 @@
                     <thead>
                     <tr class="fw-bold border-0 td-py25 td-px15">
                         <td>
-                            <input type = "checkbox" id = "clothCheckAll" th:onchange="allClothCheck()" value = "전체선택">
+                            <input type = "checkbox" id = "clothCheckAll" th:onchange="allCheck('cloth')" value = "전체선택">
                         </td>
                         <td>이미지</td>
                         <td>번호</td>
@@ -163,7 +163,7 @@
                     <tbody id="productListTBody">
                     <th:block th:if="${clothList.getNumberOfElements() > 0}">
                         <tr class = "text-center td-py10 td-px15" th:each="list:${clothList}" th:id="${list.getClothId()}">
-                            <td><input type = "checkbox" name = "clothIds" th:value = "${list.getClothId()}"></td>
+                            <td><input type = "checkbox" name = "clothIds" th:value = "${list.getClothId()}" th:onchange="allCheckRemove('cloth')"></td>
                             <td> <!-- th:if="${list.mainfile != null}" -->
                                 <img th:src="|/uploadMainImageView/${list.getClothId()}|" alt="이미지 없음"
                                      width = "50px" height = "60px">

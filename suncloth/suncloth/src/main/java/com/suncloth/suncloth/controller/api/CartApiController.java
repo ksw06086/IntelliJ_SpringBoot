@@ -76,7 +76,7 @@ public class CartApiController {
         UserDetails userDetails = (UserDetails)principal;
         String username = userDetails.getUsername();
 
-        return cartRepository.findById(newCart.getCartNum())
+        return cartRepository.findById(newCart.getCartId())
                 .map(cart -> {
                     Stock stock = stockRepository.findById(stockId).orElse(null);
                     User user = userRepository.findByUsername(username);
@@ -108,10 +108,10 @@ public class CartApiController {
     }
 
     // PUT : Id에 맞게 한가지 Cart 정보만 갱신
-    @PutMapping("/cart/{cartNum}")
-    Cart replaceCart(@RequestBody Cart newCart,@RequestBody Long stockId,@RequestBody String username, @PathVariable Long cartNum) {
+    @PutMapping("/cart/{cartId}")
+    Cart replaceCart(@RequestBody Cart newCart,@RequestBody Long stockId,@RequestBody String username, @PathVariable Long cartId) {
 
-        return cartRepository.findById(cartNum)
+        return cartRepository.findById(cartId)
                 .map(cart -> {
                     Stock stock = stockRepository.findById(stockId).orElse(null);
                     User user = userRepository.findByUsername(username);
@@ -121,16 +121,16 @@ public class CartApiController {
                     return cartRepository.save(cart);
                 })
                 .orElseGet(() -> {
-                    newCart.setCartNum(cartNum);
+                    newCart.setCartId(cartId);
                     return cartRepository.save(newCart);
                 });
     }
 
     // 로그인 된 사용자일 경우에만 삭제가 가능하고, ID에 맞는 한가지의 Cart 만 삭제
     @Secured("ROLE_USER")
-    @DeleteMapping("/carts/{cartNum}")
-    void deleteCart(@PathVariable Long cartNum) {
-        cartRepository.deleteById(cartNum);
+    @DeleteMapping("/carts/{cartId}")
+    void deleteCart(@PathVariable Long cartId) {
+        cartRepository.deleteById(cartId);
     }
 
 }

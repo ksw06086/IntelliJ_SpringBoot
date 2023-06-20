@@ -42,8 +42,10 @@ function stockGet() {
         url: '/api/stocks/color/size?colorCode=' + colorSelector + '&sizeCode=' + sizeSelector,
         success: (result) => {
             //AJAX 성공시 실행 코드(* mainCategoriesSelector Class)
+            document.getElementById("buyBtn").value = result.stock.stockId;
+            document.getElementById("cartAddBtn").value = result.stock.stockId;
+
             const stockOrderAmountSelectBox = document.getElementById("stockOrderAmountSelectBox");
-            const buyBtn = document.getElementById("buyBtn").value = result.stock.stockId;
             stockOrderAmountSelectBox.innerHTML
                   = '<tr class="border-top-1-ccc">' +
                     '    <td><b>color/size</b></td>' +
@@ -76,11 +78,11 @@ function detailPriceUpdate(count){
     stockTotalPrice.innerHTML = totalPrice + '원';
 };
 // 한개의 stock 정보를 가지고 주문페이지로 이동
-function stockOrderFormMove(Num) {
-    if(Num === ''){ alert("구매할 상품을 선택해주세요."); return false; }
+function stockOrderFormMove(id) {
+    if(id === ''){ alert("구매할 상품을 선택해주세요."); return false; }
 
-    const stockId = document.getElementById("stockId_" + Num); // 재고 목록들(stockIds)
-    const count = document.getElementById("count_" + Num); // 주문할 수량 가져오기(counts)
+    const stockId = document.getElementById("stockId_" + id); // 재고 목록들(stockIds)
+    const count = document.getElementById("count_" + id); // 주문할 수량 가져오기(counts)
     let stockIdList = []; let countList = [];
     stockIdList.push(stockId.value); countList.push(count.value);
 
@@ -88,15 +90,15 @@ function stockOrderFormMove(Num) {
 }
 // checkbox 선택 stockList 가지고 주문페이지로 이동
 function stockListOrderFormMove() {
-    const cartNums = document.getElementsByName("cartNums"); // 화면에 있는 모든 Checkbox(cartNums)
+    const cartIds = document.getElementsByName("cartIds"); // 화면에 있는 모든 Checkbox(cartNums)
     let stockIdList = []; let countList = [];
 
     // checkBox에 체크되었는지 확인 후 stockIdList, countList 에 값 추가해주기
-    for (let i = 0; i < cartNums.length; i++) {
-        if (cartNums[i].checked === true) {
-            let cartNum = cartNums[i].value;
-            const stockId = document.getElementById("stockId_" + cartNum); // 재고 목록들(stockIds)
-            const count = document.getElementById("count_" + cartNum); // 주문할 수량 가져오기(counts)
+    for (let i = 0; i < cartIds.length; i++) {
+        if (cartIds[i].checked === true) {
+            let cartId = cartIds[i].value;
+            const stockId = document.getElementById("stockId_" + cartId); // 재고 목록들(stockIds)
+            const count = document.getElementById("count_" + cartId); // 주문할 수량 가져오기(counts)
 
             stockIdList.push(stockId.value);
             countList.push(count.value);
@@ -108,9 +110,11 @@ function stockListOrderFormMove() {
 
 //*** Cart ***//
 // 장바구니 추가
-function cartAdd() {
-    const stockId = document.getElementById("stockId").value;
-    const count = document.getElementById("count").value;
+function cartAdd(id) {
+    if(id === ''){ alert("장바구니에 추가할 상품을 선택해주세요."); return false; }
+
+    const stockId = document.getElementById("stockId_" + id).value; // 재고 목록들(stockIds)
+    const count = document.getElementById("count_" + id).value; // 주문할 수량 가져오기(counts)
     const formData = new FormData();
     formData.append("stockId", stockId);
     formData.append("count", count);
@@ -132,17 +136,17 @@ function cartAdd() {
     })
 }
 // 장바구니 삭제
-function cartDel(cartNum) {
-    if(confirm(cartNum + "번 장바구니를 정말 삭제하시겠습니까?")){
+function cartDel(cartId) {
+    if(confirm(cartId + "번 장바구니를 정말 삭제하시겠습니까?")){
         // cart 1개 삭제하는 Ajax 함수
         $.ajax({
             type: 'DELETE',
-            url: '/api/carts/' + cartNum,
+            url: '/api/carts/' + cartId,
             success: (result) => {
                 //AJAX 성공시 실행 코드
-                alert(cartNum + "번 장바구니가 삭제되었습니다.");
+                alert(cartId + "번 장바구니가 삭제되었습니다.");
                 // 화면에서 해당 요소 삭제해줌
-                document.getElementById('tr_' + cartNum).remove();
+                document.getElementById('tr_' + cartId).remove();
                 // Total Price 업데이트
                 totalPriceUpdate();
             }, error:function(e) {
@@ -150,7 +154,7 @@ function cartDel(cartNum) {
             }
         });
     } else {
-        alert(cartNum + '번 삭제가 취소되었습니다.');
+        alert(cartId + '번 삭제가 취소되었습니다.');
     }
 }
 // 장바구니 checkbox 선택목록 삭제 Or 장바구니 비우기
@@ -160,21 +164,21 @@ function cartAllOrCheckDel(switchStr) {
     else if(switchStr === 'all'){ msg = "장바구니를 정말 비우시겠습니까?" }
 
     if(confirm(msg)) {
-        const cartNums = document.getElementsByName("cartNums"); // 화면에 있는 모든 Checkbox(cartNums)
+        const cartIds = document.getElementsByName("cartIds"); // 화면에 있는 모든 Checkbox(cartNums)
         let cartDelList = []; // 삭제된 cartNums
 
         // checkBox에 체크되었는지 확인 후 삭제
-        for (let i = 0; i < cartNums.length; i++) {
+        for (let i = 0; i < cartIds.length; i++) {
             if (switchStr === 'check') {
-                if (cartNums[i].checked === true) {
-                    let cartNum = cartNums[i].value;
-                    cartDelAjax(cartNum);
-                    cartDelList.push(cartNum);
+                if (cartIds[i].checked === true) {
+                    let cartId = cartIds[i].value;
+                    cartDelAjax(cartId);
+                    cartDelList.push(cartId);
                 }
             } else if (switchStr === 'all') {
-                let cartNum = cartNums[i].value;
-                cartDelAjax(cartNum);
-                cartDelList.push(cartNum);
+                let cartId = cartIds[i].value;
+                cartDelAjax(cartId);
+                cartDelList.push(cartId);
             }
         }
 
@@ -182,7 +186,7 @@ function cartAllOrCheckDel(switchStr) {
         alert(cartDelList + "번 장바구니가 삭제되었습니다.");
 
         // 장바구니의 모든 목록을 삭제해준 것이라면 장바구니 목록이 없다는 Text를 띄워줌
-        if(cartDelList.length === cartNums.length){
+        if(cartDelList.length === cartIds.length){
             document.getElementById("cartSizeZeroMsg").className = 'text-center';
         }
 
@@ -197,10 +201,10 @@ function cartAllOrCheckDel(switchStr) {
     }
 
     // stock 1개 삭제하는 Ajax 함수
-    function cartDelAjax(cartNum){
+    function cartDelAjax(cartId){
         $.ajax({
             type: 'DELETE',
-            url: '/api/carts/' + cartNum,
+            url: '/api/carts/' + cartId,
             success: (result) => {
                 //AJAX 성공시 실행 코드
             }, error:function(e) {
@@ -209,23 +213,8 @@ function cartAllOrCheckDel(switchStr) {
         });
     }
 }
-// 장바구니 checkbox 한번에 체크 함수
-function allCartCheck() {
-    const cartCheckAll = document.getElementById("cartCheckAll");
-    const cartNums = document.getElementsByName("cartNums");
-    // 해당 페이지의 모든 stock CheckBox에 체크
-    if(cartCheckAll.checked === true){
-        for (let i = 0; i < cartNums.length; i++) {
-            cartNums[i].checked = true;
-        }
-    } else {
-        for (let i = 0; i < cartNums.length; i++) {
-            cartNums[i].checked = false;
-        }
-    }
-}
 // 장바구니 checkBox 버튼 클릭 시 totalPrice 바꿔주기
-function totalPriceUpdate() {
+function totalPriceUpdate(checkType) {
     // 값을 넣어줄 Block 들
     const cartSelectTotalText = document.getElementById("cartSelectTotalText"); // 상품구매금액 0 + 배송비 0 = 합계: KRW 0
     const totalSalePriceView = document.getElementById("totalSalePriceView");   // Total 상품 금액
@@ -233,15 +222,19 @@ function totalPriceUpdate() {
     const totalPriceView = document.getElementById("totalPriceView");           // Total 구매 금액
 
     // 값을 가져올 Block 들
-    const cartNums = document.getElementsByName("cartNums"); // 화면에 있는 모든 Checkbox(cartNums)
+    const cartIds = document.getElementsByName("cartIds"); // 화면에 있는 모든 Checkbox(cartNums)
     let totalSalePrice = 0, totalDeliPrice = 0, totalPrice = 0;
 
+    // 모두 체크가 되어있다면 전체 CheckBox 체크 해주기
+    if(checkType === 'allCheck') { allCheck('cart'); }
+    else { allCheckRemove('cart'); }
+
     // checkBox에 체크되었는지 확인 후 삭제
-    for (let i = 0; i < cartNums.length; i++) {
-        if(cartNums[i].checked === true){
-            const salePrice = document.getElementById("salePrice_" + cartNums[i].value).textContent.split(' ')[1]; // 장바구니 상품 단가 금액
-            const cartCount = document.getElementById("count_" + cartNums[i].value).value; // 장바구니 상품 수량
-            const deliPrice = parseInt(document.getElementById("deliPrice_" + cartNums[i].value).textContent.replace(/원/, '')); // 장바구니 상품 배송비
+    for (let i = 0; i < cartIds.length; i++) {
+        if(cartIds[i].checked === true){
+            const salePrice = document.getElementById("salePrice_" + cartIds[i].value).textContent.split(' ')[1]; // 장바구니 상품 단가 금액
+            const cartCount = document.getElementById("count_" + cartIds[i].value).value; // 장바구니 상품 수량
+            const deliPrice = parseInt(document.getElementById("deliPrice_" + cartIds[i].value).textContent.replace(/원/, '')); // 장바구니 상품 배송비
             totalSalePrice  += salePrice * cartCount; // 상품단가 * 수량
             totalDeliPrice  += deliPrice;             // 상품 배송비
             totalPrice      += totalSalePrice + totalDeliPrice;     // 상품 가격 + 배송비
@@ -257,17 +250,17 @@ function totalPriceUpdate() {
     totalPriceView.innerText = '= KRW ' + totalPrice;
 }
 // 장바구니 numberInput 버튼 값 변경 시 totalPrice 바꿔주기
-function cartCountChange(updateCartNum) {
-    const cartCount = document.getElementById(updateCartNum).value;
-    const salePrice = document.getElementById("salePrice_" + (updateCartNum.split('_')[1])).textContent.split(' ')[1];
-    const deliPrice = document.getElementById("deliPrice_" + (updateCartNum.split('_')[1])).textContent.replace(/원/, '');
-    const totalPrice = document.getElementById("totalPrice_" + (updateCartNum.split('_')[1]));
+function cartCountChange(updateCartId) {
+    const cartCount = document.getElementById(updateCartId).value;
+    const salePrice = document.getElementById("salePrice_" + (updateCartId.split('_')[1])).textContent.split(' ')[1];
+    const deliPrice = document.getElementById("deliPrice_" + (updateCartId.split('_')[1])).textContent.replace(/원/, '');
+    const totalPrice = document.getElementById("totalPrice_" + (updateCartId.split('_')[1]));
     const plusPay = salePrice/100;
-    const plusPayBlock = document.getElementById("plusPay_" + (updateCartNum.split('_')[1]));
+    const plusPayBlock = document.getElementById("plusPay_" + (updateCartId.split('_')[1]));
     totalPrice.innerText = 'KSW ' + (salePrice * cartCount + parseInt(deliPrice));
     plusPayBlock.innerText = (plusPay * cartCount) + '원';
 
-    totalPriceUpdate();
+    totalPriceUpdate('oneCheck');
 }
 
 
