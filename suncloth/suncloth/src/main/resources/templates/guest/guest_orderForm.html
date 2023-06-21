@@ -79,7 +79,9 @@
                 class="color-gray">[옵션: Blue/M]</span>
         </td>
         <td><b th:text="|KRW ${15000*10}|"></b></td>
-        <td th:text="${10}"></td>
+        <td><input type="number" th:id="|count_${list.get('stock').getStockId()}|" th:value="${list.get('count')}"
+                   min="1" th:max="${list.get('stock').getStockMaxCount()}"
+                   th:oninput="cartCountChange(this.id)"></td>
         <td>
           <img src = "./ascloimage/n.png" width = "10px" height = "10px" style = "vertical-align: middle;">
           ${cvo.plus}원
