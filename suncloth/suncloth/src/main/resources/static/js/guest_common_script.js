@@ -1,3 +1,248 @@
+// *** 비밀번호 정규식 ***
+// 1) 최소 하나 이상의 소문자, 하나의 대문자, 하나의 숫자, 하나의 특수문자, 최소 8 자리
+// 2) 비밀번호 6 자리 이상, 모든 요구 사항을 충족하거나 숫자만 빼고 나머지를 충족하는 경우
+// 3) 비밀번호 6 자리 이상, 최소 하나 이상의 대소문자, 하나의 숫자, 하나의 특수문자
+let strongPassword = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})');
+let mediumStrongPassword = new RegExp('((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,}))|((?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9])(?=.{8,}))');
+let mediumPassword = new RegExp('(((?=.*[a-z])|(?=.*[A-Z]))(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,}))');
+
+// *** 휴대폰 번호 정규식 *** //
+let regPhone = /^01([0|1|2|7|8|9])?-([0-9]{3,4})?-([0-9]{4})$/;
+
+// *** Register(회원가입) *** //
+// ID 중복검사
+function idCheck(id){
+    const idForm = document.getElementById("IDForm");
+    const idDiv = document.getElementById("IDdiv");
+
+    $.ajax({
+        url: '/api/userCheck/' + id,
+        type: 'GET',
+        success: (result) => {
+            //AJAX 성공시 실행 코드
+            if(id === ""){
+                idDiv.previousElementSibling.className = "form-control is-invalid";
+                idDiv.className = "invalid-feedback"
+                idDiv.innerText = "입력해주세요.";
+            } else if(id.length > 30){
+                idDiv.previousElementSibling.className = "form-control is-invalid";
+                idDiv.className = "invalid-feedback"
+                idDiv.innerText = "id는 30자가 넘어가면 안됩니다.";
+            } else if(result === ""){
+                idDiv.previousElementSibling.className = "form-control is-valid";
+                idDiv.className = "valid-feedback";
+                idDiv.innerText = "사용가능한 아이디입니다.";
+            } else {
+                idDiv.previousElementSibling.className = "form-control is-invalid";
+                idDiv.className = "invalid-feedback"
+                idDiv.innerText = "중복된 아이디입니다. 사용이 불가능합니다.";
+            }
+        }
+    });
+}
+// PWD 보안 강함, 보통, 약함
+function pwdCheck(pwd){
+    const pwdDiv = document.getElementById("pwdDiv");
+    if(pwd === ""){
+        pwdDiv.previousElementSibling.className = "form-control is-invalid";
+        pwdDiv.className = "invalid-feedback"
+        pwdDiv.style.color = "red";
+        pwdDiv.textContent = "입력해주세요.";
+    } else if(strongPassword.test(pwd)){
+        pwdDiv.previousElementSibling.className = "form-control is-valid";
+        pwdDiv.className = "valid-feedback";
+        pwdDiv.style.color = "green";
+        pwdDiv.textContent = "강함";
+    } else if(mediumPassword.test(pwd)){
+        pwdDiv.previousElementSibling.className = "form-control is-valid";
+        pwdDiv.className = "valid-feedback";
+        pwdDiv.style.color = "blue";
+        pwdDiv.textContent = "보통";
+    } else {
+        pwdDiv.previousElementSibling.className = "form-control is-invalid";
+        pwdDiv.className = "invalid-feedback"
+        pwdDiv.style.color = "red";
+        pwdDiv.textContent = "위험(영문, 특수문자, 숫자를 1가지 이상씩 넣어주세요)";
+    }
+}
+// PWDChk 일치 확인
+function pwdChkCheck(pwdChk){
+    const pwd = document.getElementById("pwdInput");
+    const pwdChkDiv = document.getElementById("pwdChkDiv");
+    if(pwd.value !== pwdChk){
+        pwdChkDiv.previousElementSibling.className = "form-control is-invalid";
+        pwdChkDiv.className = "invalid-feedback"
+        pwdChkDiv.style.color = "red";
+        pwdChkDiv.textContent = "비밀번호가 일치하지 않습니다.";
+    } else {
+        pwdChkDiv.previousElementSibling.className = "form-control is-valid";
+        pwdChkDiv.className = "valid-feedback";
+        pwdChkDiv.style.color = "green";
+        pwdChkDiv.textContent = "비밀번호가 일치합니다.";
+    }
+}
+
+// SMS 인증 번호 전송
+function SMSFormal(){
+    const keyCheckForm = document.getElementById("keyCheckForm");
+    const keyHiddenInput = document.getElementById("keyNumber");
+    let hp = document.getElementById("hpInput").value;
+    if(!regPhone.test(hp)){
+        alert("번호입력이 잘못되었습니다. 다시 입력해주세요.(ex 010-1234-5678)");
+    } else {
+        $.ajax({
+            url: '/smsApi/send-one/' + hp.replace(/-/g, ''),
+            type: 'GET',
+            success: (result) => {
+                //AJAX 성공시 실행 코드
+                alert(result); // 인증번호 가져온거 alert 띄워줌
+                alert("인증번호가 발송되었습니다.");
+                keyCheckForm.className = "";
+                keyHiddenInput.value = result;
+            }
+        });
+    }
+}
+// SMS 인증 번호 일치 확인
+function SMSFormalCheck() {
+    const keyHiddenInput = document.getElementById("keyNumber");
+    const formalInput = document.getElementById("formalInput");
+    const formalDiv = document.getElementById("formalDiv");
+    if(keyHiddenInput.value === formalInput.value) {
+        formalDiv.style.color = "green";
+        formalDiv.textContent = "비밀번호가 일치합니다.";
+    } else {
+        formalDiv.style.color = "red";
+        formalDiv.textContent = "비밀번호가 일치하지 않습니다.";
+    }
+}
+
+// Email urlSelect 시 동작 함수
+function urlSelected() {
+    const urlSelect = document.getElementById("urlSelect");
+    const urlCodeInput = document.getElementById("urlCodeInput");
+    if(urlSelect.value === "0"){
+        urlCodeInput.value = "";
+        urlCodeInput.focus();
+        return false;
+    } else {
+        urlCodeInput.value = urlSelect.value;
+        return false;
+    }
+}
+
+/* checkbox 한번에 체크 함수 */
+function allAgreeCheck() {
+    const allAgree = document.getElementById("allAgree");
+    const useAgree = document.getElementById("useAgree");
+    const dataAgree = document.getElementById("dataAgree");
+    if(allAgree.checked){
+        useAgree.checked = true;
+        dataAgree.checked = true;
+    } else {
+        useAgree.checked = false;
+        dataAgree.checked = false;
+    }
+}
+/* checkbox 제거 시에 all체크 제거 함수 */
+function agreeCheck() {
+    const allAgree = document.getElementById("allAgree");
+    const useAgree = document.getElementById("useAgree");
+    const dataAgree = document.getElementById("dataAgree");
+    if(!useAgree.checked){ allAgree.checked = false; }
+    else { allAgree.checked = dataAgree.checked; }
+}
+
+// 우편번호 버튼 클릭 기능
+function addressSearch() {
+    new daum.Postcode({
+        oncomplete: function(data) {
+            // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+            // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+            // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+            var fullAddr = ''; // 최종 주소 변수
+            var extraAddr = ''; // 조합형 주소 변수
+
+            // 사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+            if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                fullAddr = data.roadAddress;
+
+            } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                fullAddr = data.jibunAddress;
+            }
+
+            // 사용자가 선택한 주소가 도로명 타입일때 조합한다.
+            if(data.userSelectedType === 'R'){
+                //법정동명이 있을 경우 추가한다.
+                if(data.bname !== ''){
+                    extraAddr += data.bname;
+                }
+                // 건물명이 있을 경우 추가한다.
+                if(data.buildingName !== ''){
+                    extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                }
+                // 조합형주소의 유무에 따라 양쪽에 괄호를 추가하여 최종 주소를 만든다.
+                fullAddr += (extraAddr !== '' ? ' ('+ extraAddr +')' : '');
+            }
+
+            // 우편번호와 주소 정보를 해당 필드에 넣는다.
+            document.getElementById('addressInput').value = data.zonecode; //5자리 새우편번호 사용
+            document.getElementById('subAddressInput').value = fullAddr;
+
+            // 커서를 상세주소 필드로 이동한다.
+            document.getElementById('detailAddressInput').focus();
+        }
+    }).open();
+}
+
+// Register 폼 제출 전 확인 script
+function registerCheck() {
+    // 아이디 입력 확인(30자 이하여야함)
+    if (document.getElementById("IDdiv").className === "invalid-feedback"){
+        document.getElementById("IDdiv").innerText = "사용가능한 아이디여야합니다.";
+        document.getElementById("idInput").focus();
+        return false;
+    }
+
+    // 패스워드 입력 확인(강함, 보통인지)
+    if (document.getElementById("pwdDiv").className === "invalid-feedback") {
+        document.getElementById("pwdDiv").previousElementSibling.className = "form-control is-invalid";
+        document.getElementById("pwdDiv").className = "invalid-feedback"
+        document.getElementById("pwdDiv").style.color = "red";
+        document.getElementById("pwdDiv").textContent = "패스워드는 강함/보통 정도여야합니다.";
+        document.getElementById("pwdDiv").focus();
+        return false;
+    }
+
+    // 패스워드 Chk 확인
+    if(document.getElementById("pwdInput").value !== document.getElementById("pwdChkInput").value){
+        document.getElementById("pwdChkDiv").previousElementSibling.className = "form-control is-invalid";
+        document.getElementById("pwdChkDiv").className = "invalid-feedback"
+        document.getElementById("pwdChkDiv").style.color = "red";
+        document.getElementById("pwdChkDiv").textContent = "비밀번호가 일치하지 않습니다.";
+        document.getElementById("pwdChkInput").focus();
+        return false;
+    }
+
+    // 휴대폰 인증번호 확인
+    if(document.getElementById("keyCheckForm").className === "d-none") { // 휴대폰 인증 확인
+        alert("휴대폰 인증을 해주세요");
+        document.getElementById("hpInput").focus();
+        return false;
+    } else if(document.getElementById("keyNumber").value !== document.getElementById("formalInput").value) { // 인증번호 확인
+        alert("인증번호를 확인해주세요.");
+        const formalDiv = document.getElementById("formalDiv");
+        formalDiv.style.color = "red";
+        formalDiv.textContent = "인증번호를 확인해주세요.";
+        document.getElementById("formalInput").focus();
+        return false;
+    }
+
+}
+
+
+//*** Category(Search) ***//
 // 상품 검색
 function clothSearch() {
     const guestSearchText = document.getElementById("guestSearchText").value;
@@ -35,11 +280,12 @@ function stockSizesGet() {
 function stockGet() {
     const colorSelector = document.getElementById("colorSelector").value;
     const sizeSelector = document.getElementById("sizeSelector").value;
+    const clothId = document.getElementById("clothId").value;
 
     // ajax로 Color/Size의 재고 가져와서 화면 보여주기
     $.ajax({
         type: 'GET',
-        url: '/api/stocks/color/size?colorCode=' + colorSelector + '&sizeCode=' + sizeSelector,
+        url: '/api/stocks/color/size?colorCode=' + colorSelector + '&sizeCode=' + sizeSelector + '&clothId=' + clothId,
         success: (result) => {
             //AJAX 성공시 실행 코드(* mainCategoriesSelector Class)
             document.getElementById("buyBtn").value = result.stock.stockId;
@@ -214,7 +460,7 @@ function cartAllOrCheckDel(switchStr) {
     }
 }
 // 장바구니 checkBox 버튼 클릭 시 totalPrice 바꿔주기
-function totalPriceUpdate(checkType) {
+function cartTotalPriceUpdate(checkType) {
     // 값을 넣어줄 Block 들
     const cartSelectTotalText = document.getElementById("cartSelectTotalText"); // 상품구매금액 0 + 배송비 0 = 합계: KRW 0
     const totalSalePriceView = document.getElementById("totalSalePriceView");   // Total 상품 금액
@@ -237,7 +483,7 @@ function totalPriceUpdate(checkType) {
             const deliPrice = parseInt(document.getElementById("deliPrice_" + cartIds[i].value).textContent.replace(/원/, '')); // 장바구니 상품 배송비
             totalSalePrice  += salePrice * cartCount; // 상품단가 * 수량
             totalDeliPrice  += deliPrice;             // 상품 배송비
-            totalPrice      += totalSalePrice + totalDeliPrice;     // 상품 가격 + 배송비
+            totalPrice      += salePrice * cartCount + deliPrice;     // 상품 가격 + 배송비
         }
     }
 
@@ -250,19 +496,55 @@ function totalPriceUpdate(checkType) {
     totalPriceView.innerText = '= KRW ' + totalPrice;
 }
 // 장바구니 numberInput 버튼 값 변경 시 totalPrice 바꿔주기
-function cartCountChange(updateCartId) {
-    const cartCount = document.getElementById(updateCartId).value;
-    const salePrice = document.getElementById("salePrice_" + (updateCartId.split('_')[1])).textContent.split(' ')[1];
-    const deliPrice = document.getElementById("deliPrice_" + (updateCartId.split('_')[1])).textContent.replace(/원/, '');
-    const totalPrice = document.getElementById("totalPrice_" + (updateCartId.split('_')[1]));
-    const plusPay = salePrice/100;
-    const plusPayBlock = document.getElementById("plusPay_" + (updateCartId.split('_')[1]));
-    totalPrice.innerText = 'KSW ' + (salePrice * cartCount + parseInt(deliPrice));
-    plusPayBlock.innerText = (plusPay * cartCount) + '원';
+function CountChangeUpdate(updateId, page) {
+    const Count = document.getElementById(updateId).value;
+    const salePrice = document.getElementById("salePrice_" + (updateId.split('_')[1])).textContent.split(' ')[1];
+    const deliPrice = document.getElementById("deliPrice_" + (updateId.split('_')[1])).textContent.replace(/원/, '');
+    const totalPrice = document.getElementById("totalPrice_" + (updateId.split('_')[1]));
+    const plusPayBlock = document.getElementById("plusPay_" + (updateId.split('_')[1]));
+    const plusPay = (plusPayBlock.textContent === '0원')?0:salePrice/100;
+    totalPrice.innerText = 'KSW ' + (salePrice * Count + parseInt(deliPrice));
+    plusPayBlock.innerText = (plusPay * Count) + '원';
 
-    totalPriceUpdate('oneCheck');
+    if(page === 'cartList') { cartTotalPriceUpdate('oneCheck'); }
+    else if(page === 'orderForm') { orderTotalPriceUpdate(); }
 }
 
+//*** OrderForm ***//
+// 주문 Form에서 수량 증감시 TotalPrice 업데이트
+function orderTotalPriceUpdate() {
+    // 값을 넣어줄 Block 들
+    const orderSelectTotalText = document.getElementById("orderSelectTotalText"); // 상품구매금액 0 + 배송비 0 = 합계: KRW 0
+    const totalOrderPriceView = document.getElementById("totalOrderPriceView");   // Total 상품 금액
+    const totalUseMileageView = document.getElementById("totalUseMileageView");   // Total 배송비 금액
+    const totalPriceView = document.getElementById("totalPriceView");           // Total 구매 금액
 
+    // 값을 가져올 Block 들
+    const stockIds = document.getElementsByName("stockIds"); // 화면에 있는 모든 Checkbox(cartNums)
+    const useMileage = document.getElementById("useMileage").value; // 사용가능한 적립금 가져오기
+    let totalSalePrice = 0, totalDeliPrice = 0, totalPrice = 0;
+
+    // checkBox에 체크되었는지 확인 후 삭제
+    for (let i = 0; i < stockIds.length; i++) {
+        const salePrice = document.getElementById("salePrice_" + stockIds[i].value).textContent.split(' ')[1]; // 장바구니 상품 단가 금액
+        const orderCount = document.getElementById("count_" + stockIds[i].value).value; // 장바구니 상품 수량
+        const deliPrice = parseInt(document.getElementById("deliPrice_" + stockIds[i].value).textContent.replace(/원/, '')); // 장바구니 상품 배송비
+        totalSalePrice  += salePrice * orderCount;              // 상품단가 * 수량
+        totalDeliPrice  += deliPrice;                           // 상품 배송비
+        totalPrice      += salePrice * orderCount + deliPrice;     // 상품 가격 + 배송비
+    }
+
+    // Total 값 Text 띄워주기
+    orderSelectTotalText.innerText = '상품구매금액 ' + totalSalePrice +
+        ' + 배송비 ' + totalDeliPrice +
+        ' = 합계: KRW ' + totalPrice;
+    totalOrderPriceView.innerText = 'KRW ' + totalPrice;
+    totalUseMileageView.innerText = '- KRW ' + useMileage;
+    totalPriceView.innerText = '= KRW ' + (totalPrice-useMileage);
+}
+// 배송지 radioButton 별 작동 함수
+function deliveryAddressUpdate() {
+    alert(document.getElementsByName("deliInfo"));
+}
 
 

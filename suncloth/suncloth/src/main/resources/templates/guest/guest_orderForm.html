@@ -49,6 +49,7 @@
           상품의 옵션 및 수량 변경은 상품상세 또는 장바구니에서 가능합니다.
         </td>
       </tr>
+
       <!-- order Product List Title -->
       <tr class="border-y-1-ccc td-py10">
         <td>이미지</td>
@@ -62,24 +63,34 @@
 
       <!-- order Product List Info -->
       <tr class = "td-border-bottom-1-ccc td-py10" th:each="list:${orderMapList}">
-        <td><img th:src="|/uploadMainImageView/${list.get('stock').getStockCloth().getClothId()}|"
-                 width = "80px" height = "100px"></td>
+        <!-- stockId & Image -->
+        <td>
+          <input type="hidden" name="stockIds" id="stockId" th:value="${list.get('stock').getStockId()}">
+          <img th:src="|/uploadMainImageView/${list.get('stock').getStockCloth().getClothId()}|"
+                 width = "80px" height = "100px">
+        </td>
+        <!-- Product Name/Option -->
         <td class="text-start ps-5px">
           <b th:text="${list.get('stock').getStockCloth().getClothName()}">아름다운 이미지</b><br>
           <span th:text="|[옵션: ${list.get('stock').getStockColor().getColorName()}/${list.get('stock').getStockSize().getSizeName()}]|"
                 class="color-gray">[옵션: Blue/M]</span>
         </td>
+        <!-- oneProductSalePrice -->
         <td><b th:text="|KSW ${list.get('stock').getSalePrice()}|"
                th:id="|salePrice_${list.get('stock').getStockId()}|">KSW 15000</b></td>
+        <!-- orderCount -->
         <td><input type="number" th:id="|count_${list.get('stock').getStockId()}|" th:value="${list.get('count')}"
                    min="1" th:max="${list.get('stock').getStockMaxCount()}"
-                   th:oninput="cartCountChange(this.id)"></td>
+                   th:oninput="CountChangeUpdate(this.id, 'orderForm')"></td>
+        <!-- plus Pay -->
         <td th:id="|plusPay_${list.get('stock').getStockId()}|"
             th:text="|${list.get('stock').getPlus() * list.get('count')}원|">
           ${cvo.plus}원
         </td>
+        <!-- deliPrice -->
         <td th:id="|deliPrice_${list.get('stock').getStockId()}|"
             th:text="|${list.get('stock').getStockCloth().getDeliPrice()}원|"></td>
+        <!-- TotalPrice -->
         <td><b th:text="|KSW ${list.get('stock').getSalePrice() * list.get('count') + list.get('stock').getStockCloth().getDeliPrice()}|"
                th:id="|totalPrice_${list.get('stock').getStockId()}|"></b></td>
       </tr>
@@ -87,7 +98,8 @@
       <!-- Bottom OrderProduct Info -->
       <tr>
         <td colspan = "7" class="py-5px vertical-middle-all">
-          <div class="float-end" id="orderSelectTotalText">상품구매금액 0 + 배송비 0 = 합계: KRW 0</div>
+          <div class="float-end" id="orderSelectTotalText"
+               th:text="|상품구매금액 ${totalPrice} + 배송비 ${totalDeliPrice} = 합계: KRW ${finalTotalPrice}|"></div>
         </td>
       </tr>
     </table>
@@ -105,11 +117,12 @@
       <tr>
         <td>배송지 선택</td>
         <td>
-
-          <input type="radio" id="deli" name="deliInfo" value="profile" checked>
+          <input type="radio" id="new" name="deliInfo" value="new"
+                 th:onchange="deliveryAddressUpdate()" checked>
+          <label for="new">새로운배송지</label>&nbsp;&nbsp;&nbsp;
+          <input type="radio" id="deli" name="deliInfo" value="profile"
+                 th:onchange="deliveryAddressUpdate()">
           <label for="deli">회원정보와 동일</label>
-          <input type="radio" id="new" name="deliInfo" value="new">
-          <label for="new">새로운배송지</label>
         </td>
       </tr>
       <!-- 받는 사람 -->
@@ -118,7 +131,7 @@
           <span class="text-danger">*</span>받으시는 분
         </label></td>
         <td>
-          <input type = "text" id = "deliName" name = "deliName">
+          <input type = "text" id = "deliName" name = "deliName" required>
         </td>
       </tr>
       <!-- 배송지 주소 -->
@@ -127,9 +140,9 @@
           <span class="text-danger">*</span>주소
         </label></td>
         <td>
-          <input type = "text" id = "addressInput" name = "addressInput">
-          <input type = "button" value = "우편번호" id = "addrBtn" class="whiteButton" onclick = "addressSearch();"><br>
-          <input type = "text" id = "subAddressInput" name = "subAddressInput" class="w-50">기본주소<br>
+          <input type = "text" id = "addressInput" name = "addressInput" required>
+          <input type = "button" value = "우편번호" id = "addrBtn" class="whiteButton" th:onclick = "addressSearch()"><br>
+          <input type = "text" id = "subAddressInput" name = "subAddressInput" class="w-50" required>기본주소<br>
           <input type = "text" id = "detailAddressInput" name = "detailAddressInput" class="w-50">나머지주소
         </td>
       </tr>
@@ -157,7 +170,7 @@
           <span class="text-danger">*</span>휴대폰번호
         </label></td>
         <td>
-          <select name = "baseHP" id = "baseHPInput">
+          <select name = "baseHP" id = "baseHPInput" required>
             <option value = "010">010</option>
             <option value = "011">011</option>
             <option value = "016">016</option>
@@ -165,8 +178,8 @@
             <option value = "018">018</option>
             <option value = "019">019</option>
           </select>
-          - <input type = "text" class="phone-SubContent" id = "secondHPInput" name = "secondHP">
-          - <input type = "text" class="phone-SubContent" id = "thirdHPInput" name = "thirdHP">
+          - <input type = "text" class="phone-SubContent" id = "secondHPInput" name = "secondHP" required>
+          - <input type = "text" class="phone-SubContent" id = "thirdHPInput" name = "thirdHP" required>
         </td>
       </tr>
       <!-- 이메일 -->
@@ -177,9 +190,9 @@
           </label>
         </td>
         <td>
-          <input type = "text" id = "idNameInput" name = "idName">
-          @<input type = "text" id = "urlCodeInput"  name = "urlCode">
-          <select name = "urlSelect" onchange = "OselectEmailChk();" id = "urlSelect">
+          <input type = "text" id = "idNameInput" name = "idName" required>
+          @<input type = "text" id = "urlCodeInput"  name = "urlCode" required>
+          <select name = "urlSelect" onchange = "urlSelected();" id = "urlSelect">
             <option>직접입력</option>
             <option value = "naver.com">naver.com</option>
             <option value = "daum.com">daum.com</option>
@@ -214,9 +227,9 @@
         <td>총 결제예정 금액</td>
       </tr>
       <tr class = "totalContent">
-        <td th:text="|KRW ${(1500*10) + 1500 - 0}|">KRW ${(cvo.saleprice*count) + cvo.deliprice}</td>
-        <td th:text="|- KRW ${0}|"></td>
-        <td th:text="|= KRW ${(1500*10) + 1500 - 0}|">KRW ${(cvo.saleprice*count) + cvo.deliprice}</td>
+        <td id="totalOrderPriceView" th:text="|KRW ${finalTotalPrice}|">KRW ${(cvo.saleprice*count) + cvo.deliprice}</td>
+        <td id="totalUseMileageView" th:text="|- KRW ${user.getUsablePlus()}|"></td>
+        <td id="totalPriceView" th:text="|= KRW ${finalTotalPrice - user.getUsablePlus()}|">KRW ${(cvo.saleprice*count) + cvo.deliprice}</td>
       </tr>
     </table>
     <!-- 적립금 관련 정보(mileage Info) -->
@@ -225,13 +238,14 @@
       <col>
       <tr>
         <td>총 부가결제금액</td>
-        <td th:text="|KRW ${0}|"></td>
+        <td th:text="|KRW ${user.getUsablePlus()}|"></td>
       </tr>
       <tr>
         <td>적립금</td>
         <td>
-          <input type = "text" id = "useMileage" name = "pluspay" onkeyup="go(this.value);">
-          원 (총 사용가능 적립금 : <span class="text-danger" th:text="${1500}">${gvo.plus}</span>원)<br>
+          <input type = "text" id = "useMileage" name = "pluspay" th:value="${user.getUsablePlus()}"
+                 onkeyup="go(this.value);" th:readonly="${user.getUsablePlus() == 0}?true">
+          원 (총 사용가능 적립금 : <span class="text-danger" th:text="${user.getUsablePlus()}">${gvo.plus}</span>원)<br>
           <br>
           - 적립금은 최소 100 이상일 때 결제가 가능합니다.<br>
           - 최대 사용금액은 제한이 없습니다.<br>

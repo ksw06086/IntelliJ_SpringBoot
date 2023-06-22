@@ -36,7 +36,7 @@
         <col style="width:15%;">
         <tr class="td-border-bottom-1-ccc td-py10 text-center">
             <td>
-                <input type = "checkbox" id = "cartCheckAll" th:onchange="totalPriceUpdate('allCheck')" value = "전체선택">
+                <input type = "checkbox" id = "cartCheckAll" th:onchange="cartTotalPriceUpdate('allCheck')" value = "전체선택">
             </td>
             <td>이미지</td>
             <td>상품정보</td>
@@ -52,7 +52,7 @@
         <tr class="text-center" th:each="list:${cartList}" th:id="|tr_${list.getCartId()}|">
             <td class="border-right-1-ccc"><!-- checkBox -->
                 <input type="hidden" th:id="|stockId_${list.getCartId()}|" th:value="${list.getCartStock().getStockId()}">
-                <input type = "checkbox" name = "cartIds" th:onchange="totalPriceUpdate('oneCheck')" th:id="${list.getCartId()}"
+                <input type = "checkbox" name = "cartIds" th:onchange="cartTotalPriceUpdate('oneCheck')" th:id="${list.getCartId()}"
                        th:value="${list.getCartId()}">
             </td>
             <td class="border-right-1-ccc"><!-- Image -->
@@ -71,7 +71,7 @@
             <!-- cartCount -->
             <td class="border-right-1-ccc"><input type="number" th:id="|count_${list.getCartId()}|" th:value="${list.getCount()}"
                                                   min="1" th:max="${list.getCartStock().getStockMaxCount()}"
-                                                  th:oninput="cartCountChange(this.id)"></td>
+                                                  th:oninput="CountChangeUpdate(this.id, 'cartList')"></td>
             <!-- plus Pay -->
             <td class="border-right-1-ccc" th:id="|plusPay_${list.getCartId()}|"
                 th:text="|${list.getCartStock().getPlus() * list.getCount()}원|">500원</td>

@@ -109,10 +109,12 @@ public class StockApiController {
     // GET : sizeCode 에 맞게 Stock 정보 가져오기
     @GetMapping("/stocks/color/size")
     Map<String, Object> oneColorSizeAndOne(@RequestParam(required = false) Long colorCode
-            , @RequestParam(required = false) Long sizeCode) {
+            , @RequestParam(required = false) Long sizeCode
+            , @RequestParam(required = false) Long clothId) {
         Color color = colorRepository.findById(colorCode).orElse(null);
         Size size = sizeRepository.findById(sizeCode).orElse(null);
-        Stock stock = stockRepository.findByStockSizeAndStockColor(size, color);
+        Cloth cloth = clothRepository.findById(clothId).orElse(null);
+        Stock stock = stockRepository.findByStockSizeAndStockColorAndStockCloth(size, color, cloth);
 
         Map<String, Object> stockMap = new HashMap<>();
         stockMap.put("stock", stock); stockMap.put("color", color); stockMap.put("size", size);

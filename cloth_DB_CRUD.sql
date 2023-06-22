@@ -7,11 +7,13 @@ select * from sub_category_tbl;
 select * from brand_tbl;
 select * from file_tbl;
 select * from cloth_tbl;
+select * from stock_tbl;
 select * from color_tbl;
 select * from size_tbl;
 select * from board_tbl;
+select * from cart_tbl;
 
-update user_role set role_id = 2 where user_id = 2;
+update user_role set role_id = 2 where user_id = 21;
 select * from cloth_tbl order by cloth_id desc;
 
 -- ¿Ã¿¸±€

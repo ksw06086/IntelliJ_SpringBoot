@@ -20,7 +20,7 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
     List<Stock> findByStockSize(Size size);
 
     // Size 를 기준으로 정보들 가져오기(where size_code = ?1)
-    Stock findByStockSizeAndStockColor(Size size, Color color);
+    Stock findByStockSizeAndStockColorAndStockCloth(Size size, Color color, Cloth cloth);
 
     // Cloth 를 기준으로 관련 Color 정보들 Distinct 해서 가져오기
     @Query("select distinct s0.stockColor from Stock s0 where s0.stockCloth = :cloth")
