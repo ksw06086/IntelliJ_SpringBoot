@@ -124,29 +124,33 @@ public class GuestController {
     public String orderForm(Model model
             , @RequestParam(required = false) List<Long> stockIds
             , @RequestParam(required = false) List<Long> counts) {
-
+        // stockIds, counts 확인 출력
         System.out.println("stockIds : " + stockIds);
         System.out.println("counts : " + counts);
 
+        // Map 생성하여 stock과 count를 넣어줌 -> 리스트에 추가해줌
         List<Map<String, Object>> orderMapList = new ArrayList<>();
-        Map<String, Object> orderMap = new HashMap<>();
-        orderMap.put("stock", stockRepository.findById(stockIds.get(0)).orElse(null));
-        orderMap.put("count", counts.get(0));
-        System.out.println("stock : " + orderMap.get("stock") + ", count : " + orderMap.get("count"));
-        orderMapList.add(orderMap);
 
-        if(stockIds.size() > 1) {
-            for (int i = 1; i < stockIds.size(); i++) {
-                orderMap.replace("stock", stockRepository.findById(stockIds.get(i)).orElse(null));
-                orderMap.replace("count", counts.get(i));
-                System.out.println("stock : " + orderMap.get("stock") + ", count : " + orderMap.get("count"));
-                orderMapList.add(orderMap);
-            }
+        // 1개 이상의 stock이 넘겨져 왔을 경우 반복해줌
+        for (int i = 0; i < stockIds.size(); i++) {
+            Map<String, Object> orderMap = new HashMap<>();
+            orderMap.put("stock", stockRepository.findById(stockIds.get(i)).orElse(null));
+            orderMap.put("count", counts.get(i));
+            System.out.println("stock : " + orderMap.get("stock") + ", count : " + orderMap.get("count"));
+            orderMapList.add(orderMap);
         }
 
+        // 잘 가져왔는지 0개인지 확인
         System.out.println("orderMapList : " + orderMapList.size());
 
+        // 시큐리티 이용해 로그인 유저의 username 가져와 user 정보 가져오기
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails userDetails = (UserDetails)principal;
+        String username = userDetails.getUsername();
+        User user = userRepository.findByUsername(username);
+
         model.addAttribute("orderMapList", orderMapList);
+        model.addAttribute("user", user);
 
         return "/guest/guest_orderForm";
     }

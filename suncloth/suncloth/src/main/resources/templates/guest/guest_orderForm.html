@@ -22,13 +22,13 @@
 
   <table class = "benefitInfo">
     <tr>
-      <th rowspan="2">혜택정보</th>
+      <th rowspan="2" class="text-center">혜택정보</th>
       <td>
-        <b th:text="${'kim'}"></b>님 저희 매장을 이용해주셔서 감사합니다.
+        <b th:text="${user.getUsername()}"></b>님 저희 매장을 이용해주셔서 감사합니다.
       </td>
     </tr>
     <tr>
-      <td th:text="|가용적립금 : ${200}원|"></td>
+      <td th:text="|가용적립금 : ${user.getUsablePlus()}원|"></td>
     </tr>
   </table>
 
@@ -36,41 +36,32 @@
     <p class="my-2">국내배송상품 주문내역</p>
     <!-- Order List Table -->
     <table class="mx-auto align-middle w-100 fs-9 text-center" id="orderList">
-      <col>
       <col style="width:9%;">
       <col>
       <col style="width:9%;">
       <col style="width:7%;">
       <col style="width:9%;">
       <col style="width:9%;">
-      <col style="width:9%;">
       <col style="width:15%;">
 
       <tr class = "ps-5px">
-        <td colspan = "9" class="text-start">
+        <td colspan = "7" class="text-start">
           상품의 옵션 및 수량 변경은 상품상세 또는 장바구니에서 가능합니다.
         </td>
       </tr>
       <!-- order Product List Title -->
       <tr class="border-y-1-ccc td-py10">
-        <td><input type="checkbox" id="allCheck"></td>
         <td>이미지</td>
         <td>상품정보</td>
         <td>판매가</td>
         <td>수량</td>
         <td>적립금</td>
-        <td>배송구분</td>
         <td>배송비</td>
         <td>합계</td>
       </tr>
 
       <!-- order Product List Info -->
       <tr class = "td-border-bottom-1-ccc td-py10" th:each="list:${orderMapList}">
-        <td>
-          <input type="hidden" th:id="|stockId_${list.get('stock').getStockId()}|" th:value="${list.get('stock').getStockId()}">
-          <input type = "checkbox" name = "stockIds" th:id="${list.get('stock').getStockId()}"
-                 th:value="${list.get('stock').getStockId()}">
-        </td>
         <td><img th:src="|/uploadMainImageView/${list.get('stock').getStockCloth().getClothId()}|"
                  width = "80px" height = "100px"></td>
         <td class="text-start ps-5px">
@@ -78,27 +69,24 @@
           <span th:text="|[옵션: ${list.get('stock').getStockColor().getColorName()}/${list.get('stock').getStockSize().getSizeName()}]|"
                 class="color-gray">[옵션: Blue/M]</span>
         </td>
-        <td><b th:text="|KRW ${15000*10}|"></b></td>
+        <td><b th:text="|KSW ${list.get('stock').getSalePrice()}|"
+               th:id="|salePrice_${list.get('stock').getStockId()}|">KSW 15000</b></td>
         <td><input type="number" th:id="|count_${list.get('stock').getStockId()}|" th:value="${list.get('count')}"
                    min="1" th:max="${list.get('stock').getStockMaxCount()}"
                    th:oninput="cartCountChange(this.id)"></td>
-        <td>
-          <img src = "./ascloimage/n.png" width = "10px" height = "10px" style = "vertical-align: middle;">
+        <td th:id="|plusPay_${list.get('stock').getStockId()}|"
+            th:text="|${list.get('stock').getPlus() * list.get('count')}원|">
           ${cvo.plus}원
-          <input type = "hidden" name = "prdplus" value = "${cvo.plus}">
         </td>
-        <td>기본배송</td>
-        <td th:text="|${1500}|"></td>
-        <td><b th:text="|KRW ${(15000*10) + 1500}|"></b></td>
+        <td th:id="|deliPrice_${list.get('stock').getStockId()}|"
+            th:text="|${list.get('stock').getStockCloth().getDeliPrice()}원|"></td>
+        <td><b th:text="|KSW ${list.get('stock').getSalePrice() * list.get('count') + list.get('stock').getStockCloth().getDeliPrice()}|"
+               th:id="|totalPrice_${list.get('stock').getStockId()}|"></b></td>
       </tr>
 
       <!-- Bottom OrderProduct Info -->
       <tr>
-        <td colspan = "9" class="py-5px vertical-middle-all">
-          <div class="float-start">
-            <button  type="button" class="whiteBaseButton py-1 px-10 fs-9" value="선택상품 삭제하기"
-                     id="checkDel" th:onclick="cartAllOrCheckDel('check')">선택상품 삭제하기</button>
-          </div>
+        <td colspan = "7" class="py-5px vertical-middle-all">
           <div class="float-end" id="orderSelectTotalText">상품구매금액 0 + 배송비 0 = 합계: KRW 0</div>
         </td>
       </tr>
