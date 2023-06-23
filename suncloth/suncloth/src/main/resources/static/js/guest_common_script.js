@@ -543,8 +543,8 @@ function orderTotalPriceUpdate() {
     totalPriceView.innerText = '= KRW ' + (totalPrice-useMileage);
 }
 // 배송지 radioButton 별 작동 함수
-function deliveryAddressUpdate() {
-    alert(document.getElementsByName("deliInfo"));
+function newDeliveryAddress() {
+    document.getElementById("")
 }
 
 

@@ -1,0 +1,7 @@
+--- 오라클 설치 방법 ---
+1. Oracle Database 21c Express Edition - 검색
+2. Oracle Database 21c Express for windows x64 설치
+3. 설치 진행 -> 폴더 설정 시 한글이 들어가면 안됨 -> 비밀번호 원하는거 입력
+4. cmd 들어가서 sqlplus system/oracle@localhost:1521/XEPDB1 입력
+5. 사용자명 : sys as sysdba, 비밀번호 그냥 엔터누름
+6. 이제 cloth_DB_기본insert.sql에 있는 계정생성해줌

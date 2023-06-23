@@ -105,6 +105,7 @@
     </table>
 
     <!-- Delivery Info Table -->
+    <form id="deliInfoForm" name="deliInfoForm">
     <div class="mt-4 mb-1">
       <span><b>배송정보</b></span>
       <span class="float-end">* 필수입력사항</span>
@@ -118,7 +119,7 @@
         <td>배송지 선택</td>
         <td>
           <input type="radio" id="new" name="deliInfo" value="new"
-                 th:onchange="deliveryAddressUpdate()" checked>
+                 th:onchange="newDeliveryAddress()" checked>
           <label for="new">새로운배송지</label>&nbsp;&nbsp;&nbsp;
           <input type="radio" id="deli" name="deliInfo" value="profile"
                  th:onchange="deliveryAddressUpdate()">
@@ -206,6 +207,7 @@
       </tr>
 
     </table>
+    </form>
 
     <!-- 고객메세지(Guest Message) 정보 -->
     <span><b>추가정보</b></span>
