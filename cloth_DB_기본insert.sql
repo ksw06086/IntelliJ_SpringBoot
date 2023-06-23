@@ -1,3 +1,9 @@
+-- 계정생성 --
+ALTER SESSION SET "_ORACLE_SCRIPT"=TRUE;
+create user [id] identified by [pw];
+grant connect, resource, dba to [id];
+
+
 -- ROLE 테이블 --
 insert into role_tbl(name)
 values ('ROLE_USER');
