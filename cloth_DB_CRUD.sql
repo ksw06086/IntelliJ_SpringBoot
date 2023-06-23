@@ -13,7 +13,7 @@ select * from size_tbl;
 select * from board_tbl;
 select * from cart_tbl;
 
-update user_role set role_id = 2 where user_id = 21;
+update user_role set role_id = 2 where user_id = 2;
 select * from cloth_tbl order by cloth_id desc;
 
 -- ÀÌÀü±Û
