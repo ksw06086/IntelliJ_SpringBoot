@@ -129,7 +129,7 @@ public class GuestController {
         System.out.println("counts : " + counts);
 
         List<Map<String, Object>> orderMapList = new ArrayList<>(); // Map 생성하여 stock과 count를 넣어줌 -> 리스트에 추가해줌
-        int totalPrice = 0, totalDeliPrice = 0, finalTotalPrice = 0; // 상품 가격 합, 상품 배달비 합, 최종 상품 가격
+        int totalPrice = 0, totalDeliPrice = 0, finalTotalPrice = 0, addStockMileage = 0; // 상품 가격 합, 상품 배달비 합, 최종 상품 가격, 추가될 적립금
 
         // 1개 이상의 stock이 넘겨져 왔을 경우 반복해줌
         for (int i = 0; i < stockIds.size(); i++) {
@@ -142,6 +142,7 @@ public class GuestController {
             totalPrice += stock.getSalePrice() * counts.get(i);
             totalDeliPrice += stock.getStockCloth().getDeliPrice();
             finalTotalPrice += stock.getSalePrice() * counts.get(i) + stock.getStockCloth().getDeliPrice();
+            addStockMileage += stock.getPlus() * counts.get(i);
         }
 
         // 잘 가져왔는지 0개인지 확인
@@ -158,6 +159,7 @@ public class GuestController {
         model.addAttribute("totalPrice", totalPrice);           // 상품 가격 합
         model.addAttribute("totalDeliPrice", totalDeliPrice);   // 상품 배달비 합
         model.addAttribute("finalTotalPrice", finalTotalPrice); // 최종 상품 가격
+        model.addAttribute("addStockMileage", addStockMileage);           // 추가 될 적립금
 
         return "/guest/guest_orderForm";
     }

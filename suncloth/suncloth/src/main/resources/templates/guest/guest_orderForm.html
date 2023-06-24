@@ -105,12 +105,13 @@
     </table>
 
     <!-- Delivery Info Table -->
-    <form id="deliInfoForm" name="deliInfoForm">
     <div class="mt-4 mb-1">
       <span><b>배송정보</b></span>
-      <span class="float-end">* 필수입력사항</span>
+      <span class="float-end"><span class="text-danger">*</span> 필수입력사항</span>
     </div>
-    <table class="deliTable">
+
+    <form name = "deliForm">
+    <table class="deliTable" id="deliTable">
       <colgroup>
         <col width = "20%">
         <col width = "80%">
@@ -118,18 +119,19 @@
       <tr>
         <td>배송지 선택</td>
         <td>
+          <input type="reset" id="newReset" class="d-none"/>
           <input type="radio" id="new" name="deliInfo" value="new"
                  th:onchange="newDeliveryAddress()" checked>
           <label for="new">새로운배송지</label>&nbsp;&nbsp;&nbsp;
-          <input type="radio" id="deli" name="deliInfo" value="profile"
-                 th:onchange="deliveryAddressUpdate()">
+          <input type="radio" id="deli" name="deliInfo" th:value="${user.getId()}"
+                 th:onchange="getMyDeliveryAddress(this.value)">
           <label for="deli">회원정보와 동일</label>
         </td>
       </tr>
       <!-- 받는 사람 -->
       <tr>
         <td><label for="deliName">
-          <span class="text-danger">*</span>받으시는 분
+          <span class="text-danger">*</span> 받으시는 분
         </label></td>
         <td>
           <input type = "text" id = "deliName" name = "deliName" required>
@@ -138,7 +140,7 @@
       <!-- 배송지 주소 -->
       <tr>
         <td><label for="addressInput">
-          <span class="text-danger">*</span>주소
+          <span class="text-danger">*</span> 주소
         </label></td>
         <td>
           <input type = "text" id = "addressInput" name = "addressInput" required>
@@ -168,7 +170,7 @@
       <!-- 휴대폰번호 -->
       <tr>
         <td><label for="baseHPInput">
-          <span class="text-danger">*</span>휴대폰번호
+          <span class="text-danger">*</span> 휴대폰번호
         </label></td>
         <td>
           <select name = "baseHP" id = "baseHPInput" required>
@@ -187,7 +189,7 @@
       <tr>
         <td>
           <label for="idNameInput">
-            <span class="text-danger">*</span>이메일
+            <span class="text-danger">*</span> 이메일
           </label>
         </td>
         <td>
@@ -230,8 +232,8 @@
       </tr>
       <tr class = "totalContent">
         <td id="totalOrderPriceView" th:text="|KRW ${finalTotalPrice}|">KRW ${(cvo.saleprice*count) + cvo.deliprice}</td>
-        <td id="totalUseMileageView" th:text="|- KRW ${user.getUsablePlus()}|"></td>
-        <td id="totalPriceView" th:text="|= KRW ${finalTotalPrice - user.getUsablePlus()}|">KRW ${(cvo.saleprice*count) + cvo.deliprice}</td>
+        <td id="totalUseMileageView" th:text="|- KRW 0|"></td>
+        <td id="totalPriceView" th:text="|= KRW ${finalTotalPrice}|">KRW ${(cvo.saleprice*count) + cvo.deliprice}</td>
       </tr>
     </table>
     <!-- 적립금 관련 정보(mileage Info) -->
@@ -239,19 +241,14 @@
       <col style = "width:20%;">
       <col>
       <tr>
-        <td>총 부가결제금액</td>
-        <td th:text="|KRW ${user.getUsablePlus()}|"></td>
-      </tr>
-      <tr>
         <td>적립금</td>
         <td>
-          <input type = "text" id = "useMileage" name = "pluspay" th:value="${user.getUsablePlus()}"
-                 onkeyup="go(this.value);" th:readonly="${user.getUsablePlus() == 0}?true">
-          원 (총 사용가능 적립금 : <span class="text-danger" th:text="${user.getUsablePlus()}">${gvo.plus}</span>원)<br>
+          <input type = "text" id = "useMileage" name = "pluspay" th:value="${0}"
+                 th:readonly="${user.getUsablePlus() < 100}?true" th:oninput="useMileageInput()" onfocusout="useMileageCheck()">
+          원 (총 사용가능 적립금 : <span class="text-danger" id="usableMileage" th:text="${user.getUsablePlus()}">${gvo.plus}</span>원)<br>
           <br>
           - 적립금은 최소 100 이상일 때 결제가 가능합니다.<br>
           - 최대 사용금액은 제한이 없습니다.<br>
-          - 1회 구매시 적립금 최대 사용금액은 2,000입니다.<br>
           - 적립금으로만 결제할 경우. 결제금액이 0으로 보여지는 것은 정상이며 [결제하기] 버튼을 누르면 주문이 완료됩니다.
         </td>
       </tr>
@@ -264,10 +261,10 @@
       <tr>
         <!-- 결제방식 선택 -->
         <td class="paySelect">
-          <input type = "radio" name = "howPay" value = "account" checked>
-          <label>무통장 입금</label>
-          <input type = "radio" name = "howPay" value = "card">
-          <label>카드 결제</label>
+          <input type = "radio" name = "howPay" id="account" value = "account" checked>
+          <label for="account">무통장 입금</label>
+          <input type = "radio" name = "howPay" id="card" value = "card">
+          <label for="card">카드 결제</label>
         </td>
         <!-- 결제 최종 정보 -->
         <td rowspan="2">
@@ -284,7 +281,7 @@
                 KRW
               </td>
               <td class="text-end fs-30px py-9 px-6">
-                <label class = "total">15000</label>
+                <label class = "total" id="finishTotalPriceView" th:text="${finalTotalPrice}">15000</label>
               </td>
             </tr>
             <tr>
@@ -299,32 +296,21 @@
               </td>
             </tr>
             <tr class="savedMoneyInfo">
-              <td>
-                <b>총 적립예정금액</b>
-              </td>
-              <td>
-                1500원
-              </td>
+              <td><b>총 적립예정금액</b></td>
+              <td id="totalMileage" th:text="|${addStockMileage}원|">1500원</td>
             </tr>
             <tr class="savedMoneyInfo">
-              <td>
-                상품별 적립금
-              </td>
-              <td>
-                1500원
-              </td>
+              <td>상품별 적립금</td>
+              <td id="addStockMileage" th:text="|${addStockMileage}원|">1500원</td>
             </tr>
-            <tr class="savedMoneyInfo">
-              <td>
-                회원 적립금
-              </td>
-              <td>
-                <label>5000</label>원
-              </td>
+            <tr class="savedMoneyInfo d-none">
+              <td>회원 적립금</td>
+              <td><label>5000</label>원</td>
             </tr>
           </table>
         </td>
       </tr>
+      <!-- 무통장 입금 Info -->
       <tr>
         <td  class="paySelectInfo">
           <table class="fs-75 w-100 paySelectAccountInfo">
@@ -383,32 +369,65 @@
     </fieldset>
   </form>
 
+
+  <!-- IMPORT의 결제 시스템 API : 현재 등록된 PG정보가 없다고 뜸, 결제 구현 중-->
+  <!-- javascript -->
+  <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+  <!-- jQuery -->
+  <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+  <!-- iamport.payment.js -->
+  <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
+  <script>
+    IMP.init("imp00000000a"); // 예: imp00000000a
+
+    function requestPay() {
+      IMP.request_pay({
+        pg: "kcp.1111",
+        pay_method: "card",
+        merchant_uid: "ORD20180131-0000011",   // 주문번호
+        name: "노르웨이 회전 의자",
+        amount: 64900,                         // 숫자 타입
+        buyer_email: "gildong@gmail.com",
+        buyer_name: "홍길동",
+        buyer_tel: "010-4242-4242",
+        buyer_addr: "서울특별시 강남구 신사동",
+        buyer_postcode: "01181"
+      }, function (rsp) { // callback
+        //rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
+      });
+    }
+  </script>
+  <!-- HTML -->
+  <button onclick="requestPay()">결제하기</button>
+  <!-- 결제하기 버튼 생성 -->
+
+  <!-- TOSS의 결제 시스템 API -->
   <!-- 결제위젯, 이용약관 영역 -->
   <!--<div id="payment-method"></div>
   <div id="agreement"></div>-->
   <!-- 결제하기 버튼 -->
   <!--<button id="payment-button">결제하기</button>-->
-  <script>
+  <!--<script>
     const clientKey = "test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq"
     const customerKey = "tHe3_yG6m7Xk2yyN680mf" // 내 상점의 고객을 식별하는 고유한 키
     const button = document.getElementById("payment-button")
 
-    // ------  결제위젯 초기화 ------
+    // &#45;&#45;&#45;&#45;&#45;&#45;  결제위젯 초기화 &#45;&#45;&#45;&#45;&#45;&#45;
     // 비회원 결제에는 customerKey 대신 ANONYMOUS를 사용하세요.
     const paymentWidget = PaymentWidget(clientKey, customerKey) // 회원 결제
     // const paymentWidget = PaymentWidget(clientKey, PaymentWidget.ANONYMOUS) // 비회원 결제
 
-    // ------  결제위젯 렌더링 ------
+    // &#45;&#45;&#45;&#45;&#45;&#45;  결제위젯 렌더링 &#45;&#45;&#45;&#45;&#45;&#45;
     // 결제위젯이 렌더링될 DOM 요소를 지정하는 CSS 선택자 및 결제 금액을 넣어주세요.
     // https://docs.tosspayments.com/reference/widget-sdk#renderpaymentmethods선택자-결제-금액
     paymentWidget.renderPaymentMethods("#payment-method", 15000)
 
-    // ------  이용약관 렌더링 ------
+    // &#45;&#45;&#45;&#45;&#45;&#45;  이용약관 렌더링 &#45;&#45;&#45;&#45;&#45;&#45;
     // 이용약관이 렌더링될 DOM 요소를 지정하는 CSS 선택자를 넣어주세요.
     // https://docs.tosspayments.com/reference/widget-sdk#renderagreement선택자
     paymentWidget.renderAgreement('#agreement')
 
-    // ------ '결제하기' 버튼 누르면 결제창 띄우기 ------
+    // &#45;&#45;&#45;&#45;&#45;&#45; '결제하기' 버튼 누르면 결제창 띄우기 &#45;&#45;&#45;&#45;&#45;&#45;
     // 더 많은 결제 정보 파라미터는 결제위젯 SDK에서 확인하세요.
     // https://docs.tosspayments.com/reference/widget-sdk#requestpayment결제-정보
     button.addEventListener("click", function () {
@@ -421,7 +440,7 @@
         customerName: "김토스"
       })
     })
-  </script>
+  </script>-->
 
 </section>
 

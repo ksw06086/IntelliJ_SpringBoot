@@ -5,9 +5,11 @@
 let strongPassword = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})');
 let mediumStrongPassword = new RegExp('((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,}))|((?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9])(?=.{8,}))');
 let mediumPassword = new RegExp('(((?=.*[a-z])|(?=.*[A-Z]))(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,}))');
-
 // *** 휴대폰 번호 정규식 *** //
 let regPhone = /^01([0|1|2|7|8|9])?-([0-9]{3,4})?-([0-9]{4})$/;
+// *** 숫자 정규식 *** //
+let numberCheck = /^[0-9]+$/;
+
 
 // *** Register(회원가입) *** //
 // ID 중복검사
@@ -514,24 +516,29 @@ function CountChangeUpdate(updateId, page) {
 // 주문 Form에서 수량 증감시 TotalPrice 업데이트
 function orderTotalPriceUpdate() {
     // 값을 넣어줄 Block 들
-    const orderSelectTotalText = document.getElementById("orderSelectTotalText"); // 상품구매금액 0 + 배송비 0 = 합계: KRW 0
-    const totalOrderPriceView = document.getElementById("totalOrderPriceView");   // Total 상품 금액
-    const totalUseMileageView = document.getElementById("totalUseMileageView");   // Total 배송비 금액
-    const totalPriceView = document.getElementById("totalPriceView");           // Total 구매 금액
+    const orderSelectTotalText = document.getElementById("orderSelectTotalText");   // 상품구매금액 0 + 배송비 0 = 합계: KRW 0
+    const totalOrderPriceView = document.getElementById("totalOrderPriceView");     // Total 상품 금액
+    const totalUseMileageView = document.getElementById("totalUseMileageView");     // Total 배송비 금액
+    const totalPriceView = document.getElementById("totalPriceView");               // Total 구매 금액
+    const finishTotalPriceView = document.getElementById("finishTotalPriceView");   // 최종 Total 구매 금액
+    const addStockMileage = document.getElementById("addStockMileage");             // 추가 될 적립금
+    const totalMileage = document.getElementById("totalMileage");                   // 총 추가 될 적립금
 
     // 값을 가져올 Block 들
     const stockIds = document.getElementsByName("stockIds"); // 화면에 있는 모든 Checkbox(cartNums)
     const useMileage = document.getElementById("useMileage").value; // 사용가능한 적립금 가져오기
-    let totalSalePrice = 0, totalDeliPrice = 0, totalPrice = 0;
+    let totalSalePrice = 0, totalDeliPrice = 0, totalPrice = 0, mileage = 0;
 
     // checkBox에 체크되었는지 확인 후 삭제
     for (let i = 0; i < stockIds.length; i++) {
-        const salePrice = document.getElementById("salePrice_" + stockIds[i].value).textContent.split(' ')[1]; // 장바구니 상품 단가 금액
-        const orderCount = document.getElementById("count_" + stockIds[i].value).value; // 장바구니 상품 수량
-        const deliPrice = parseInt(document.getElementById("deliPrice_" + stockIds[i].value).textContent.replace(/원/, '')); // 장바구니 상품 배송비
+        const salePrice = document.getElementById("salePrice_" + stockIds[i].value).textContent.split(' ')[1]; // 상품 단가 금액
+        const orderCount = document.getElementById("count_" + stockIds[i].value).value; // 상품 수량
+        const deliPrice = parseInt(document.getElementById("deliPrice_" + stockIds[i].value).textContent.replace(/원/, '')); // 상품 배송비
+        const stockMileage = parseInt(document.getElementById("plusPay_" + stockIds[i].value).textContent.replace(/원/, '')); // 상품 적립금
         totalSalePrice  += salePrice * orderCount;              // 상품단가 * 수량
         totalDeliPrice  += deliPrice;                           // 상품 배송비
-        totalPrice      += salePrice * orderCount + deliPrice;     // 상품 가격 + 배송비
+        totalPrice      += salePrice * orderCount + deliPrice;  // 상품 가격 + 배송비
+        mileage         += stockMileage;                        // 상품 적립금
     }
 
     // Total 값 Text 띄워주기
@@ -539,12 +546,67 @@ function orderTotalPriceUpdate() {
         ' + 배송비 ' + totalDeliPrice +
         ' = 합계: KRW ' + totalPrice;
     totalOrderPriceView.innerText = 'KRW ' + totalPrice;
-    totalUseMileageView.innerText = '- KRW ' + useMileage;
+    totalUseMileageView.innerText = '- KRW ' + (useMileage === ''?0:useMileage);
     totalPriceView.innerText = '= KRW ' + (totalPrice-useMileage);
+    finishTotalPriceView.innerText = (totalPrice-useMileage) + '';
+    addStockMileage.innerText = mileage + '원';
+    totalMileage.innerText = mileage + '원';
 }
 // 배송지 radioButton 별 작동 함수
 function newDeliveryAddress() {
-    document.getElementById("")
+    document.getElementById("newReset").click();
+}
+function getMyDeliveryAddress(userId) {
+    $.ajax({
+        url: '/api/users/' + userId,
+        type: 'GET',
+        success: (result) => {
+            //AJAX 성공시 실행 코드
+            const addressInput = document.getElementById("addressInput");
+            const subAddressInput = document.getElementById("subAddressInput");
+            const detailAddressInput = document.getElementById("detailAddressInput");
+            const baseHPInput = document.getElementById("baseHPInput");
+            const secondHPInput = document.getElementById("secondHPInput");
+            const thirdHPInput = document.getElementById("thirdHPInput");
+            const idNameInput = document.getElementById("idNameInput");
+            const urlCodeInput = document.getElementById("urlCodeInput");
+
+            addressInput.value = result.addressNum;
+            subAddressInput.value = result.addressSub;
+            detailAddressInput.value = result.addressDetail;
+            baseHPInput.value = result.hp.split('-')[0];
+            secondHPInput.value = result.hp.split('-')[1];
+            thirdHPInput.value = result.hp.split('-')[2];
+            idNameInput.value = result.emailIdName;
+            urlCodeInput.value = result.emailUrlCode;
+
+        }
+    });
 }
 
+// 결제 적립금 지정
+function useMileageInput() {
+    const useMileage = document.getElementById("useMileage"); // 사용가능한 적립금 가져오기
+    const usableMileage = parseInt(document.getElementById("usableMileage").textContent); // 사용가능한 적립금 가져오기
+    const totalOrderPriceView = parseInt(document.getElementById("totalOrderPriceView").textContent.split(' ')[1]);
+    if(!numberCheck.test(useMileage.value) && useMileage.value != ''){
+        alert("숫자만 입력 가능합니다.");
+        useMileage.value = '';
+    }
+    if(useMileage.value > totalOrderPriceView){
+        useMileage.value = totalOrderPriceView;
+    }
+    if(useMileage.value > usableMileage){
+        useMileage.value = usableMileage;
+    }
 
+    orderTotalPriceUpdate();
+}
+function useMileageCheck() {
+    const useMileage = document.getElementById("useMileage"); // 사용가능한 적립금 가져오기
+    if(useMileage.value < 100 && useMileage.value !== '' && useMileage.value !== '0'){
+        alert("적립금은 100원 이상부터 사용가능합니다.");
+        useMileage.value = 0;
+        orderTotalPriceUpdate();
+    }
+}
