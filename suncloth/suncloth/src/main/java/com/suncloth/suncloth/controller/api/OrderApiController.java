@@ -5,6 +5,7 @@ import com.suncloth.suncloth.model.Stock;
 import com.suncloth.suncloth.model.User;
 import com.suncloth.suncloth.repository.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.juli.logging.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,6 +14,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/*
+ * 최초 작성자 : 김선우
+ * 최초 작성일 : 2023.06.27
+ * 최초 변경일 : 2023.06.27
+ * 목적 : 쇼핑몰 주문 관련 RestAPI 컨트롤러
+ * 개정 이력 : 김선우 - 2023.06.03, 주문 RestAPI 컨트롤러 생성
+ * 저작권 : 김선우
+ */
 @RestController
 @RequestMapping("/api")
 @Slf4j
@@ -51,21 +60,32 @@ public class OrderApiController {
     }
     // end::get-aggregate-root[]
 
-    // POST : Order 테이블에 정보 삽입하기
+    /*
+     * 목적 : POST - Order 테이블에 정보 삽입하기
+     * 매개변수 : newOrder(주문 Model)
+     *           stockId(재고 아이디)
+     * 반환 값 : Order(주문 Model)
+     * 변경 이력 : 김선우, 2023.06.27(ver. 01)
+     */
     @PostMapping("/order")
-    Order newOrder(Order newOrder, Long stockId) {
+    Order newOrder(@RequestParam(required = false, defaultValue = "") String imp_uid
+            , @RequestParam(required = false, defaultValue = "") String merchant_uid) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDetails userDetails = (UserDetails)principal;
         String username = userDetails.getUsername();
 
         User user = userRepository.findByUsername(username);
-        Stock stock = stockRepository.findById(stockId).orElse(null);
+
+        log.info("{}, {}", imp_uid, merchant_uid);
+        return null;
+
+        /*Stock stock = stockRepository.findById(stockId).orElse(null);
 
         newOrder.setOrderUser(user);
         newOrder.setOrderStock(stock);
 
         System.out.println("order : " + newOrder.toString());
-        return orderRepository.save(newOrder);
+        return orderRepository.save(newOrder);*/
     }
 
     // POST : Id에 맞게 한가지 Order 정보만 갱신

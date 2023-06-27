@@ -383,9 +383,9 @@
       IMP.request_pay({
         pg: "kcp.INIpayTest",
         pay_method: "card",
-        merchant_uid: "57008833-33004",
+        merchant_uid: "57008833-33005",
         name: "당근 10kg",
-        amount: 1004,
+        amount: 100,
         buyer_email: "Iamport@chai.finance",
         buyer_name: "포트원 기술지원팀",
         buyer_tel: "010-1234-5678",
@@ -393,15 +393,25 @@
         buyer_postcode: "123-456",
       }, function (rsp) { // callback
         //rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
-        $.ajax({
-          type: 'DELETE',
-          url: '/api/carts/' + cartId,
-          success: (result) => {
-            //AJAX 성공시 실행 코드
-          }, error:function(e) {
-            alert("error: " + e);
-          }
-        });
+        if(rsp.success){
+          console.log(rsp);
+          $.ajax({
+            url: "/api/order",
+            type : "POST",
+            data: {
+              "imp_uid": rsp.imp_uid,            // 결제 고유번호
+              "merchant_uid": rsp.merchant_uid   // 주문번호
+            },
+            success: (result) => {
+              //AJAX 성공시 실행 코드
+              alert("결제 성공");
+            }, error:function(e) {
+              alert("error: " + e);
+            }
+          });
+        } else {
+          alert("결제에 실패하였습니다. 에러 내용: " + rsp.error_msg);
+        }
       });
     }
   </script>
