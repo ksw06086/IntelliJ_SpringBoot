@@ -216,3 +216,23 @@ create table cart_tbl(
     FOREIGN KEY(user_id) REFERENCES user_tbl(id) on delete cascade,
     FOREIGN KEY(stock_id) REFERENCES stock_tbl(stock_id) on delete cascade
 );
+
+/************ 주문 관련 Table ***********/
+/** 주문(order_tbl) Table **/
+create table order_tbl(
+    order_id int GENERATED ALWAYS as IDENTITY,
+    user_id int not null,
+    stock_id int not null,
+    count int,
+    use_plus int,
+    real_price int,
+    reg_date Date DEFAULT sysdate,
+    deposit_name varchar2(50),
+    bank_name varchar2(50) constraint orders_bankname_nn_excption not null,
+    pay_option varchar2(50),
+    user_messege clob,
+    order_state varchar2(100),
+    CONSTRAINT order_id_pk_excption PRIMARY key(order_id),
+    FOREIGN KEY(user_id) REFERENCES user_tbl(id) on delete cascade,
+    FOREIGN KEY(stock_id) REFERENCES stock_tbl(stock_id) on delete cascade
+);

@@ -11,6 +11,15 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+ * 최초 작성자 : 김선우
+ * 최초 작성일 : 2023.06.03
+ * 최초 변경일 : 2023.06.27
+ * 목적 : 쇼핑몰 재고 내역 저장
+ * 개정 이력 : 김선우 - 2023.06.03, 재고 Model 생성
+ *                   2023.06.27, 주문 Model 연결
+ * 저작권 : 김선우
+ */
 @NoArgsConstructor
 @Getter
 @Setter
@@ -54,4 +63,9 @@ public class Stock {
     @OneToMany(mappedBy = "cartStock", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Cart> carts = new ArrayList<>();
+
+    // Stock 과 연결된 Order 들
+    @OneToMany(mappedBy = "orderStock", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Order> orders = new ArrayList<>();
 }

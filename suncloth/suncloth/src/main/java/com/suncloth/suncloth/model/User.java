@@ -17,6 +17,15 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.spi.CalendarDataProvider;
 
+/*
+ * 최초 작성자 : 김선우
+ * 최초 작성일 : 2023.04.02
+ * 최초 변경일 : 2023.06.27
+ * 목적 : 쇼핑몰 사용자 내역 저장
+ * 개정 이력 : 김선우 - 2023.04.02, 사용자 Model 생성
+ *                   2023.06.27, 주문 Model 연결
+ * 저작권 : 김선우
+ */
 @NoArgsConstructor
 @Getter
 @Setter
@@ -76,4 +85,9 @@ public class User {
     @OneToMany(mappedBy = "cartUser", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Cart> carts = new ArrayList<>();
+
+    // 주문 Order 테이블과 조인
+    @OneToMany(mappedBy = "orderUser", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Order> orders = new ArrayList<>();
 }
