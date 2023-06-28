@@ -353,7 +353,60 @@ function stockListOrderFormMove() {
         }
     }
 
-    window.location.href="/guest/orderForm?stockIds=" + stockIdList + "&counts=" + countList;
+    if(stockIdList.length === 0) { alert("주문할 상품을 선택해주세요."); return false; }
+
+    // 아임포트의 Token 가져오기 => 일회용 프록시 서버 사용해서 함
+    let urlLink = "https://api.iamport.kr/users/getToken";
+    let accessToken = "";
+    $.ajax({
+        url: "https://cors-anywhere.herokuapp.com/" + urlLink,
+        method: "post",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        data: JSON.stringify({
+            imp_key: "", // REST API 키
+            imp_secret: "" // REST API Secret
+        }),
+        success: (result) => {
+            console.log("성공");
+            console.log(result);
+
+            // 아임포트 서버에 주문번호와 금액 DB 저장하기
+            paymentPrepare(result.response.access_token);
+
+            // 상품 주문 페이지로 이동
+            // window.location.href="/guest/orderForm?stockIds=" + stockIdList + "&counts=" + countList;
+        },
+        error: function (e) {
+            console.log("실패");
+            console.log(e);
+        }
+
+    });
+
+    function paymentPrepare(accessToken) {
+        $.ajax({
+            url: "https://cors-anywhere.herokuapp.com/https://api.iamport.kr/payments/prepare?_token=" + accessToken,
+            method: "post",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            data: JSON.stringify({
+                merchant_uid: "406", // 가맹점 주문번호
+                amount: 200, // 결제 예정금액
+            }),
+            success: (result) => {
+                console.log("성공");
+                console.log(result);
+            },
+            error: function (e) {
+                console.log("실패");
+                console.log(e);
+            }
+
+        });
+    }
 }
 
 //*** Cart ***//

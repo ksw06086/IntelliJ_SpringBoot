@@ -10,8 +10,12 @@ import org.springframework.security.config.annotation.web.configurers.LogoutConf
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.sql.DataSource;
+import java.util.Arrays;
 
 // security 적용 및 설정을 위한 클래스
 @Configuration
@@ -20,10 +24,31 @@ public class WebSecurityConfig {
     // 데이터베이스 연동 클래스 생성
     @Autowired
     private DataSource dataSource;
+
+    /*@Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        //허용할 url 설정
+        configuration.addAllowedOrigin("https://api.iamport.kr/users/getToken");
+        //허용할 헤더 설정
+        configuration.addAllowedHeader("*");
+        //허용할 http method
+        configuration.addAllowedMethod("*");
+        //사용자 자격 증명이 지원되는지 여부
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+
+    }*/
+
     // 페이지별 권한 부여 메소드 : requestMatchers에 표시된 페이지 및 경로는 모든 사용자 사용 가능 그 이외는 로그인된 사용자만 사용 가능
     // formLogin - 로그인 페이지 지정해주는 것
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        // http.cors().configurationSource(corsConfigurationSource());
         http
                 .csrf().disable() // 이거 하면 보안에 취약하나 테스트 원활히 가능, 이거 없으면 추가,수정이 어려움
                 .authorizeHttpRequests((requests) -> requests
