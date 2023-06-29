@@ -339,7 +339,7 @@ function stockOrderFormMove(id) {
 // checkbox 선택 stockList 가지고 주문페이지로 이동
 function stockListOrderFormMove() {
     const cartIds = document.getElementsByName("cartIds"); // 화면에 있는 모든 Checkbox(cartNums)
-    let stockIdList = []; let countList = [];
+    let stockIdList = [], countList = [];
 
     // checkBox에 체크되었는지 확인 후 stockIdList, countList 에 값 추가해주기
     for (let i = 0; i < cartIds.length; i++) {
@@ -355,9 +355,18 @@ function stockListOrderFormMove() {
 
     if(stockIdList.length === 0) { alert("주문할 상품을 선택해주세요."); return false; }
 
-    // 아임포트의 Token 가져오기 => 일회용 프록시 서버 사용해서 함
+    // 아임포트 토큰 가져오기 및 주문번호 금액 지정(보안 위해서 => 적립금을 지정해주어야해서 orderForm에서 DB 값 가져와서 처리하기로 함)
+    // getAccessToken(saleTotalPrice);
+
+    // 상품 주문 페이지로 이동
+    window.location.href="/guest/orderForm?stockIds=" + stockIdList + "&counts=" + countList;
+
+}
+
+//*** I'mport(아임포트) 결제 API 관련 ***//
+// 아임포트의 Token 가져오기 => 일회용 프록시 서버 사용해서 함
+function getAccessToken(saleTotalPrice) {
     let urlLink = "https://api.iamport.kr/users/getToken";
-    let accessToken = "";
     $.ajax({
         url: "https://cors-anywhere.herokuapp.com/" + urlLink,
         method: "post",
@@ -365,18 +374,17 @@ function stockListOrderFormMove() {
             "Content-Type": "application/json"
         },
         data: JSON.stringify({
-            imp_key: "", // REST API 키
-            imp_secret: "" // REST API Secret
+            imp_key: "8257307580684274", // REST API 키
+            imp_secret: "mSeaMrasCmMjwsOnm8yhD8xQIbr3UBHhLRX3VJJxtqO9iYPiQYkjBmk4OdamfFJkIPFh6262kMAqVeh3" // REST API Secret
         }),
         success: (result) => {
             console.log("성공");
             console.log(result);
 
-            // 아임포트 서버에 주문번호와 금액 DB 저장하기
-            paymentPrepare(result.response.access_token);
+            const maxId = getOrderTableMaxId();
 
-            // 상품 주문 페이지로 이동
-            // window.location.href="/guest/orderForm?stockIds=" + stockIdList + "&counts=" + countList;
+            // 아임포트 서버에 주문번호와 금액 DB 저장하기(인증 토큰, 주문번호, 결제 금액
+            paymentPrepare(result.response.access_token, (maxId+1), saleTotalPrice);
         },
         error: function (e) {
             console.log("실패");
@@ -384,29 +392,29 @@ function stockListOrderFormMove() {
         }
 
     });
+}
+// 아임포트 서버에 주문번호와 금액 DB 저장하기
+function paymentPrepare(accessToken, maxId, saleTotalPrice) {
+    $.ajax({
+        url: "https://cors-anywhere.herokuapp.com/https://api.iamport.kr/payments/prepare?_token=" + accessToken,
+        method: "post",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        data: JSON.stringify({
+            merchant_uid: maxId,    // 가맹점 주문번호
+            amount: saleTotalPrice, // 결제 예정금액
+        }),
+        success: (result) => {
+            console.log("성공");
+            console.log(result);
+        },
+        error: function (e) {
+            console.log("실패");
+            console.log(e);
+        }
 
-    function paymentPrepare(accessToken) {
-        $.ajax({
-            url: "https://cors-anywhere.herokuapp.com/https://api.iamport.kr/payments/prepare?_token=" + accessToken,
-            method: "post",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            data: JSON.stringify({
-                merchant_uid: "406", // 가맹점 주문번호
-                amount: 200, // 결제 예정금액
-            }),
-            success: (result) => {
-                console.log("성공");
-                console.log(result);
-            },
-            error: function (e) {
-                console.log("실패");
-                console.log(e);
-            }
-
-        });
-    }
+    });
 }
 
 //*** Cart ***//
@@ -574,8 +582,6 @@ function orderTotalPriceUpdate() {
     const totalUseMileageView = document.getElementById("totalUseMileageView");     // Total 배송비 금액
     const totalPriceView = document.getElementById("totalPriceView");               // Total 구매 금액
     const finishTotalPriceView = document.getElementById("finishTotalPriceView");   // 최종 Total 구매 금액
-    const addStockMileage = document.getElementById("addStockMileage");             // 추가 될 적립금
-    const totalMileage = document.getElementById("totalMileage");                   // 총 추가 될 적립금
 
     // 값을 가져올 Block 들
     const stockIds = document.getElementsByName("stockIds"); // 화면에 있는 모든 Checkbox(cartNums)
@@ -585,13 +591,11 @@ function orderTotalPriceUpdate() {
     // checkBox에 체크되었는지 확인 후 삭제
     for (let i = 0; i < stockIds.length; i++) {
         const salePrice = document.getElementById("salePrice_" + stockIds[i].value).textContent.split(' ')[1]; // 상품 단가 금액
-        const orderCount = document.getElementById("count_" + stockIds[i].value).value; // 상품 수량
+        const orderCount = parseInt(document.getElementById("count_" + stockIds[i].value).textContent); // 상품 수량
         const deliPrice = parseInt(document.getElementById("deliPrice_" + stockIds[i].value).textContent.replace(/원/, '')); // 상품 배송비
-        const stockMileage = parseInt(document.getElementById("plusPay_" + stockIds[i].value).textContent.replace(/원/, '')); // 상품 적립금
         totalSalePrice  += salePrice * orderCount;              // 상품단가 * 수량
         totalDeliPrice  += deliPrice;                           // 상품 배송비
         totalPrice      += salePrice * orderCount + deliPrice;  // 상품 가격 + 배송비
-        mileage         += stockMileage;                        // 상품 적립금
     }
 
     // Total 값 Text 띄워주기
@@ -602,8 +606,6 @@ function orderTotalPriceUpdate() {
     totalUseMileageView.innerText = '- KRW ' + (useMileage === ''?0:useMileage);
     totalPriceView.innerText = '= KRW ' + (totalPrice-useMileage);
     finishTotalPriceView.innerText = (totalPrice-useMileage) + '';
-    addStockMileage.innerText = mileage + '원';
-    totalMileage.innerText = mileage + '원';
 }
 // 배송지 radioButton 별 작동 함수
 function newDeliveryAddress() {
@@ -636,7 +638,6 @@ function getMyDeliveryAddress(userId) {
         }
     });
 }
-
 // 결제 적립금 지정
 function useMileageInput() {
     const useMileage = document.getElementById("useMileage"); // 사용가능한 적립금 가져오기
@@ -662,4 +663,131 @@ function useMileageCheck() {
         useMileage.value = 0;
         orderTotalPriceUpdate();
     }
+}
+
+//*** OrderForm : 결제하기 ***//
+// 1. 결제 위변조 검증
+function paymentsVerification() {
+    const finishTotalPriceView = document.getElementById("finishTotalPriceView").textContent;
+    const useMileage = document.getElementById("useMileage").value;
+
+    const stockIds = document.getElementsByName("stockIds"); // 화면에 있는 모든 Checkbox(cartNums)
+    const stockIdList = [], countList = [];
+
+    for(let i = 0; i < stockIds.length; i++){
+        const orderCount = parseInt(document.getElementById("count_" + stockIds[i].value).textContent); // 상품 수량
+
+        stockIdList.push(stockIds[i].value);
+        countList.push(orderCount);
+    }
+
+    const formData = new FormData();
+    formData.append("stockIdList", stockIdList);
+    formData.append("countList", countList);
+    formData.append("finishTotalPriceView", finishTotalPriceView);
+    formData.append("useMileage", useMileage);
+
+    $.ajax({
+        type: 'POST',
+        url: '/api/order/payments_verification',
+        processData: false,
+        contentType: false,
+        data: formData,
+        success: (result) => {
+            //AJAX 성공시 실행 코드(* mainCategoriesSelector Class)
+            if(result === "정상 결제시도"){ alert(result); getOrderTableMaxId(); }
+            else { alert(result); }
+        }, error:function(e) {
+            alert("실패 에러남");
+        }
+    });
+}
+// 2. 주문 테이블의 Id 최대값 가져오기(주문번호로 사용 될 예정)
+function getOrderTableMaxId() {
+    // ajax로 Color/Size의 재고 가져와서 화면 보여주기
+    $.ajax({
+        type: 'GET',
+        url: '/api/order/maxId',
+        success: (result) => {
+            //AJAX 성공시 실행 코드(* mainCategoriesSelector Class)
+            requestPay(result);
+        }, error:function(e) {
+            alert("실패 에러남");
+        }
+    });
+}
+// 3. 아임포트 결제 화면 실행
+// IMPORT의 결제 시스템 API : 현재 등록된 PG정보가 없다고 뜸, 결제 구현 중 아직 해야할 것 많음 내일 꼭 다 끝낸다 //
+const IMP = window.IMP;
+IMP.init("imp81234382"); // 예: imp00000000
+function requestPay(orderMaxId) {
+    const count = document.getElementById("count");                 // 주문에 추가한 재고 수
+    const usePlus = document.getElementById("usePlus");             // 주문할 때 사용한 적립금
+    const realPrice = document.getElementById("realPrice");         // 주문 최종 금액
+    const depositName = document.getElementById("depositName");     // 계좌번호
+    const bankName = document.getElementById("bankName");           // 은행명
+    const payOption = document.getElementById("payOption");         // 결제방식
+    const userMessage = document.getElementById("userMessage");     // 고객 메세지
+
+    const paymentsAgree = document.getElementById("paymentsAgree");
+    const finishTotalPriceView = document.getElementById("finishTotalPriceView").textContent;
+    const stockIds = document.getElementsByName("stockIds"); // 화면에 있는 모든 Checkbox(cartNums)
+    let orderStockListStr = "";
+
+    // 결제 동의 체크 여부 확인
+    if(paymentsAgree.checked === false) {
+        alert("결제정보와 유의사항을 확인하시고 결제버튼 위에 동의를 체크해주세요.");
+        return false;
+    }
+
+    // 주문 정보 Info(상품 이름, 상품 옵션<color, size>)
+    for(let i = 0; i < stockIds.length; i++){
+        const clothName = document.getElementById("clothName_" + stockIds[i].value).textContent;
+        const stockColorSize = document.getElementById("stockColorSize_" + stockIds[i].value).textContent;
+
+        orderStockListStr += "(" + clothName + " " + stockColorSize + ") "
+    }
+    alert(orderStockListStr + " : " + finishTotalPriceView + "원");
+
+    IMP.request_pay({
+        pg: "kcp.INIpayTest",
+        pay_method: "card",
+        merchant_uid: "1-" + orderMaxId,
+        name: orderStockListStr,
+        amount: finishTotalPriceView,
+        buyer_email: "Iamport@chai.finance",
+        buyer_name: "포트원 기술지원팀",
+        buyer_tel: "010-1234-5678",
+        buyer_addr: "서울특별시 강남구 삼성동",
+        buyer_postcode: "123-456",
+    }, function (rsp) { // callback
+        //rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
+        if(rsp.success){
+            console.log(rsp);
+            $.ajax({
+                url: "/api/order",
+                type : "POST",
+                data: {
+                    "imp_uid": rsp.imp_uid,            // 결제 고유번호
+                    "merchantUid": rsp.merchant_uid,   // 주문번호
+                    "count": count,                    // 주문에 추가한 재고 수
+                    "usePlus": usePlus,                // 주문할 때 사용한 적립금
+                    "realPrice": realPrice,            // 주문 최종 금액
+                    "depositName": depositName,        // 계좌번호
+                    "bankName": bankName,              // 은행명
+                    "payOption": payOption,            // 결제방식
+                    "userMessage": userMessage,        // 고객 메세지
+                    "orderState": rsp.pay_method,      // 주문상태
+                },
+                success: (result) => {
+                    //AJAX 성공시 실행 코드
+                    alert("결제 성공");
+                }, error:function(e) {
+                    alert("error: " + e);
+                }
+            });
+        } else {
+            alert("결제에 실패하였습니다. 에러 내용: " + rsp.error_msg);
+        }
+    });
 }

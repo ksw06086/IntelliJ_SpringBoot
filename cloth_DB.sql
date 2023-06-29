@@ -223,6 +223,7 @@ create table order_tbl(
     order_id int GENERATED ALWAYS as IDENTITY,
     user_id int not null,
     stock_id int not null,
+    merchant_uid clob not null,
     count int,
     use_plus int,
     real_price int,
@@ -235,4 +236,12 @@ create table order_tbl(
     CONSTRAINT order_id_pk_excption PRIMARY key(order_id),
     FOREIGN KEY(user_id) REFERENCES user_tbl(id) on delete cascade,
     FOREIGN KEY(stock_id) REFERENCES stock_tbl(stock_id) on delete cascade
+);
+
+/** order_stock 테이블(다대다 적용을 위해 order와 stock 연결) **/
+create table order_stock(
+    order_id int,
+    stock_id int,
+    CONSTRAINT fk_order FOREIGN key(order_id) REFERENCES order_tbl(order_id) on delete cascade,
+    CONSTRAINT fk_stock FOREIGN key(stock_id) REFERENCES stock_tbl(stock_id) on delete cascade
 );

@@ -65,7 +65,7 @@ public class Stock {
     private List<Cart> carts = new ArrayList<>();
 
     // Stock 과 연결된 Order 들
-    @OneToMany(mappedBy = "orderStock", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private List<Order> orders = new ArrayList<>();
+    @ManyToMany(mappedBy = "orderStockList")
+    @JsonIgnore /// 이 부분은 json 표시할 때 무시한다(지운다)
+    private List<Order> orderList = new ArrayList<>();
 }

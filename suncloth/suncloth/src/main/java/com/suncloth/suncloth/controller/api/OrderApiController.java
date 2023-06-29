@@ -1,6 +1,7 @@
 package com.suncloth.suncloth.controller.api;
 
 import com.suncloth.suncloth.model.Order;
+import com.suncloth.suncloth.model.Role;
 import com.suncloth.suncloth.model.Stock;
 import com.suncloth.suncloth.model.User;
 import com.suncloth.suncloth.repository.*;
@@ -61,21 +62,29 @@ public class OrderApiController {
     // end::get-aggregate-root[]
 
     /*
-     * 목적 : POST - Order 테이블에 정보 삽입하기
+     * 목적 : POST - Order 테이블에 정보 삽입하기(Insert)
      * 매개변수 : newOrder(주문 Model)
      *           stockId(재고 아이디)
      * 반환 값 : Order(주문 Model)
      * 변경 이력 : 김선우, 2023.06.27(ver. 01)
      */
     @PostMapping("/order")
-    Order newOrder(@RequestParam(required = false, defaultValue = "") String imp_uid
-            , @RequestParam(required = false, defaultValue = "") String merchant_uid) {
+    Order newOrder(Order newOrder
+            , @RequestParam(required = false, defaultValue = "") String imp_uid
+            , @RequestParam(required = false, defaultValue = "") String merchant_uid
+            , @RequestParam(required = false, defaultValue = "") List<Long> stockIds) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDetails userDetails = (UserDetails)principal;
         String username = userDetails.getUsername();
 
         User user = userRepository.findByUsername(username);
+        newOrder.setOrderUser(user);
 
+        for (int i = 0; i < stockIds.size(); i++) {
+            Stock stock = stockRepository.findById(stockIds.get(i)).orElse(null);
+            newOrder.getOrderStockList().add(stock);
+        }
+        
         log.info("{}, {}", imp_uid, merchant_uid);
         return null;
 
@@ -88,18 +97,16 @@ public class OrderApiController {
         return orderRepository.save(newOrder);*/
     }
 
-    // POST : Id에 맞게 한가지 Order 정보만 갱신
+    // POST : Id에 맞게 한가지 Order 정보만 갱신(Update)
     @PostMapping("/newOrder")
-    Order updateOrder(Order newOrder, Long stockId) {
+    Order updateOrder(Order newOrder) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDetails userDetails = (UserDetails)principal;
         String username = userDetails.getUsername();
 
         return orderRepository.findById(newOrder.getOrderId())
                 .map(order -> {
-                    Stock stock = stockRepository.findById(stockId).orElse(null);
                     User user = userRepository.findByUsername(username);
-                    order.setOrderStock(stock);
                     order.setOrderUser(user);
                     order.setCount(newOrder.getCount());
                     return orderRepository.save(order);
@@ -107,6 +114,44 @@ public class OrderApiController {
                 .orElseGet(() -> {
                     return orderRepository.save(newOrder);
                 });
+    }
+
+    /*
+     * 목적 : POST - Order 결제 금액이 DB와 맞는지 확인하기 위함
+     * 매개변수 : stockIdList(stock 아이디 목록)
+     *           totalOrderPriceView(orderForm.html 의 주문 총 예정 금액)
+     *           useMileage(orderForm.html 의 고객이 사용할 적립금)
+     * 반환 값 : String(정상/위조된 결제시도)
+     * 변경 이력 : 김선우, 2023.06.28(ver. 01)
+     */
+    @PostMapping("/order/payments_verification")
+    String paymentsVerification(@RequestParam(required = false, defaultValue = "") List<Long> stockIdList
+            , @RequestParam(required = false, defaultValue = "") List<Long> countList
+            , @RequestParam(required = false, defaultValue = "") Long finishTotalPriceView
+            , @RequestParam(required = false, defaultValue = "") Long useMileage) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails userDetails = (UserDetails)principal;
+        String username = userDetails.getUsername();
+        User user = userRepository.findByUsername(username);
+
+        long stockTotalSalePrice = 0;       // DB Stock 테이블의 totalSalePrice
+        for (int i = 0; i < stockIdList.size(); i++) {
+            Stock stock = stockRepository.findById(stockIdList.get(i)).orElse(null);
+            stockTotalSalePrice += (stock.getSalePrice() * countList.get(i) + stock.getStockCloth().getDeliPrice());
+        }
+
+        log.info("orderForm 사용 적립금 : {}", useMileage);
+        log.info("사용 가능 적립금 : {}", user.getUsablePlus());
+        log.info("orderForm 주문 최종 금액 : {}", finishTotalPriceView);
+        log.info("주문 최종 금액 : {}", (stockTotalSalePrice - useMileage));
+
+        if(useMileage > user.getUsablePlus()){
+            return "사용 적립금 위조된 결제시도";
+        } else if(finishTotalPriceView != (stockTotalSalePrice - useMileage)){
+            return "주문 최종금액 위조된 결제시도";
+        } else {
+            return "정상 결제시도";
+        }
     }
 
     // Single item
@@ -126,15 +171,21 @@ public class OrderApiController {
         return orderRepository.findByOrderUser(user);
     }
 
+    // GET : Id 중 가장 높은 값 가져오기
+    @GetMapping("/order/maxId")
+    Long oneOrderMaxId() {
+        Long maxId = orderRepository.findByOrderMaxId();
+        log.info("{}", maxId);
+        return maxId;
+    }
+
     // PUT : Id에 맞게 한가지 Order 정보만 갱신
     @PutMapping("/order/{orderId}")
-    Order replaceOrder(@RequestBody Order newOrder,@RequestBody Long stockId,@RequestBody String username, @PathVariable Long orderId) {
+    Order replaceOrder(@RequestBody Order newOrder,@RequestBody String username, @PathVariable Long orderId) {
 
         return orderRepository.findById(orderId)
                 .map(order -> {
-                    Stock stock = stockRepository.findById(stockId).orElse(null);
                     User user = userRepository.findByUsername(username);
-                    order.setOrderStock(stock);
                     order.setOrderUser(user);
                     order.setCount(newOrder.getCount());
                     return orderRepository.save(order);

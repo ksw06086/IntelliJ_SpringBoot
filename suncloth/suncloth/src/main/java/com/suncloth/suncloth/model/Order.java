@@ -9,6 +9,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 /*
 * 최초 작성자 : 김선우
@@ -28,6 +30,7 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // => 자동증가
     private long orderId;               // 주문 목록 식별번호
+    private String merchantUid;         // 주문 번호
     private long count;                 // 주문에 추가한 재고 수
     private long usePlus;               // 주문할 때 사용한 적립금
     private long realPrice;             // 주문 최종 금액
@@ -46,10 +49,12 @@ public class Order {
     @JsonIgnore
     private User orderUser;
 
-    // Stock 와 연결
+    // Stock 와 조인함
     // name : 나의 외래키 컬럼, referencedColumnName(생략가능) : 상대의 primary 컬럼
-    @ManyToOne
-    @JoinColumn(name = "stock_id")
-    @JsonIgnore
-    private Stock orderStock;
+    @ManyToMany
+    @JoinTable(
+            name = "order_stock",
+            joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "stock_id"))
+    private List<Stock> orderStockList = new ArrayList<>();
 }

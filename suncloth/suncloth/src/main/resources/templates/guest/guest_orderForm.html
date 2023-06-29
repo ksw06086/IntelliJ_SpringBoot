@@ -71,17 +71,15 @@
         </td>
         <!-- Product Name/Option -->
         <td class="text-start ps-5px">
-          <b th:text="${list.get('stock').getStockCloth().getClothName()}">아름다운 이미지</b><br>
+          <b th:text="${list.get('stock').getStockCloth().getClothName()}" th:id="|clothName_${list.get('stock').getStockId()}|">아름다운 이미지</b><br>
           <span th:text="|[옵션: ${list.get('stock').getStockColor().getColorName()}/${list.get('stock').getStockSize().getSizeName()}]|"
-                class="color-gray">[옵션: Blue/M]</span>
+                class="color-gray" th:id="|stockColorSize_${list.get('stock').getStockId()}|">[옵션: Blue/M]</span>
         </td>
         <!-- oneProductSalePrice -->
         <td><b th:text="|KSW ${list.get('stock').getSalePrice()}|"
                th:id="|salePrice_${list.get('stock').getStockId()}|">KSW 15000</b></td>
-        <!-- orderCount -->
-        <td><input type="number" th:id="|count_${list.get('stock').getStockId()}|" th:value="${list.get('count')}"
-                   min="1" th:max="${list.get('stock').getStockMaxCount()}"
-                   th:oninput="CountChangeUpdate(this.id, 'orderForm')"></td>
+        <!-- orderCount : 결제 금액 불일치 관련 보안을 위해서 개수를 조절할 수 없게 만듦 -->
+        <td th:id="|count_${list.get('stock').getStockId()}|" th:text="${list.get('count')}"></td>
         <!-- plus Pay -->
         <td th:id="|plusPay_${list.get('stock').getStockId()}|"
             th:text="|${list.get('stock').getPlus() * list.get('count')}원|">
@@ -286,13 +284,13 @@
             </tr>
             <tr>
               <td colspan = "2" class="fs-65 px-6 py-9">
-                <input type = "checkbox" name = "agree" value = "ok">
+                <input type = "checkbox" id = "paymentsAgree" value = "ok">
                 <label> 결제정보를 확인하였으며, 구매진행에 동의합니다.</label>
               </td>
             </tr>
             <tr>
               <td colspan = "2" class="py-9 px-6">
-                <input type = "submit" class="blackButton" name = "pay" value = "결제하기" onclick = "javascript: orderform.action = 'orderPro'">
+                <input type = "submit" class="blackButton" name = "pay" value = "결제하기" th:onclick="paymentsVerification()">
               </td>
             </tr>
             <tr class="savedMoneyInfo">
@@ -370,78 +368,33 @@
   </form>
 
 
-  <!-- IMPORT의 결제 시스템 API : 현재 등록된 PG정보가 없다고 뜸, 결제 구현 중 아직 해야할 것 많음 내일 꼭 다 끝낸다 -->
-  <script>
-    const IMP = window.IMP;
-    IMP.init("imp81234382"); // 예: imp00000000
-
-    function requestPay() {
-      IMP.request_pay({
-        pg: "kcp.INIpayTest",
-        pay_method: "card",
-        merchant_uid: "406",
-        name: "당근 10kg",
-        amount: 100,
-        buyer_email: "Iamport@chai.finance",
-        buyer_name: "포트원 기술지원팀",
-        buyer_tel: "010-1234-5678",
-        buyer_addr: "서울특별시 강남구 삼성동",
-        buyer_postcode: "123-456",
-      }, function (rsp) { // callback
-        //rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
-        if(rsp.success){
-          console.log(rsp);
-          $.ajax({
-            url: "/api/order",
-            type : "POST",
-            data: {
-              "imp_uid": rsp.imp_uid,            // 결제 고유번호
-              "merchant_uid": rsp.merchant_uid   // 주문번호
-            },
-            success: (result) => {
-              //AJAX 성공시 실행 코드
-              alert("결제 성공");
-            }, error:function(e) {
-              alert("error: " + e);
-            }
-          });
-        } else {
-          alert("결제에 실패하였습니다. 에러 내용: " + rsp.error_msg);
-        }
-      });
-    }
-  </script>
-  <!-- HTML -->
-  <button th:onclick="requestPay()">결제하기</button>
-  <!-- 결제하기 버튼 생성 -->
-
   <!-- TOSS의 결제 시스템 API -->
   <!-- 결제위젯, 이용약관 영역 -->
   <!--<div id="payment-method"></div>
   <div id="agreement"></div>-->
   <!-- 결제하기 버튼 -->
   <!--<button id="payment-button">결제하기</button>-->
-  <!--<script>
+  <script>
     const clientKey = "test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq"
     const customerKey = "tHe3_yG6m7Xk2yyN680mf" // 내 상점의 고객을 식별하는 고유한 키
     const button = document.getElementById("payment-button")
 
-    // &#45;&#45;&#45;&#45;&#45;&#45;  결제위젯 초기화 &#45;&#45;&#45;&#45;&#45;&#45;
+    // ------  결제위젯 초기화 ------
     // 비회원 결제에는 customerKey 대신 ANONYMOUS를 사용하세요.
     const paymentWidget = PaymentWidget(clientKey, customerKey) // 회원 결제
     // const paymentWidget = PaymentWidget(clientKey, PaymentWidget.ANONYMOUS) // 비회원 결제
 
-    // &#45;&#45;&#45;&#45;&#45;&#45;  결제위젯 렌더링 &#45;&#45;&#45;&#45;&#45;&#45;
+    // ------  결제위젯 렌더링 ------
     // 결제위젯이 렌더링될 DOM 요소를 지정하는 CSS 선택자 및 결제 금액을 넣어주세요.
     // https://docs.tosspayments.com/reference/widget-sdk#renderpaymentmethods선택자-결제-금액
     paymentWidget.renderPaymentMethods("#payment-method", 15000)
 
-    // &#45;&#45;&#45;&#45;&#45;&#45;  이용약관 렌더링 &#45;&#45;&#45;&#45;&#45;&#45;
+    // ------  이용약관 렌더링 ------
     // 이용약관이 렌더링될 DOM 요소를 지정하는 CSS 선택자를 넣어주세요.
     // https://docs.tosspayments.com/reference/widget-sdk#renderagreement선택자
     paymentWidget.renderAgreement('#agreement')
 
-    // &#45;&#45;&#45;&#45;&#45;&#45; '결제하기' 버튼 누르면 결제창 띄우기 &#45;&#45;&#45;&#45;&#45;&#45;
+    // ------ '결제하기' 버튼 누르면 결제창 띄우기 ------
     // 더 많은 결제 정보 파라미터는 결제위젯 SDK에서 확인하세요.
     // https://docs.tosspayments.com/reference/widget-sdk#requestpayment결제-정보
     button.addEventListener("click", function () {
@@ -454,7 +407,7 @@
         customerName: "김토스"
       })
     })
-  </script>-->
+  </script>
 
 </section>
 

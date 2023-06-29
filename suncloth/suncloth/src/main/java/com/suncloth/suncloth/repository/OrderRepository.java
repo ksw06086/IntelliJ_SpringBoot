@@ -5,6 +5,7 @@ import com.suncloth.suncloth.model.Order;
 import com.suncloth.suncloth.model.Stock;
 import com.suncloth.suncloth.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.sql.Date;
 import java.util.List;
@@ -29,4 +30,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     
     // Stock과 User를 기준으로 정보들 가져오기(where stock_id = ?1 and user_id = ?2)
     Order findByOrderStockAndOrderUser(Stock stock, User user);
+
+    // Id 중 가장 큰 번호 가져오기
+    @Query("select nvl(max(o0.orderId), 0) from Order o0")
+    Long findByOrderMaxId();
 }
