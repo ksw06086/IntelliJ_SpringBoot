@@ -222,26 +222,34 @@ create table cart_tbl(
 create table order_tbl(
     order_id int GENERATED ALWAYS as IDENTITY,
     user_id int not null,
-    stock_id int not null,
     merchant_uid clob not null,
-    count int,
     use_plus int,
     real_price int,
-    reg_date Date DEFAULT sysdate,
-    deposit_name varchar2(100),
-    bank_name varchar2(100) constraint orders_bankname_nn_excption not null,
-    pay_option varchar2(100),
-    user_message clob,
     order_state varchar2(100),
+    reg_date Date DEFAULT sysdate,
+    -- 배송관련 --
+    address_num VARCHAR2(10),
+    address_sub VARCHAR2(400),
+    address_detail VARCHAR2(400),
+    hp VARCHAR2(30),
+    reserve_hp VARCHAR2(30),
+    email_id_name VARCHAR2(30),
+    email_url_code VARCHAR2(30),
+    user_message clob,
+    -- 결제방식관련 --
+    deposit_name varchar2(100),
+    bank_name varchar2(100),
+    pay_option varchar2(100),
     CONSTRAINT order_id_pk_excption PRIMARY key(order_id),
-    FOREIGN KEY(user_id) REFERENCES user_tbl(id) on delete cascade,
-    FOREIGN KEY(stock_id) REFERENCES stock_tbl(stock_id) on delete cascade
+    FOREIGN KEY(user_id) REFERENCES user_tbl(id) on delete cascade
 );
 
 /** order_stock 테이블(다대다 적용을 위해 order와 stock 연결) **/
 create table order_stock(
     order_id int,
     stock_id int,
+    count int,
     CONSTRAINT fk_order FOREIGN key(order_id) REFERENCES order_tbl(order_id) on delete cascade,
-    CONSTRAINT fk_stock FOREIGN key(stock_id) REFERENCES stock_tbl(stock_id) on delete cascade
+    CONSTRAINT fk_stock FOREIGN key(stock_id) REFERENCES stock_tbl(stock_id) on delete cascade,
+    CONSTRAINT order_stock_id_pk_excption PRIMARY key(order_id, stock_id)
 );

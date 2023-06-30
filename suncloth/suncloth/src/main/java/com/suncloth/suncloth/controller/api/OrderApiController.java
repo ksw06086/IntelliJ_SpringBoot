@@ -1,9 +1,6 @@
 package com.suncloth.suncloth.controller.api;
 
-import com.suncloth.suncloth.model.Order;
-import com.suncloth.suncloth.model.Role;
-import com.suncloth.suncloth.model.Stock;
-import com.suncloth.suncloth.model.User;
+import com.suncloth.suncloth.model.*;
 import com.suncloth.suncloth.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.juli.logging.Log;
@@ -39,19 +36,23 @@ public class OrderApiController {
     private final UserRepository userRepository;
     @Autowired
     private final OrderRepository orderRepository;
+    @Autowired
+    private final OrderStockRepository orderStockRepository;
 
     OrderApiController(ColorRepository colorRepository
             , SizeRepository sizeRepository
             , ClothRepository clothRepository
             , StockRepository stockRepository
             , UserRepository userRepository
-            , OrderRepository orderRepository) {
+            , OrderRepository orderRepository
+            , OrderStockRepository orderStockRepository) {
         this.colorRepository = colorRepository;
         this.sizeRepository = sizeRepository;
         this.clothRepository = clothRepository;
         this.stockRepository = stockRepository;
         this.userRepository = userRepository;
         this.orderRepository = orderRepository;
+        this.orderStockRepository = orderStockRepository;
     }
 
     // GET : Order 테이블 정보 가져오기
@@ -71,8 +72,8 @@ public class OrderApiController {
     @PostMapping("/order")
     Order newOrder(Order newOrder
             , @RequestParam(required = false, defaultValue = "") String imp_uid
-            , @RequestParam(required = false, defaultValue = "") String merchant_uid
-            , @RequestParam(required = false, defaultValue = "") List<Long> stockIds) {
+            , @RequestParam(required = false, defaultValue = "") List<Long> stockIdList
+            , @RequestParam(required = false, defaultValue = "") List<Long> stockCountList) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDetails userDetails = (UserDetails)principal;
         String username = userDetails.getUsername();
@@ -80,13 +81,21 @@ public class OrderApiController {
         User user = userRepository.findByUsername(username);
         newOrder.setOrderUser(user);
 
-        for (int i = 0; i < stockIds.size(); i++) {
-            Stock stock = stockRepository.findById(stockIds.get(i)).orElse(null);
+        for (int i = 0; i < stockIdList.size(); i++) {
+            Stock stock = stockRepository.findById(stockIdList.get(i)).orElse(null);
             newOrder.getOrderStockList().add(stock);
         }
-        
-        log.info("{}, {}", imp_uid, merchant_uid);
-        return null;
+
+        log.info("stockIds : {}", stockIdList.size());
+        log.info("imp_uid : {}", imp_uid);
+        log.info("주문번호 : {}", newOrder.getMerchantUid());
+        log.info("주문상태 : {}", newOrder.getOrderState());
+
+        List<OrderStock> orderStockList = orderStockRepository.findByOrderId(6L);
+        log.info("orderStockList.size : {}", orderStockList.size());
+
+
+        return orderRepository.save(newOrder);
 
         /*Stock stock = stockRepository.findById(stockId).orElse(null);
 
@@ -108,7 +117,6 @@ public class OrderApiController {
                 .map(order -> {
                     User user = userRepository.findByUsername(username);
                     order.setOrderUser(user);
-                    order.setCount(newOrder.getCount());
                     return orderRepository.save(order);
                 })
                 .orElseGet(() -> {
@@ -157,11 +165,11 @@ public class OrderApiController {
     // Single item
 
     // GET : stockId 에 맞게 Order 정보 가져오기
-    @GetMapping("/orders/stock/{stockId}")
+    /*@GetMapping("/orders/stock/{stockId}")
     List<Order> oneStockAndMany(@PathVariable Long stockId) {
         Stock stock = stockRepository.findById(stockId).orElse(null);
         return orderRepository.findByOrderStock(stock);
-    }
+    }*/
 
     // GET : username 에 맞게 Order 정보 가져오기
     @GetMapping("/orders/user")
@@ -187,7 +195,6 @@ public class OrderApiController {
                 .map(order -> {
                     User user = userRepository.findByUsername(username);
                     order.setOrderUser(user);
-                    order.setCount(newOrder.getCount());
                     return orderRepository.save(order);
                 })
                 .orElseGet(() -> {

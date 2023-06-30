@@ -721,18 +721,12 @@ function getOrderTableMaxId() {
 const IMP = window.IMP;
 IMP.init("imp81234382"); // 예: imp00000000
 function requestPay(orderMaxId) {
-    const count = document.getElementById("count");                 // 주문에 추가한 재고 수
-    const usePlus = document.getElementById("usePlus");             // 주문할 때 사용한 적립금
-    const realPrice = document.getElementById("realPrice");         // 주문 최종 금액
-    const depositName = document.getElementById("depositName");     // 계좌번호
-    const bankName = document.getElementById("bankName");           // 은행명
-    const payOption = document.getElementById("payOption");         // 결제방식
-    const userMessage = document.getElementById("userMessage");     // 고객 메세지
 
     const paymentsAgree = document.getElementById("paymentsAgree");
     const finishTotalPriceView = document.getElementById("finishTotalPriceView").textContent;
     const stockIds = document.getElementsByName("stockIds"); // 화면에 있는 모든 Checkbox(cartNums)
     let orderStockListStr = "";
+    let stockIdList = [], stockCountList = [];
 
     // 결제 동의 체크 여부 확인
     if(paymentsAgree.checked === false) {
@@ -742,17 +736,19 @@ function requestPay(orderMaxId) {
 
     // 주문 정보 Info(상품 이름, 상품 옵션<color, size>)
     for(let i = 0; i < stockIds.length; i++){
+        const count = document.getElementById("count_" + stockIds[i].value);
         const clothName = document.getElementById("clothName_" + stockIds[i].value).textContent;
         const stockColorSize = document.getElementById("stockColorSize_" + stockIds[i].value).textContent;
 
-        orderStockListStr += "(" + clothName + " " + stockColorSize + ") "
+        orderStockListStr += "(" + clothName + " " + stockColorSize + ") ";
+        stockIdList.push(stockIds[i].value); stockCountList.push(count);
     }
     alert(orderStockListStr + " : " + finishTotalPriceView + "원");
 
     IMP.request_pay({
         pg: "kcp.INIpayTest",
         pay_method: "card",
-        merchant_uid: "1-" + orderMaxId,
+        merchant_uid: "1-13" + orderMaxId,
         name: orderStockListStr,
         amount: finishTotalPriceView,
         buyer_email: "Iamport@chai.finance",
@@ -764,21 +760,17 @@ function requestPay(orderMaxId) {
         //rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
         if(rsp.success){
             console.log(rsp);
+            const formData = new FormData();
+            formData.append("imp_uid", rsp.imp_uid);                    // 결제 고유번호
+            formData.append("merchantUid", rsp.merchant_uid);           // 주문번호
+            formData.append("orderState", "paymentComplete");     // 주문상태
+            formData.append("stockIdList", stockIdList);                // 재고 번호 리스트
             $.ajax({
                 url: "/api/order",
                 type : "POST",
-                data: {
-                    "imp_uid": rsp.imp_uid,            // 결제 고유번호
-                    "merchantUid": rsp.merchant_uid,   // 주문번호
-                    "count": count,                    // 주문에 추가한 재고 수
-                    "usePlus": usePlus,                // 주문할 때 사용한 적립금
-                    "realPrice": realPrice,            // 주문 최종 금액
-                    "depositName": depositName,        // 계좌번호
-                    "bankName": bankName,              // 은행명
-                    "payOption": payOption,            // 결제방식
-                    "userMessage": userMessage,        // 고객 메세지
-                    "orderState": rsp.pay_method,      // 주문상태
-                },
+                processData: false,
+                contentType: false,
+                data: formData,
                 success: (result) => {
                     //AJAX 성공시 실행 코드
                     alert("결제 성공");

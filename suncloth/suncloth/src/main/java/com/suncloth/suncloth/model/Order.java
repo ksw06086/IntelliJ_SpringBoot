@@ -31,14 +31,22 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // => 자동증가
     private long orderId;               // 주문 목록 식별번호
     private String merchantUid;         // 주문 번호
-    private long count;                 // 주문에 추가한 재고 수
     private long usePlus;               // 주문할 때 사용한 적립금
     private long realPrice;             // 주문 최종 금액
+    private String orderState;          // 주문 상태
+    // 배송 관련
+    private String addressNum;          // 우편번호
+    private String addressSub;          // 주소 Main 텍스트
+    private String addressDetail;       // 주소 Detail 텍스트
+    private String hp;                  // 핸드폰 번호
+    private String reserveHp;           // 서브 전화번호(집, 회사 등등)
+    private String emailIdName;         // 이메일 아이디 명
+    private String emailUrlCode;        // 이메일 URL 명
+    private String userMessage;         // 고객 메세지
+    // 결제방식 관련
     private String depositName;         // 계좌번호
     private String bankName;            // 은행명
     private String payOption;           // 결제방식
-    private String userMessage;         // 고객 메세지
-    private String orderState;          // 주문 상태
     @CreationTimestamp                  // insert 될 때 현재 시간을 넣어줌
     private Date regDate;               // 주문 등록 날짜
 
