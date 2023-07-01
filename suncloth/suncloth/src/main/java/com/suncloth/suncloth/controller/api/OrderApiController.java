@@ -1,6 +1,9 @@
 package com.suncloth.suncloth.controller.api;
 
-import com.suncloth.suncloth.model.*;
+import com.suncloth.suncloth.model.Order;
+import com.suncloth.suncloth.model.Role;
+import com.suncloth.suncloth.model.Stock;
+import com.suncloth.suncloth.model.User;
 import com.suncloth.suncloth.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.juli.logging.Log;
@@ -18,6 +21,7 @@ import java.util.List;
  * 최초 변경일 : 2023.06.27
  * 목적 : 쇼핑몰 주문 관련 RestAPI 컨트롤러
  * 개정 이력 : 김선우 - 2023.06.03, 주문 RestAPI 컨트롤러 생성
+ *                    2023.07.01, 주문 RestAPI OrderStock Model 지움
  * 저작권 : 김선우
  */
 @RestController
@@ -36,23 +40,19 @@ public class OrderApiController {
     private final UserRepository userRepository;
     @Autowired
     private final OrderRepository orderRepository;
-    @Autowired
-    private final OrderStockRepository orderStockRepository;
 
     OrderApiController(ColorRepository colorRepository
             , SizeRepository sizeRepository
             , ClothRepository clothRepository
             , StockRepository stockRepository
             , UserRepository userRepository
-            , OrderRepository orderRepository
-            , OrderStockRepository orderStockRepository) {
+            , OrderRepository orderRepository) {
         this.colorRepository = colorRepository;
         this.sizeRepository = sizeRepository;
         this.clothRepository = clothRepository;
         this.stockRepository = stockRepository;
         this.userRepository = userRepository;
         this.orderRepository = orderRepository;
-        this.orderStockRepository = orderStockRepository;
     }
 
     // GET : Order 테이블 정보 가져오기
@@ -83,17 +83,13 @@ public class OrderApiController {
 
         for (int i = 0; i < stockIdList.size(); i++) {
             Stock stock = stockRepository.findById(stockIdList.get(i)).orElse(null);
-            newOrder.getOrderStockList().add(stock);
+            newOrder.setOrderStock(stock); newOrder.setCount(stockCountList.get(i));
         }
 
         log.info("stockIds : {}", stockIdList.size());
         log.info("imp_uid : {}", imp_uid);
         log.info("주문번호 : {}", newOrder.getMerchantUid());
         log.info("주문상태 : {}", newOrder.getOrderState());
-
-        List<OrderStock> orderStockList = orderStockRepository.findByOrderId(6L);
-        log.info("orderStockList.size : {}", orderStockList.size());
-
 
         return orderRepository.save(newOrder);
 

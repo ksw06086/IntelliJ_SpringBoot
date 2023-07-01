@@ -9,8 +9,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
 
 /*
 * 최초 작성자 : 김선우
@@ -49,6 +47,7 @@ public class Order {
     private String payOption;           // 결제방식
     @CreationTimestamp                  // insert 될 때 현재 시간을 넣어줌
     private Date regDate;               // 주문 등록 날짜
+    private long count;                 // 주문에 추가한 재고 수
 
     // User 와 연결
     // name : 나의 외래키 컬럼, referencedColumnName(생략가능) : 상대의 primary 컬럼
@@ -57,12 +56,10 @@ public class Order {
     @JsonIgnore
     private User orderUser;
 
-    // Stock 와 조인함
+    // Stock 와 연결
     // name : 나의 외래키 컬럼, referencedColumnName(생략가능) : 상대의 primary 컬럼
-    @ManyToMany
-    @JoinTable(
-            name = "order_stock",
-            joinColumns = @JoinColumn(name = "order_id"),
-            inverseJoinColumns = @JoinColumn(name = "stock_id"))
-    private List<Stock> orderStockList = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "stock_id")
+    @JsonIgnore
+    private Stock orderStock;
 }

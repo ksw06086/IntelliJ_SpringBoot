@@ -22,8 +22,14 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     // 날짜가 포함된 주문 정보들 가져오기(where reg_date between ?1 and ?2)
     List<Order> findByRegDateBetween(Date firstDay, Date lastDay);
 
+    // Stock 를 기준으로 정보들 가져오기(where stock_id = ?1)
+    List<Order> findByOrderStock(Stock stock);
+
     // User 를 기준으로 정보들 가져오기(where user_id = ?1)
     List<Order> findByOrderUser(User user);
+
+    // Stock과 User를 기준으로 정보들 가져오기(where stock_id = ?1 and user_id = ?2)
+    Order findByOrderStockAndOrderUser(Stock stock, User user);
 
     // Id 중 가장 큰 번호 가져오기
     @Query("select nvl(max(o0.orderId), 0) from Order o0")
