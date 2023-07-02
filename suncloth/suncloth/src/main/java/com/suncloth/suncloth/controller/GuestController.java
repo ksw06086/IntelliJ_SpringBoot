@@ -37,6 +37,8 @@ public class GuestController {
     ColorRepository colorRepository;
     @Autowired
     CartRepository cartRepository;
+    @Autowired
+    OrderRepository orderRepository;
 
     @GetMapping("/category")
     public String categoryPage(Model model
@@ -99,7 +101,16 @@ public class GuestController {
     }
 
     @GetMapping("/orderList")
-    public String orderList() {
+    public String orderList(Model model) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails userDetails = (UserDetails)principal;
+        String username = userDetails.getUsername();
+
+        User user = userRepository.findByUsername(username);
+        List<Order> orderList = orderRepository.findByOrderUser(user);
+
+        model.addAttribute("orderList", orderList);
+        model.addAttribute("user", user);
         return "/guest/guest_orderList";
     }
 

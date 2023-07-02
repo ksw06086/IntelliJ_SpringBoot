@@ -7,6 +7,8 @@ let mediumStrongPassword = new RegExp('((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^
 let mediumPassword = new RegExp('(((?=.*[a-z])|(?=.*[A-Z]))(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,}))');
 // *** 휴대폰 번호 정규식 *** //
 let regPhone = /^01([0|1|2|7|8|9])?-([0-9]{3,4})?-([0-9]{4})$/;
+// *** 예비 전화번호 정규식 *** //
+let reservePhone = /^0([2|31|32|33|41|42|43|44|70])?-([0-9]{3,4})?-([0-9]{4})$/;
 // *** 숫자 정규식 *** //
 let numberCheck = /^[0-9]+$/;
 
@@ -617,6 +619,7 @@ function getMyDeliveryAddress(userId) {
         type: 'GET',
         success: (result) => {
             //AJAX 성공시 실행 코드
+            const deliName = document.getElementById("deliName");
             const addressInput = document.getElementById("addressInput");
             const subAddressInput = document.getElementById("subAddressInput");
             const detailAddressInput = document.getElementById("detailAddressInput");
@@ -626,6 +629,7 @@ function getMyDeliveryAddress(userId) {
             const idNameInput = document.getElementById("idNameInput");
             const urlCodeInput = document.getElementById("urlCodeInput");
 
+            deliName.value = result.username;
             addressInput.value = result.addressNum;
             subAddressInput.value = result.addressSub;
             detailAddressInput.value = result.addressDetail;
@@ -666,6 +670,17 @@ function useMileageCheck() {
 }
 
 //*** OrderForm : 결제하기 ***//
+// 0. 결제 방법 선택
+function paymentMethod(method) {
+    if(method === 'account') {
+        document.getElementById("paySelectAccountInfo").className = 'fs-75 w-100';
+        document.getElementById("paySelectCardInfo").className = 'fs-75 w-100 d-none';
+    }
+    else {
+        document.getElementById("paySelectAccountInfo").className = 'fs-75 w-100 d-none';
+        document.getElementById("paySelectCardInfo").className = 'fs-75 w-100';
+    }
+}
 // 1. 결제 위변조 검증
 function paymentsVerification() {
     const finishTotalPriceView = document.getElementById("finishTotalPriceView").textContent;
@@ -721,22 +736,16 @@ function getOrderTableMaxId() {
 const IMP = window.IMP;
 IMP.init("imp81234382"); // 예: imp00000000
 function requestPay(orderMaxId) {
-
-    const paymentsAgree = document.getElementById("paymentsAgree");
     const finishTotalPriceView = document.getElementById("finishTotalPriceView").textContent;
     const stockIds = document.getElementsByName("stockIds"); // 화면에 있는 모든 Checkbox(cartNums)
     let orderStockListStr = "";
     let stockIdList = [], stockCountList = [];
 
-    // 결제 동의 체크 여부 확인
-    if(paymentsAgree.checked === false) {
-        alert("결제정보와 유의사항을 확인하시고 결제버튼 위에 동의를 체크해주세요.");
-        return false;
-    }
+    const formData = paymentCheck(); if(!formData){ return false; };
 
     // 주문 정보 Info(상품 이름, 상품 옵션<color, size>)
     for(let i = 0; i < stockIds.length; i++){
-        const count = document.getElementById("count_" + stockIds[i].value);
+        const count = document.getElementById("count_" + stockIds[i].value).textContent;
         const clothName = document.getElementById("clothName_" + stockIds[i].value).textContent;
         const stockColorSize = document.getElementById("stockColorSize_" + stockIds[i].value).textContent;
 
@@ -745,41 +754,163 @@ function requestPay(orderMaxId) {
     }
     alert(orderStockListStr + " : " + finishTotalPriceView + "원");
 
-    IMP.request_pay({
-        pg: "kcp.INIpayTest",
-        pay_method: "card",
-        merchant_uid: "1-13" + orderMaxId,
-        name: orderStockListStr,
-        amount: finishTotalPriceView,
-        buyer_email: "Iamport@chai.finance",
-        buyer_name: "포트원 기술지원팀",
-        buyer_tel: "010-1234-5678",
-        buyer_addr: "서울특별시 강남구 삼성동",
-        buyer_postcode: "123-456",
-    }, function (rsp) { // callback
-        //rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
-        if(rsp.success){
-            console.log(rsp);
-            const formData = new FormData();
-            formData.append("imp_uid", rsp.imp_uid);                    // 결제 고유번호
-            formData.append("merchantUid", rsp.merchant_uid);           // 주문번호
-            formData.append("orderState", "paymentComplete");     // 주문상태
-            formData.append("stockIdList", stockIdList);                // 재고 번호 리스트
-            $.ajax({
-                url: "/api/order",
-                type : "POST",
-                processData: false,
-                contentType: false,
-                data: formData,
-                success: (result) => {
-                    //AJAX 성공시 실행 코드
-                    alert("결제 성공");
-                }, error:function(e) {
-                    alert("error: " + e);
-                }
-            });
-        } else {
-            alert("결제에 실패하였습니다. 에러 내용: " + rsp.error_msg);
-        }
-    });
+    // 무통장 입금인지, 카드 결제인지 확인하기 위한 부분
+    const paymentAccount = document.getElementById("account").checked;
+    if(paymentAccount){
+        const depositName = document.getElementById("depositName");
+        const depositAccount = document.getElementById("depositAccount");
+        if(depositName.value === "") { alert("입금자명이 입력되지 않았습니다. 입력 후 결제버튼을 눌러주세요."); depositName.focus(); return false; }
+        if(depositAccount.value === "") { alert("입금계좌가 선택되지 않았습니다. 선택 후 결제버튼을 눌러주세요."); depositAccount.focus(); return false; }
+        formData.append("depositName", depositName.value);          // 입금자명
+        formData.append("depositAccount", depositAccount.value);    // 입금계좌
+        formData.append("merchantUid", "1-13" + orderMaxId);  // 주문번호
+        formData.append("orderState", "beforeDeposit");       // 주문상태
+        formData.append("payOption", "account");              // 결제수단
+        formData.append("stockIdList", stockIdList);                // 재고 번호 리스트
+        formData.append("stockCountList", stockCountList);          // 재고별 주문 수량
+
+        $.ajax({
+            url: "/api/order",
+            type : "POST",
+            processData: false,
+            contentType: false,
+            data: formData,
+            success: (result) => {
+                //AJAX 성공시 실행 코드
+                alert("결제 성공");
+                window.location.href="/guest/orderList";
+            }, error:function(e) {
+                alert("error: " + e);
+            }
+        });
+    } else {
+        // Import API 블러오기
+        IMP.request_pay({
+            pg: "kcp.INIpayTest",
+            pay_method: "card",
+            merchant_uid: "1-16" + orderMaxId,
+            name: orderStockListStr,
+            amount: finishTotalPriceView,
+            buyer_email: formData.get("emailIdName") + "@" + formData.get("emailUrlCode"),
+            buyer_name: "포트원 기술지원팀",
+            buyer_tel: formData.get("hp"),
+            buyer_addr: formData.get("addressSub"),
+            buyer_postcode: formData.get("addressNum"),
+        }, function (rsp) { // callback
+            //rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
+            if(rsp.success){
+                console.log(rsp);
+                formData.append("imp_uid", rsp.imp_uid);                    // 결제 고유번호
+                formData.append("merchantUid", rsp.merchant_uid);           // 주문번호
+                formData.append("orderState", "paymentComplete");     // 주문상태
+                formData.append("payOption", rsp.pay_method);               // 결제수단
+                formData.append("stockIdList", stockIdList);                // 재고 번호 리스트
+                formData.append("stockCountList", stockCountList);          // 재고별 주문 수량
+                $.ajax({
+                    url: "/api/order",
+                    type : "POST",
+                    processData: false,
+                    contentType: false,
+                    data: formData,
+                    success: (result) => {
+                        //AJAX 성공시 실행 코드
+                        alert("결제 성공");
+                        window.location.href="/guest/orderList";
+                    }, error:function(e) {
+                        alert("error: " + e);
+                    }
+                });
+            } else {
+                alert("결제에 실패하였습니다. 에러 내용: " + rsp.error_msg);
+            }
+        });
+    }
+}
+// 결제 전 체크
+function paymentCheck() {
+    // FormData 정보들
+    /** 배송관련 Data **/
+    const deliName = document.getElementById("deliName");
+    const addressNum = document.getElementById("addressInput");
+    const addressSub = document.getElementById("subAddressInput");
+    const addressDetail = document.getElementById("detailAddressInput");
+    const hp = document.getElementById("baseHPInput").value + '-' +
+        document.getElementById("secondHPInput").value + '-' +
+        document.getElementById("thirdHPInput").value;
+    const reserveHp = document.getElementById("baseTelInput").value + '-' +
+        document.getElementById("secondTelInput").value + '-' +
+        document.getElementById("thirdTelInput").value;
+    const emailIdName = document.getElementById("idNameInput");
+    const emailUrlCode = document.getElementById("urlCodeInput");
+    const userMessage = document.getElementById("userMessage").value;
+    const usePlus = document.getElementById("useMileage").value;
+    const realPrice = document.getElementById("finishTotalPriceView").textContent;
+    const totalMileage = document.getElementById("totalMileage").textContent.replace(/원/, '');
+    const paymentsAgree = document.getElementById("paymentsAgree");
+
+    // 결제 동의 체크 여부 확인
+    if (paymentsAgree.checked === false) {
+        alert("결제정보와 유의사항을 확인하시고 결제버튼 위에 동의를 체크해주세요.");
+        return false;
+    }
+    // 받으시는 분 입력 확인
+    if (deliName.value === ""){
+        alert("배송정보 중 배송 받으시는 분에 대해서 입력하지 않으셨습니다. 입력 후 결제해주세요.");
+        deliName.focus();
+        return false;
+    }
+    // 우편번호 입력
+    if (addressNum.value === ""){
+        alert("배송정보 중 우편번호가 입력되지 않으셨습니다. 입력 후 결제해주세요.");
+        addressNum.focus();
+        return false;
+    }
+    // 배송 주소 정보 입력
+    if (addressSub.value === ""){
+        alert("배송정보 중 주소 정보가 입력되지 않으셨습니다. 입력 후 결제해주세요.");
+        addressSub.focus();
+        return false;
+    }
+    // 배송 주소 상세정보 입력
+    if (addressDetail.value === ""){
+        alert("배송정보 중 주소 상세 정보가 입력되지 않으셨습니다. 입력 후 결제해주세요.");
+        addressDetail.focus();
+        return false;
+    }
+    // 배송 전화번호 입력
+    if (!regPhone.test(hp)) {
+        alert("번호입력이 잘못되었습니다. 다시 입력해주세요.(ex 010-1234-5678)");
+        document.getElementById("baseHPInput").focus();
+        return false;
+    }
+    // 이메일 아이디
+    if (emailIdName.value === ""){
+        alert("배송정보 중 이메일 ID가 입력되지 않으셨습니다. 입력 후 결제해주세요.");
+        emailIdName.focus();
+        return false;
+    }
+    // 이메일 URL
+    if (emailUrlCode.value === ""){
+        alert("배송정보 중 이메일 url이 선택되지 않으셨습니다. 입력 후 결제해주세요.");
+        emailUrlCode.focus();
+        return false;
+    }
+
+
+    const formData = new FormData();
+    formData.append("reserveHp", reserveHp);                          // 예비 전화번호
+    formData.append("userMessage", userMessage);                      // 고객 메세지
+    formData.append("usePlus", usePlus);                              // 사용 적립금
+    formData.append("totalMileage", totalMileage);                    // 추가될 적립금
+    formData.append("deliName", deliName.value);                      // 받는 사람
+    formData.append("addressNum", addressNum.value);                  // 우편번호
+    formData.append("addressSub", addressSub.value);                  // 배송 주소
+    formData.append("addressDetail", addressDetail.value);            // 배송 상세주소
+    formData.append("hp", hp);                                        // 핸드폰번호
+    formData.append("emailIdName", emailIdName.value);                // 이메일 아이디
+    formData.append("emailUrlCode", emailUrlCode.value);              // 이메일 URL
+    formData.append("realPrice", realPrice);                          // 최종 결제 금액
+
+    alert("체크 완료!!!");
+    return formData;
 }

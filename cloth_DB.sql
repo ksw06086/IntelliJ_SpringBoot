@@ -240,7 +240,7 @@ create table order_tbl(
     user_message clob,
     -- 결제방식관련 --
     deposit_name varchar2(100),
-    bank_name varchar2(100),
+    deposit_account varchar2(100),
     pay_option varchar2(100),
     CONSTRAINT order_id_pk_excption PRIMARY key(order_id),
     FOREIGN KEY(user_id) REFERENCES user_tbl(id) on delete cascade,

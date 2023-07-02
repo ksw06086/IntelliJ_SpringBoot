@@ -43,7 +43,7 @@ public class Order {
     private String userMessage;         // 고객 메세지
     // 결제방식 관련
     private String depositName;         // 계좌번호
-    private String bankName;            // 은행명
+    private String depositAccount;      // 은행명
     private String payOption;           // 결제방식
     @CreationTimestamp                  // insert 될 때 현재 시간을 넣어줌
     private Date regDate;               // 주문 등록 날짜

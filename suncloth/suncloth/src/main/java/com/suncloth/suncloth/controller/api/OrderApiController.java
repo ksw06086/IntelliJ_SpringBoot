@@ -84,6 +84,8 @@ public class OrderApiController {
         for (int i = 0; i < stockIdList.size(); i++) {
             Stock stock = stockRepository.findById(stockIdList.get(i)).orElse(null);
             newOrder.setOrderStock(stock); newOrder.setCount(stockCountList.get(i));
+            orderRepository.save(newOrder);
+            log.info("newOrder{} : {}", i, newOrder);
         }
 
         log.info("stockIds : {}", stockIdList.size());
@@ -91,7 +93,7 @@ public class OrderApiController {
         log.info("주문번호 : {}", newOrder.getMerchantUid());
         log.info("주문상태 : {}", newOrder.getOrderState());
 
-        return orderRepository.save(newOrder);
+        return null;
 
         /*Stock stock = stockRepository.findById(stockId).orElse(null);
 

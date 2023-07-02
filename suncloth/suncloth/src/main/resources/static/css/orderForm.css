@@ -73,7 +73,7 @@
     vertical-align:top;
 }
 
-.paySelectAccountInfo tr td {
+#paySelectAccountInfo tr td {
     padding:15px 12px;
     border-top:1px solid #ccc;
 }

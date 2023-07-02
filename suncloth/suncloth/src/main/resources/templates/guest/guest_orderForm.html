@@ -160,6 +160,7 @@
             <option value = "042">042</option>
             <option value = "043">043</option>
             <option value = "044">044</option>
+            <option value = "070">070</option>
           </select>
           - <input type = "text" class="phone-SubContent" id = "secondTelInput" name = "secondTel">
           - <input type = "text" class="phone-SubContent" id = "thirdTelInput" name = "thirdTel">
@@ -256,12 +257,12 @@
     <table class="paymentTable border">
       <col>
       <col width="270px">
-      <tr>
+      <tr height="60">
         <!-- 결제방식 선택 -->
         <td class="paySelect">
-          <input type = "radio" name = "howPay" id="account" value = "account" checked>
-          <label for="account">무통장 입금</label>
-          <input type = "radio" name = "howPay" id="card" value = "card">
+          <input type = "radio" name = "howPay" id="account" value = "account" th:onchange="paymentMethod(this.value)" checked>
+          <label for="account">계좌 이체</label>
+          <input type = "radio" name = "howPay" id="card" value = "card" th:onchange="paymentMethod(this.value)">
           <label for="card">카드 결제</label>
         </td>
         <!-- 결제 최종 정보 -->
@@ -271,7 +272,7 @@
             <col>
             <tr>
               <td colspan = "2" class="text-end fs-75 py-9 px-6">
-                <span class="fw-bold">무통장 입금</span> <span>최종결제 금액</span>
+                <span class="fw-bold">계좌 이체</span> <span>최종결제 금액</span>
               </td>
             </tr>
             <tr>
@@ -310,19 +311,19 @@
       </tr>
       <!-- 무통장 입금 Info -->
       <tr>
-        <td  class="paySelectInfo">
-          <table class="fs-75 w-100 paySelectAccountInfo">
+        <td class="paySelectInfo">
+          <table class="fs-75 w-100" id="paySelectAccountInfo">
             <col style = "width:15%;">
             <col>
             <tr>
               <td>입금자명</td>
-              <td><input type = "text" name = "depositname" id = "payname" style = "padding:5px 0px;"></td>
+              <td><input type = "text" name = "depositName" id = "depositName" style = "padding:5px 0px;"></td>
             </tr>
             <tr>
-              <td>입금은행</td>
-              <td style = "line-height:27px;"><select id = "paybank" name = "bank" style = "padding:5px 0px; font-size:.9em;">
+              <td>입금계좌</td>
+              <td style = "line-height:27px;"><select name = "depositAccount" id = "depositAccount" style = "padding:5px 0px; font-size:.9em;">
                 <option value = "">:::선택해 주세요:::</option>
-                <option value = "국민은행">상품 등록 담당 관리자 은행 계좌</option>
+                <option value = "국민:101-1203-112345">관리자 은행 계좌(국민 : 101-1203-112345)</option>
               </select>
               </td>
             </tr>
@@ -333,7 +334,7 @@
             </tr>
           </table>
 
-          <table class="fs-75 w-100 paySelectCardInfo">
+          <table class="fs-75 w-100 d-none" id="paySelectCardInfo">
             <tr>
               <td colspan="2"><img src = "./ascloimage/exclamation-mark.png" width = "10px" height = "10px">
                 최소 결제 가능 금액은 결제금액에서 배송비를 제외한 금액입니다.<br>

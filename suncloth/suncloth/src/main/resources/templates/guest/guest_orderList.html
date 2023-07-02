@@ -46,7 +46,7 @@
         <button type = "button" class="btn btn-light">조회</button>
     </div>
 
-    <div class = "basetext">
+    <div class = "baseText">
         <p>·기본적으로 최근 3개월간의 자료가 조회되며, 기간 검색시 지난 주문내역을 조회하실 수 있습니다.<br>
             ·주문번호를 클릭하시면 해당 주문에 대한 상세내역을 확인하실 수 있습니다.</p>
     </div>
@@ -68,7 +68,7 @@
                 <col style = "width:9%;">
             </colgroup>
             <tr class="orderListTitle">
-                <td>주문일자<br>[주문번호]</td>
+                <td>[주문번호]<br>주문일자</td>
                 <td>이미지</td>
                 <td>상품정보</td>
                 <td>수량</td>
@@ -77,30 +77,34 @@
                 <td>취소/교환/반품</td>
             </tr>
             <!-- 게시글이 있으면 -->
-            <tr class = "orderPrd">
-                <td>2021-04-15 12:15
-                    <br>[${list.num}]</td>
+            <th:block th:if="${orderList.size() > 0}">
+            <tr class = "orderPrd" th:each="list:${orderList}" th:id="|tr_${list.getOrderId()}|">
+                <td>[ [[${list.getMerchantUid()}]] ]<br>[[${list.getRegDate()}]]</td>
                 <td>
-                    <img src="" width = "50px" height = "60px">
+                    <img th:src="|/uploadMainImageView/${list.getOrderStock().getStockCloth().getClothId()}|"
+                         width = "50px" height = "60px">
                 </td>
                 <td>
                     <a href = "h_productForm?num=${list.num}&number=${number+1}&pageNum=${pageNum}">
-                        <b>${list.prdname}</b><br>
-                        [옵션: ${list.colorname}/${list.sizename}]
+                        <b th:text="${list.getOrderStock().getStockCloth().getClothName()}">아름다운 이미지</b><br>
+                        <span class="color-gray"
+                              th:text="|[옵션: ${list.getOrderStock().getStockColor().getColorName()}/${list.getOrderStock().getStockSize().getSizeName()}]|">
+                    [옵션: Blue/M]</span>
                     </a>
                 </td>
-                <td>${list.count}
-                </td>
-                <td><b>KRW ${list.price}</b></td>
-                <td>${list.state}</td>
+                <td th:id="|count_${list.getOrderId()}|" th:text="${list.getCount()}">2</td>
+                <td><b th:text="|KSW ${list.getOrderStock().getSalePrice()}|"
+                       th:id="|salePrice_${list.getOrderId()}|">KRW 15000</b></td>
+                <td th:text="${list.getOrderState()}">${list.state}</td>
                 <td>
                     <button class="refundBtn" onclick = "window.location = 'order?num=${list.num}&statenumber=2'">반품하기</button>
                     <button class="cancelBtn" onclick = "window.location = 'order?num=${list.num}&statenumber=1&count=${list.count}'">취소하기</button>
                         -
                 </td>
             </tr>
+            </th:block>
             <!-- 게시글이 없으면 -->
-            <tr class = "orderPrd">
+            <tr class = "orderPrd" th:classappend="${orderList.size() != 0}?'d-none'">
                 <td colspan = "7">
                     주문한 상품이 없을 때 나오는 글자입니다~!
                 </td>
