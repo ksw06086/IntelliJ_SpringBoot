@@ -731,102 +731,7 @@ function getOrderTableMaxId() {
         }
     });
 }
-// 3. 아임포트 결제 화면 실행
-// IMPORT의 결제 시스템 API : 현재 등록된 PG정보가 없다고 뜸, 결제 구현 중 아직 해야할 것 많음 내일 꼭 다 끝낸다 //
-const IMP = window.IMP;
-IMP.init("imp81234382"); // 예: imp00000000
-function requestPay(orderMaxId) {
-    const finishTotalPriceView = document.getElementById("finishTotalPriceView").textContent;
-    const stockIds = document.getElementsByName("stockIds"); // 화면에 있는 모든 Checkbox(cartNums)
-    let orderStockListStr = "";
-    let stockIdList = [], stockCountList = [];
-
-    const formData = paymentCheck(); if(!formData){ return false; };
-
-    // 주문 정보 Info(상품 이름, 상품 옵션<color, size>)
-    for(let i = 0; i < stockIds.length; i++){
-        const count = document.getElementById("count_" + stockIds[i].value).textContent;
-        const clothName = document.getElementById("clothName_" + stockIds[i].value).textContent;
-        const stockColorSize = document.getElementById("stockColorSize_" + stockIds[i].value).textContent;
-
-        orderStockListStr += "(" + clothName + " " + stockColorSize + ") ";
-        stockIdList.push(stockIds[i].value); stockCountList.push(count);
-    }
-    alert(orderStockListStr + " : " + finishTotalPriceView + "원");
-
-    // 무통장 입금인지, 카드 결제인지 확인하기 위한 부분
-    const paymentAccount = document.getElementById("account").checked;
-    if(paymentAccount){
-        const depositName = document.getElementById("depositName");
-        const depositAccount = document.getElementById("depositAccount");
-        if(depositName.value === "") { alert("입금자명이 입력되지 않았습니다. 입력 후 결제버튼을 눌러주세요."); depositName.focus(); return false; }
-        if(depositAccount.value === "") { alert("입금계좌가 선택되지 않았습니다. 선택 후 결제버튼을 눌러주세요."); depositAccount.focus(); return false; }
-        formData.append("depositName", depositName.value);          // 입금자명
-        formData.append("depositAccount", depositAccount.value);    // 입금계좌
-        formData.append("merchantUid", "1-13" + orderMaxId);  // 주문번호
-        formData.append("orderState", "beforeDeposit");       // 주문상태
-        formData.append("payOption", "account");              // 결제수단
-        formData.append("stockIdList", stockIdList);                // 재고 번호 리스트
-        formData.append("stockCountList", stockCountList);          // 재고별 주문 수량
-
-        $.ajax({
-            url: "/api/order",
-            type : "POST",
-            processData: false,
-            contentType: false,
-            data: formData,
-            success: (result) => {
-                //AJAX 성공시 실행 코드
-                alert("결제 성공");
-                window.location.href="/guest/orderList";
-            }, error:function(e) {
-                alert("error: " + e);
-            }
-        });
-    } else {
-        // Import API 블러오기
-        IMP.request_pay({
-            pg: "kcp.INIpayTest",
-            pay_method: "card",
-            merchant_uid: "1-16" + orderMaxId,
-            name: orderStockListStr,
-            amount: finishTotalPriceView,
-            buyer_email: formData.get("emailIdName") + "@" + formData.get("emailUrlCode"),
-            buyer_name: "포트원 기술지원팀",
-            buyer_tel: formData.get("hp"),
-            buyer_addr: formData.get("addressSub"),
-            buyer_postcode: formData.get("addressNum"),
-        }, function (rsp) { // callback
-            //rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
-            if(rsp.success){
-                console.log(rsp);
-                formData.append("imp_uid", rsp.imp_uid);                    // 결제 고유번호
-                formData.append("merchantUid", rsp.merchant_uid);           // 주문번호
-                formData.append("orderState", "paymentComplete");     // 주문상태
-                formData.append("payOption", rsp.pay_method);               // 결제수단
-                formData.append("stockIdList", stockIdList);                // 재고 번호 리스트
-                formData.append("stockCountList", stockCountList);          // 재고별 주문 수량
-                $.ajax({
-                    url: "/api/order",
-                    type : "POST",
-                    processData: false,
-                    contentType: false,
-                    data: formData,
-                    success: (result) => {
-                        //AJAX 성공시 실행 코드
-                        alert("결제 성공");
-                        window.location.href="/guest/orderList";
-                    }, error:function(e) {
-                        alert("error: " + e);
-                    }
-                });
-            } else {
-                alert("결제에 실패하였습니다. 에러 내용: " + rsp.error_msg);
-            }
-        });
-    }
-}
-// 결제 전 체크
+// 3. 결제 전 체크
 function paymentCheck() {
     // FormData 정보들
     /** 배송관련 Data **/
@@ -913,4 +818,120 @@ function paymentCheck() {
 
     alert("체크 완료!!!");
     return formData;
+}
+// 4. 아임포트 결제 화면 실행
+// IMPORT의 결제 시스템 API : 현재 등록된 PG정보가 없다고 뜸, 결제 구현 중 아직 해야할 것 많음 내일 꼭 다 끝낸다 //
+const IMP = window.IMP;
+IMP.init("imp81234382"); // 예: imp00000000
+function requestPay(orderMaxId) {
+    const finishTotalPriceView = document.getElementById("finishTotalPriceView").textContent;
+    const stockIds = document.getElementsByName("stockIds"); // 화면에 있는 모든 Checkbox(cartNums)
+    let orderStockListStr = "";
+    let stockIdList = [], stockCountList = [];
+
+    const formData = paymentCheck(); if(!formData){ return false; };
+
+    // 주문 정보 Info(상품 이름, 상품 옵션<color, size>)
+    for(let i = 0; i < stockIds.length; i++){
+        const count = document.getElementById("count_" + stockIds[i].value).textContent;
+        const clothName = document.getElementById("clothName_" + stockIds[i].value).textContent;
+        const stockColorSize = document.getElementById("stockColorSize_" + stockIds[i].value).textContent;
+
+        orderStockListStr += "(" + clothName + " " + stockColorSize + ") ";
+        stockIdList.push(stockIds[i].value); stockCountList.push(count);
+    }
+    alert(orderStockListStr + " : " + finishTotalPriceView + "원");
+
+    // 무통장 입금인지, 카드 결제인지 확인하기 위한 부분
+    const paymentAccount = document.getElementById("account").checked;
+    if(finishTotalPriceView === '0') {
+        formData.append("merchantUid", "1-13" + orderMaxId);  // 주문번호
+        formData.append("orderState", "결제완료");               // 주문상태
+        formData.append("payOption", "mileage");              // 결제수단
+        formData.append("stockIdList", stockIdList);                // 재고 번호 리스트
+        formData.append("stockCountList", stockCountList);          // 재고별 주문 수량
+
+        $.ajax({
+            url: "/api/order",
+            type : "POST",
+            processData: false,
+            contentType: false,
+            data: formData,
+            success: (result) => {
+                //AJAX 성공시 실행 코드
+                alert("결제 성공");
+                window.location.href="/guest/orderList";
+            }, error:function(e) {
+                alert("error: " + e);
+            }
+        });
+    } else if(paymentAccount){
+        const depositName = document.getElementById("depositName");
+        const depositAccount = document.getElementById("depositAccount");
+        if(depositName.value === "") { alert("입금자명이 입력되지 않았습니다. 입력 후 결제버튼을 눌러주세요."); depositName.focus(); return false; }
+        if(depositAccount.value === "") { alert("입금계좌가 선택되지 않았습니다. 선택 후 결제버튼을 눌러주세요."); depositAccount.focus(); return false; }
+        formData.append("depositName", depositName.value);          // 입금자명
+        formData.append("depositAccount", depositAccount.value);    // 입금계좌
+        formData.append("merchantUid", "1-13" + orderMaxId);  // 주문번호
+        formData.append("orderState", "입금전");               // 주문상태
+        formData.append("payOption", "account");              // 결제수단
+        formData.append("stockIdList", stockIdList);                // 재고 번호 리스트
+        formData.append("stockCountList", stockCountList);          // 재고별 주문 수량
+
+        $.ajax({
+            url: "/api/order",
+            type : "POST",
+            processData: false,
+            contentType: false,
+            data: formData,
+            success: (result) => {
+                //AJAX 성공시 실행 코드
+                alert("결제 성공");
+                window.location.href="/guest/orderList";
+            }, error:function(e) {
+                alert("error: " + e);
+            }
+        });
+    } else {
+        // Import API 블러오기
+        IMP.request_pay({
+            pg: "kcp.INIpayTest",
+            pay_method: "card",
+            merchant_uid: "1-17" + orderMaxId,
+            name: orderStockListStr,
+            amount: finishTotalPriceView,
+            buyer_email: formData.get("emailIdName") + "@" + formData.get("emailUrlCode"),
+            buyer_name: "포트원 기술지원팀",
+            buyer_tel: formData.get("hp"),
+            buyer_addr: formData.get("addressSub"),
+            buyer_postcode: formData.get("addressNum"),
+        }, function (rsp) { // callback
+            //rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
+            if(rsp.success){
+                console.log(rsp);
+                formData.append("imp_uid", rsp.imp_uid);                    // 결제 고유번호
+                formData.append("merchantUid", rsp.merchant_uid);           // 주문번호
+                formData.append("orderState", "결제완료");              // 주문상태
+                formData.append("payOption", rsp.pay_method);               // 결제수단
+                formData.append("stockIdList", stockIdList);                // 재고 번호 리스트
+                formData.append("stockCountList", stockCountList);          // 재고별 주문 수량
+                $.ajax({
+                    url: "/api/order",
+                    type : "POST",
+                    processData: false,
+                    contentType: false,
+                    data: formData,
+                    success: (result) => {
+                        //AJAX 성공시 실행 코드
+                        alert("결제 성공");
+                        window.location.href="/guest/orderList";
+                    }, error:function(e) {
+                        alert("error: " + e);
+                    }
+                });
+            } else {
+                alert("결제에 실패하였습니다. 에러 내용: " + rsp.error_msg);
+            }
+        });
+    }
 }

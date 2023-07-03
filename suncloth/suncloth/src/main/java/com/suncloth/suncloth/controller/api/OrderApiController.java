@@ -73,12 +73,14 @@ public class OrderApiController {
     Order newOrder(Order newOrder
             , @RequestParam(required = false, defaultValue = "") String imp_uid
             , @RequestParam(required = false, defaultValue = "") List<Long> stockIdList
-            , @RequestParam(required = false, defaultValue = "") List<Long> stockCountList) {
+            , @RequestParam(required = false, defaultValue = "") List<Long> stockCountList
+            , @RequestParam(required = false, defaultValue = "") Long totalMileage) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDetails userDetails = (UserDetails)principal;
         String username = userDetails.getUsername();
 
         User user = userRepository.findByUsername(username);
+        user.setUsablePlus((int) (user.getUsablePlus() - newOrder.getUsePlus() + totalMileage));
         newOrder.setOrderUser(user);
 
         for (int i = 0; i < stockIdList.size(); i++) {
@@ -92,6 +94,9 @@ public class OrderApiController {
         log.info("imp_uid : {}", imp_uid);
         log.info("주문번호 : {}", newOrder.getMerchantUid());
         log.info("주문상태 : {}", newOrder.getOrderState());
+        log.info("사용한 적립금 : {}", newOrder.getUsePlus());
+        log.info("추가될 적립금 : {}", totalMileage);
+        log.info("최종결제금액 : {}", newOrder.getRealPrice());
 
         return null;
 

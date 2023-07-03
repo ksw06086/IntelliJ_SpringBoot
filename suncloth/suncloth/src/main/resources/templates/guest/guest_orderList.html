@@ -72,7 +72,7 @@
                 <td>이미지</td>
                 <td>상품정보</td>
                 <td>수량</td>
-                <td>상품구매금액</td>
+                <td>상품금액</td>
                 <td>주문처리상태</td>
                 <td>취소/교환/반품</td>
             </tr>
@@ -97,9 +97,15 @@
                        th:id="|salePrice_${list.getOrderId()}|">KRW 15000</b></td>
                 <td th:text="${list.getOrderState()}">${list.state}</td>
                 <td>
-                    <button class="refundBtn" onclick = "window.location = 'order?num=${list.num}&statenumber=2'">반품하기</button>
+                    <th:block th:if="${list.getOrderState() != '입금전' && list.getOrderState() != '주문취소' && list.getOrderState() != '환불신청' && list.getOrderState() != '환불완료'}">
+                        <button class="refundBtn" onclick = "window.location = 'order?num=${list.num}&statenumber=2'">반품하기</button>
+                    </th:block>
+                    <th:block th:if="${list.getOrderState() == '입금전'}">
                     <button class="cancelBtn" onclick = "window.location = 'order?num=${list.num}&statenumber=1&count=${list.count}'">취소하기</button>
+                    </th:block>
+                    <th:block th:if="${list.getOrderState() == '주문취소' || list.getOrderState() == '환불신청' || list.getOrderState() == '환불완료'}">
                         -
+                    </th:block>
                 </td>
             </tr>
             </th:block>
