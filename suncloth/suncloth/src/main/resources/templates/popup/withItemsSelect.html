@@ -24,7 +24,7 @@
   <div class="d-flex vertical-middle-all w-95 mx-auto">
     <!-- 현재 가져온 게시판이 총 몇개이고 그 중 몇개가 한페이지에 출력이 되어있는지 확인 -->
     <div class="me-auto pt-20 px-15 pb-12 fs-9">
-      <b th:text="| 검색 ${10}건 / 총 ${50}건 |"></b>
+      <b id="getPageCountText" th:text="| 검색 ${clothList.getNumberOfElements()}건 / 총 ${clothList.getTotalElements()}건 |"></b>
     </div>
 
     <!-- 출력 수 제한 및 정렬을 위해 select시 목록의 변화가 일어나야 하는 부분 -->
@@ -32,70 +32,90 @@
       <select class="fs-75 align-middle py-6" id="searchType" name="searchType">
         <option value="name">상품명</option>
       </select>
-      <input type="search" class="fs-75 align-middle py-5px" placeholder="search">
-      <button type="button" class="whiteButton fs-75 align-middle py-5px">검색</button>
+      <input type="search" class="fs-75 align-middle py-5px" id="searchInput" name="searchInput" placeholder="search">
+      <button type="button" class="whiteButton fs-75 align-middle py-5px" th:onclick="clothsGet()">검색</button>
     </div>
   </div>
 
-  <table class="table text-center fs-75 w-90 mx-auto bg-white border-bottom-1-ccc border-top-1-ccc td-border-bottom-1-ccc vertical-middle-all a-tag-css">
+  <!-- 게시판 목록 Block -->
+  <table class="table text-center fs-75 w-98 mx-auto bg-white border-bottom-1-ccc border-top-1-ccc td-border-bottom-1-ccc vertical-middle-all a-tag-css">
     <thead>
-    <tr class="fw-bold border-0 td-py15 td-px15">
+    <tr class="fw-bold border-0 td-py25 td-px15">
       <td>
-        <input type = "checkbox" name = "prdCheck" id = "prdCheckAll"  value = "전체선택">
+        <input type = "checkbox" id = "clothCheckAll" th:onchange="allCheck('cloth')" value = "전체선택">
       </td>
       <td>이미지</td>
+      <td>번호</td>
       <td>카테고리</td>
       <td>상품명</td>
-      <td>판매가</td>
+      <td>기본가격</td>
+      <td>배송비</td>
+      <td>등록일</td>
+      <td>판매상태</td>
     </tr>
     </thead>
-    <tbody>
-    <!--<th:block th:if="${srhCnt > 0}">-->
-    <tr class = "text-center td-py10 td-px15"><!--th:each="list:${list}"-->
-      <td><input type = "checkbox" name = "prdChecks" value = "${list.num}"></td>
-      <td> <!-- th:if="${list.mainfile != null}" -->
-        <img src="https://cdn-icons-png.flaticon.com/128/2957/2957307.png"
-             width = "50px" height = "60px">
+    <tbody id="productListTBody">
+    <th:block th:if="${clothList.getNumberOfElements() > 0}">
+      <tr class = "text-center td-py10 td-px15" th:each="list:${clothList}" th:id="${list.getClothId()}">
+        <td><input type = "checkbox" name = "clothIds" th:value = "${list.getClothId()}" th:onchange="allCheckRemove('cloth')"></td>
+        <td> <!-- th:if="${list.mainfile != null}" -->
+          <img th:src="|/uploadMainImageView/${list.getClothId()}|" alt="이미지 없음"
+               width = "50px" height = "60px">
+        </td>
+        <td th:text="${list.getClothId()}"></td>
+        <td th:text="${list.getSubCategory().getSubName()}"></td>
+        <!-- 상세 페이지 -->
+        <td class="text-start">
+          <img th:src="|/icon/new.png|" alt="이미지 없음" width = "30px" height = "30px"
+               th:if="${#dates.format(list.getRegDate(), 'yyyy-MM-dd') == #dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+          <img th:src="|/icon/only.png|" alt="이미지 없음" width = "45px" height = "18px"
+               th:if="${list.getSubCategory().getMainCategory().getMainName() == 'onlySuncloth'}">
+          <img th:src="|/icon/best.png|" alt="이미지 없음" width = "45px" height = "18px"
+               th:if="${list.getIcon() == 'best'}">
+          <img th:src="|/icon/hot.png|" alt="이미지 없음" width = "45px" height = "18px"
+               th:if="${list.getIcon() == 'hot'}">
+          <img th:src="|/icon/minPrice.png|" alt="이미지 없음" width = "30px" height = "30px"
+               th:if="${list.getIcon() == 'minPrice'}">
+          <a th:href="@{/host/productInput(clothId=${list.getClothId()})}"
+             th:text="${list.getClothName()}"> <!--href = "h_productForm?num=${list.num}&number=${number+1}&pageNum=${pageNum}"-->
+          </a></td>
+        <td th:text="${list.getBasePrice()}"></td>
+        <td th:text="${list.getDeliPrice()}"></td>
+        <td th:text="|${list.getRegDate()}|">[[${#dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm')}]]</td>
+        <td><a th:href="@{/host/stockList(clothId=${list.getClothId()})}"><input type = "button" value = "재고 관리" name = "csInput" class="whiteButton"/></a></td>
+      </tr>
+    </th:block>
+    <tr class = "text-center td-py10 td-px15" th:if="${clothList.getNumberOfElements() == 0}">
+      <td colspan = "9">
+        등록된 상품이 없습니다. 상품을 등록해주세요.
       </td>
-      <!-- 상세 페이지 -->
-      <td th:text="${'outer'}">
-        ${list.mediumpartname}
-      </td>
-      <td class="text-start">
-        <a th:href="@{/host/productView(name='text')}"
-           th:text="|누군가가 훔쳐갈 수도 있는 아름다운 여름 옷|"> <!--href = "h_productForm?num=${list.num}&number=${number+1}&pageNum=${pageNum}"-->
-          ${list.name}
-        </a></td>
-      <td><b th:text="|KRW 15000|">KRW ${list.saleprice}</b></td>
     </tr>
-    <!--</th:block>-->
-    <!--<tr class = "text-center td-py10 td-px15">
-      <td colspan = "10">
-        게시글이 없습니다. 글을 작성해주세요!!
-      </td>
-    </tr>-->
     </tbody>
   </table>
 
   <!-- Paging Block -->
   <div class="position-relative w-90 pt-10 mx-auto"><!-- 삭제 버튼 Block -->
-    <div>
-      <ul class="pagination justify-content-center my-0">
-        <li class="page-item disabled">
-          <a class="page-link">&lt;</a>
+    <!-- Paging Process : clothList > 0-->
+    <div th:if="${clothList.getNumberOfElements() > 0}">
+      <ul class="pagination justify-content-center my-0" id="pagingBlock">
+        <li class="page-item" th:classappend="${1 == clothList.pageable.pageNumber+1} ? 'disabled'">
+          <a class="page-link" href="#;" th:onclick="clothPaging(this.id)" th:id="${clothList.pageable.pageNumber - 1}">&lt;</a>
         </li>
-        <li class="page-item active">
-          <a class="page-link" href="#">1</a>
+        <li class="page-item" th:classappend="${i == clothList.pageable.pageNumber+1} ? 'disabled'"
+            th:each="i : ${#numbers.sequence(startPage, endPage)}">
+          <a class="page-link" href="#;" th:onclick="clothPaging(this.id)" th:id="${i - 1}" th:text="${i}">1</a>
         </li>
-        <li class="page-item" aria-current="page">
-          <a class="page-link" href="#">2</a>
+        <li class="page-item" th:classappend="${clothList.totalPages == clothList.pageable.pageNumber+1} ? 'disabled'">
+          <a class="page-link" href="#;" th:onclick="clothPaging(this.id)" th:id="${clothList.pageable.pageNumber + 1}">&gt;</a>
         </li>
-        <li class="page-item">
-          <a class="page-link" href="#">3</a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href="#">&gt;</a>
-        </li>
+      </ul>
+    </div>
+    <!-- Paging Process : clothList == 0 -->
+    <div th:if="${clothList.getNumberOfElements() == 0}">
+      <ul class="pagination justify-content-center my-0" id="pagingBlock">
+        <li class="page-item disabled"><a class="page-link">&lt;</a></li>
+        <li class="page-item disabled"><a class="page-link">1</a></li>
+        <li class="page-item disabled"><a class="page-link">&gt;</a></li>
       </ul>
     </div>
 

@@ -23,8 +23,8 @@
             <!-- 리뷰할 상품을 선택해서 올리는 부분(Review Item Select) -->
             <div class = "my-15 w-100 fs-75 border-y-1-ccc">
                 <table class="w-100">
-                    <col style = "width: 20%;">
-                    <col style = "width: 80%;">
+                    <col style = "width: 15%;">
+                    <col style = "width: 85%;">
                     <tr>
                         <!-- prdImage block(image 클릭시 상품 선택 가능한 팝업 생성) -->
                         <td class="text-center py-10">
@@ -33,8 +33,8 @@
                             </div>
                         </td>
                         <td>
-                            <input type = "button" id = "detailPrd" name = "detailPrd"
-                                   value = "상품정보선택" class="fs-9 p-5px whiteBaseButton">
+                            <input type = "button" id = "detailPrd" name = "detailPrd" th:onclick="withItemListPage()"
+                                   value = "상품정보선택" class="fs-9 p-5px mx-2 whiteBaseButton">
                         </td>
                     </tr>
                 </table>
@@ -66,7 +66,7 @@
 
                     <tr>
                         <td colspan="2">
-                            <textarea rows="20" cols="95" name="content" class="w-100 resize-vertical border-0" th:if="${name == 'REVIEW'}">
+                            <textarea rows="20" cols="95" name="content" class="w-100 resize-vertical" th:if="${name == 'REVIEW'}">
 ※리뷰작성 시 최대 적립금 2,000원 지급!(50자 이상 리뷰 작성시)
 (일반리뷰 500원 / 상품포토리뷰 1000 / 상품착용포토리뷰(키,몸무게,구매사이즈(컬러) '작성필수') 2,000원)
 
@@ -75,7 +75,7 @@
 구매사이즈(컬러):
 상품리뷰:
                             </textarea>
-                            <textarea rows="20" cols="95" name="content" class="w-100 resize-vertical border-0" th:if="${name == 'Q&A'}"></textarea>
+                            <textarea rows="20" cols="95" name="content" class="w-100 resize-vertical" th:if="${name == 'Q&A'}"></textarea>
                         </td>
                     </tr>
 

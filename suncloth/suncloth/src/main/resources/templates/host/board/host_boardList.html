@@ -153,7 +153,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <th:block th:if="${boardList.size() > 0}">
+                    <th:block th:if="${boardList.getNumberOfElements() > 0}">
                     <tr class = "text-center td-py10 td-px15" th:each="list:${boardList}" th:id="${list.getNum()}">
                         <td><input type = "checkbox" name = "boardNums" th:value="${list.getNum()}"></td>
                         <td th:text="${list.getNum()}">1</td>
@@ -178,7 +178,7 @@
                         <td th:if="${name == 'Q&A'}" th:text="${list.getWriteState()}">답변완료</td>
                     </tr>
                     </th:block>
-                    <th:block th:if="${boardList.size() == 0}">
+                    <th:block th:if="${boardList.getNumberOfElements() == 0}">
                     <tr class = "text-center td-py10 td-px15">
                       <td th:colspan="${name == 'Q&A'}?7:(${name == 'FAQ'}?6:5)">
                         등록된 게시글이 없습니다. 글을 작성해주세요!!

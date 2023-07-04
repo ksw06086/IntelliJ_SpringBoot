@@ -50,14 +50,14 @@ public class ClothApiController {
     // GET : Cloth 테이블 정보 가져오기
     @GetMapping("/cloths")
     Map<String, Object> all(@RequestParam(required = false) String searchType       // 검색 타입
-            , @RequestParam(required = false) String searchInput            // 검색 TextInput value
-            , @RequestParam(required = false) List<String> icons            // 아이콘
-            , @RequestParam(required = false) Long brandId                  // 브랜드 식별자
-            , @RequestParam(required = false) Long mainCategoryId           // 메인 카테고리 식별자
-            , @RequestParam(required = false) Long subCategoryId            // 서브 카테고리 식별자
-            , @RequestParam(required = false) String firstDay               // 시작 날짜
-            , @RequestParam(required = false) String lastDay                // 끝 날짜
-            , @PageableDefault(size = 3) Pageable pageable) {               // 페이지 객체
+            , @RequestParam(required = false) String searchInput                    // 검색 TextInput value
+            , @RequestParam(required = false) List<String> icons                    // 아이콘
+            , @RequestParam(required = false) Long brandId                          // 브랜드 식별자
+            , @RequestParam(required = false) Long mainCategoryId                   // 메인 카테고리 식별자
+            , @RequestParam(required = false) Long subCategoryId                    // 서브 카테고리 식별자
+            , @RequestParam(required = false) String firstDay                       // 시작 날짜
+            , @RequestParam(required = false) String lastDay                        // 끝 날짜
+            , @PageableDefault(size = 3) Pageable pageable) {                       // 페이지 객체
 
         Brand brand = brandRepository.findById(brandId).orElse(null);
         MainCategory mainCategory = mainCategoryRepository.findById(mainCategoryId).orElse(null);
@@ -69,9 +69,14 @@ public class ClothApiController {
         int endPage = Math.min(clothList.getTotalPages(), clothList.getPageable().getPageNumber()+4);
 
         // 각 프로퍼티 결과 출력
-        System.out.println("searchType : " + searchType + ", searchInput : " + searchInput + ", icons : " + icons +
-                ", brand : " + brand + ", mainCategory : " + mainCategory + ", subCategory : " + subCategory +
-                ", firstDay : " + firstDay + ", lastDay : " + lastDay + ", pageable : " + pageable);
+        log.info("searchType : {}", searchType);
+        log.info("searchInput : {}", searchInput);
+        log.info("icons : {}", icons);
+        log.info("brand : {}", brand);
+        log.info("mainCategory : {}", mainCategory);
+        log.info("subCategory : {}", subCategory);
+        log.info("firstDay : {}, lastDay : {}", firstDay, lastDay);
+        log.info("pageSize : {}", pageable.getPageSize());
 
         List<Map<String, Object>> clothMap = new ArrayList<>();
         for (Cloth cloth : clothList) {

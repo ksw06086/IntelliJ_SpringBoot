@@ -92,23 +92,29 @@
                     <td>문의구분</td>
                     <td th:text="${'상품문의'}">${vo.state}</td>
                 </tr>
+                <tr th:if="${name == 'FAQ'}">
+                    <td>분류</td>
+                    <td th:text="${board.getContentState()}">상품등록</td>
+                </tr>
+
                 <tr>
                     <td>제목</td>
-                    <td th:text="${'멋있는 제목'}">${vo.subject}</td>
+                    <td th:text="${board.getSubject()}">멋있는 제목</td>
                 </tr>
 
                 <tr>
                     <td>작성자</td>
-                    <td><b th:text="${'kim'}">${vo.id}</b></td>
+                    <td><b th:text="${board.getBoardUser().getUsername()}">kim</b></td>
                 </tr>
             </table>
         </div>
 
         <!-- 게시물의 내용(board contents) -->
         <div class="text-center fs-8 py-20 mt-30 mb-20 border-bottom-3-ccc">
-            <!--<c:if test="${vo.file1 != null}">-->
-            <img src="" alt="이미지 사진">
-            <p th:text="내용입니다.">${vo.content}</p>
+            <th:block th:if="${boardFileList.size() > 0}" th:each="list:${boardFileList}">
+                <img th:src="|/uploadBoardImageView/${list.getFileId()}|" alt="이미지 사진">
+            </th:block>
+            <p th:text="${board.getContent()}">내용입니다.</p>
         </div>
 
         <!-- 버튼 목록 -->

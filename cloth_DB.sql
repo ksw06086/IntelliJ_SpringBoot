@@ -183,8 +183,9 @@ create table board_tbl(
     ref_level     int DEFAULT 0,                -- 답변글 그룹 레벨(들여쓰기)
     reg_date      date DEFAULT sysdate,         -- 작성일
     ip          clob,                           -- ip
-    write_state varchar2(50) default '답변대기',  -- 답변여부
+    write_state varchar2(50) default '답변대기', -- 답변여부
     board_state varchar2(50),                   -- 게시판 상태
+    read_cnt int default 0,                     -- 게시판 방문횟수
     CONSTRAINT board_num_pk_excption PRIMARY key(num),
     FOREIGN KEY(user_id) references user_tbl(id) on delete cascade
 );

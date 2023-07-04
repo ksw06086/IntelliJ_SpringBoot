@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.InetAddress;
@@ -28,44 +30,66 @@ public class BoardApiController {
     private final BoardRepository boardRepository;
     @Autowired
     private final BoardRepositoryImpl boardRepositoyImpl;
+    @Autowired
+    private final BoardFileRepository boardFileRepository;
 
     BoardApiController(UserRepository userRepository
             , BoardRepository boardRepository
-            , BoardRepositoryImpl boardRepositoyImpl) {
+            , BoardRepositoryImpl boardRepositoyImpl
+            , BoardFileRepository boardFileRepository) {
         this.userRepository = userRepository;
         this.boardRepository = boardRepository;
         this.boardRepositoyImpl = boardRepositoyImpl;
+        this.boardFileRepository = boardFileRepository;
     }
 
     // GET : Board 테이블 정보 가져오기
     @GetMapping("/boards")
     Map<String, Object> all(@RequestParam(required = false) String searchType       // 검색 타입
-            , @RequestParam(required = false) String searchInput            // 검색 TextInput value
-            , @RequestParam(required = false) Long userId                   // 유저 식별자
-            , @RequestParam(required = false) String firstDay               // 시작 날짜
-            , @RequestParam(required = false) String lastDay                // 끝 날짜
-            , @PageableDefault(size = 3) Pageable pageable) {               // 페이지 객체
-        User user = userRepository.findById(userId).orElse(null);
+            , @RequestParam(required = false) String searchInput                    // 검색 TextInput value
+            , @RequestParam(required = false) String writeState                     // 답변상태
+            , @RequestParam(required = false) String contentState                   // 문의구분 및 분류
+            , @RequestParam(required = false) String firstDay                       // 시작 날짜
+            , @RequestParam(required = false) String lastDay                        // 끝 날짜
+            , @RequestParam(required = false) String boardState                           // 페이지 이름
+            , @PageableDefault(size = 3) Pageable pageable) {                       // 페이지 객체
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails userDetails = (UserDetails)principal;
+        String username = userDetails.getUsername();
+        User user = null;
+        if(boardState == "NOTICE" || boardState == "FAQ") {
+            user = userRepository.findByUsername("host");
+        } else if(boardState == "MY BOARD"){
+            user = userRepository.findByUsername(username);
+        }
 
-        Page<Board> boardList = boardRepositoyImpl.findSearchAll(searchType, searchInput, user, firstDay, lastDay, pageable);
+        Page<Board> boardList = boardRepositoyImpl.findSearchAll(searchType, searchInput, user, writeState, contentState, firstDay, lastDay, boardState, pageable);
         // 현재 아래 바를 1~5까지 보여주게 하기 위해서 끝에 4를 빼고 더해준 것
         int startPage = Math.max(1, boardList.getPageable().getPageNumber()-4);
         int endPage = Math.min(boardList.getTotalPages(), boardList.getPageable().getPageNumber()+4);
 
         // 각 프로퍼티 결과 출력
-        System.out.println("searchType : " + searchType + ", searchInput : " + searchInput +
-                ", user : " + user + ", firstDay : " + firstDay + ", lastDay : " + lastDay + ", pageable : " + pageable);
+        log.info("searchType : {}", searchType);
+        log.info("searchInput : {}", searchInput);
+        log.info("user : {}", user);
+        log.info("writeState : {}", writeState);
+        log.info("contentState : {}", contentState);
+        log.info("firstDay : {}, lastDay : {}", firstDay, lastDay);
+        log.info("pageSize : {}", pageable.getPageSize());
+        log.info("boardState : {}", boardState);
 
         List<Map<String, Object>> boardMap = new ArrayList<>();
         for (Board board : boardList) {
             boardMap.add(new HashMap<>());
             boardMap.get(boardMap.size()-1).put("board", board);
+            List<BoardFile> boardFileList = boardFileRepository.findByBoard(board);
+            boardMap.get(boardMap.size()-1).put("boardFileList", boardFileList);
             boardMap.get(boardMap.size()-1).put("user", board.getBoardUser());
         }
 
         Map<String, Object> pageMap = new HashMap<>();
-        pageMap.put("contentList", boardMap);
-        pageMap.put("pageObject", boardList);
+        pageMap.put("contentList", boardMap);         // board와 user의 내용을 쓰기 위한 것
+        pageMap.put("pageObject", boardList);         // page 관련 함수를 쓰기 위한 것
         pageMap.put("startPage", startPage);
         pageMap.put("endPage", endPage);
         return pageMap;

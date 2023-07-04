@@ -1,6 +1,8 @@
 package com.suncloth.suncloth.repository;
 
 import com.suncloth.suncloth.model.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -15,7 +17,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     List<Board> findByBoardUser(User user);
 
     // BoardState 를 기준으로 정보들 가져오기(where board_state = ?1)
-    List<Board> findByBoardState(String boardState);
+    Page<Board> findByBoardState(String boardState, Pageable pageable);
 
     // Q&A : 해당 글의 refStep Max값 가져오기
     @Query("""
