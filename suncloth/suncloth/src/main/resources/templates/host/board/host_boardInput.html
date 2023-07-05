@@ -19,7 +19,7 @@
     </div>
     <div class="flex-fill">
         <form method="POST" id="boardInputForm" enctype="multipart/form-data"
-              th:onsubmit="${board.getBoardUser() == null|| board.getBoardUser().getUsername() != 'host'}?'return boardAdd()':'return boardUpdate()'">
+              th:onsubmit="${board.getBoardUser() == null|| board.getBoardUser().getUsername() != 'host'}?'return boardAdd(\'host\')':'return boardUpdate()'">
         <div class="position-relative text-center w-95 mx-auto my-15 vertical-middle-all">
             <input type="hidden" name="boardState" id="boardState" th:value="${name}">
             <input type="hidden" name="num" id="boardNum" th:value="${board.getNum()}"

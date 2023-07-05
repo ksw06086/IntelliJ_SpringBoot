@@ -1,27 +1,4 @@
 // *** Board 게시판 관련 Script *** //
-// Board 게시판 추가하기
-function boardAdd(){
-    let boardInputForm = new FormData(document.getElementById("boardInputForm"));
-    const boardState = document.getElementById("boardState").value;
-
-    $.ajax({
-        type:"POST",
-        url: "/api/board",
-        enctype: 'multipart/form-data',
-        processData: false,
-        contentType: false,
-        data: boardInputForm,
-        success: function(result){
-            alert(boardState + " 게시글이 등록되었습니다.");
-            boardFilesAdd(result.num);
-            window.location.href="/host/boardList?name=" + boardState;
-        },
-        err: function(err){
-            console.log("err:", err);
-            alert("실패");
-        }
-    });
-}
 
 // Board 게시판 수정하기
 function boardUpdate(){

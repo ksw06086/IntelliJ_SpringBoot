@@ -376,8 +376,8 @@ function getAccessToken(saleTotalPrice) {
             "Content-Type": "application/json"
         },
         data: JSON.stringify({
-            imp_key: "8257307580684274", // REST API 키
-            imp_secret: "mSeaMrasCmMjwsOnm8yhD8xQIbr3UBHhLRX3VJJxtqO9iYPiQYkjBmk4OdamfFJkIPFh6262kMAqVeh3" // REST API Secret
+            imp_key: "", // REST API 키
+            imp_secret: "" // REST API Secret
         }),
         success: (result) => {
             console.log("성공");
@@ -1118,4 +1118,11 @@ function withItemListPage() {
 	 */
     const url = "/popup/withItemsSelect";
     window.open(url, "withItem", "menubar=no, width=1000, height = 600");
+}
+// 2. popup 창에서 상품명 클릭 //
+function withItemSelected(clothId) {
+    opener.document.getElementById("imageDiv").innerHTML = '<img src="/uploadMainImageView/' + clothId + '" class="w-100 h-100"/>';
+    opener.document.getElementById("clothId").value = clothId;
+    opener.document.getElementById("clothName").innerText = document.getElementById("clothName_" + clothId).textContent;
+    self.close();
 }

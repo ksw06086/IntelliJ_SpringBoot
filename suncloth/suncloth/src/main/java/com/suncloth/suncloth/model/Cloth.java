@@ -58,4 +58,9 @@ public class Cloth {
     @OneToMany(mappedBy = "stockCloth", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Stock> stocks = new ArrayList<>();
+
+    // Cloth 와 연결된 Board(게시판) 들
+    @OneToMany(mappedBy = "boardCloth", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Board> boards = new ArrayList<>();
 }

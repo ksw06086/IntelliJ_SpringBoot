@@ -27,6 +27,8 @@ public class BoardApiController {
     @Autowired
     private final UserRepository userRepository;
     @Autowired
+    private final ClothRepository clothRepository;
+    @Autowired
     private final BoardRepository boardRepository;
     @Autowired
     private final BoardRepositoryImpl boardRepositoyImpl;
@@ -36,11 +38,13 @@ public class BoardApiController {
     BoardApiController(UserRepository userRepository
             , BoardRepository boardRepository
             , BoardRepositoryImpl boardRepositoyImpl
-            , BoardFileRepository boardFileRepository) {
+            , BoardFileRepository boardFileRepository
+            , ClothRepository clothRepository) {
         this.userRepository = userRepository;
         this.boardRepository = boardRepository;
         this.boardRepositoyImpl = boardRepositoyImpl;
         this.boardFileRepository = boardFileRepository;
+        this.clothRepository = clothRepository;
     }
 
     // GET : Board 테이블 정보 가져오기
@@ -51,7 +55,7 @@ public class BoardApiController {
             , @RequestParam(required = false) String contentState                   // 문의구분 및 분류
             , @RequestParam(required = false) String firstDay                       // 시작 날짜
             , @RequestParam(required = false) String lastDay                        // 끝 날짜
-            , @RequestParam(required = false) String boardState                           // 페이지 이름
+            , @RequestParam(required = false) String boardState                     // 페이지 이름
             , @PageableDefault(size = 3) Pageable pageable) {                       // 페이지 객체
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDetails userDetails = (UserDetails)principal;
@@ -98,22 +102,30 @@ public class BoardApiController {
 
     // POST : Board 테이블에 정보 삽입하기
     @PostMapping("/board")
-    Board newBoard(Board newBoard, String username
+    Board newBoard(Board newBoard
+            , @RequestParam(required = false) Long clothId
             , @RequestParam(required = false) Long refBoardNum) throws UnknownHostException {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails userDetails = (UserDetails)principal;
+        String username = userDetails.getUsername();
         User user = userRepository.findByUsername(username);
         newBoard.setBoardUser(user);
         newBoard.setIp(InetAddress.getLocalHost().getHostAddress());
 
+        if(clothId != null) {
+            Cloth cloth = clothRepository.findById(clothId).orElse(null);
+            newBoard.setBoardCloth(cloth);
+        }
         if(refBoardNum != null && refBoardNum != 0) {
             Long maxRefStep = boardRepository.findByMaxRefStep(refBoardNum);
             newBoard.setRefStep(maxRefStep + 1);
             System.out.println("maxRefStep : " + maxRefStep);
         }
 
-        System.out.println("newBoard : " + newBoard);
-        System.out.println("username : " + username);
-        System.out.println("user : " + user);
-        System.out.println("refBoardNum : " + refBoardNum);
+        log.info("newBoard : {}", newBoard.toString());
+        log.info("username : {}", username);
+        log.info("user : {}", user);
+        log.info("refBoardNum : {}", refBoardNum);
         return boardRepository.save(newBoard);
     }
 

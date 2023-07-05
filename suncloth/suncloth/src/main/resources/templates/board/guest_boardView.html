@@ -124,7 +124,7 @@
                 <input type = "submit" name = "list" value = "목록" class="fs-75 whiteButton">
             </a>
             <!-- 게시판이 review 또는 Q&A이고 내가 작성한 게시물일 경우 -->
-            <th:block>
+            <th:block th:if="${#authentication.getName() == board.getBoardUser().getUsername()}">
                 <!-- 수정 버튼 -->
                 <a href = "reviewupdate?num=${num}&number=${number}&pageNum=${pageNum}&choose=${choose}">
                     <input type = "submit" name = "update" value = "수정"  class="fs-75 whiteButton">
@@ -236,7 +236,7 @@
                     <!-- 댓글 달기위한 입력 폼 -->
                     <table class="w-100 mt-30 mb-1">
                         <tr>
-                            <td><b><label for="content">댓글달기</label></b></td>
+                            <td><b><label for="replyContent">댓글달기</label></b></td>
                             <td></td>
                             <td></td>
                         </tr>

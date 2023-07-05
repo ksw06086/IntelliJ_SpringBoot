@@ -173,6 +173,7 @@ create table stock_tbl (
 create table board_tbl(
     num    int GENERATED ALWAYS as IDENTITY,    -- 글번호
     user_id int,                                -- 작성자
+    cloth_id int,                               -- 게시글 연관 상품 : Q&A, REVIEW
     content_state   varchar2(50),               -- 문의 관련 상태 표시
     subject     clob not null,                  -- 글제목
     content     clob,                           -- 글 내용
@@ -187,7 +188,8 @@ create table board_tbl(
     board_state varchar2(50),                   -- 게시판 상태
     read_cnt int default 0,                     -- 게시판 방문횟수
     CONSTRAINT board_num_pk_excption PRIMARY key(num),
-    FOREIGN KEY(user_id) references user_tbl(id) on delete cascade
+    FOREIGN KEY(user_id) references user_tbl(id) on delete cascade,
+    FOREIGN key(cloth_id) references cloth_tbl(cloth_id) on delete cascade
 );
 
 /** 게시판 이미지파일(board_file_tbl) Table **/

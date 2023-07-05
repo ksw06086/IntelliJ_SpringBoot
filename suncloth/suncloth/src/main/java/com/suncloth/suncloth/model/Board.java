@@ -45,6 +45,13 @@ public class Board {
     @JsonIgnore
     private User boardUser;
 
+    // Cloth 와 연결
+    // name : 나의 외래키 컬럼, referencedColumnName(생략가능) : 상대의 primary 컬럼
+    @ManyToOne
+    @JoinColumn(name = "cloth_id")
+    @JsonIgnore
+    private Cloth boardCloth;
+
 
     // Cloth 와 연결된 File(이미지) 들
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
