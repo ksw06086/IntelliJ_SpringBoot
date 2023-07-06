@@ -70,10 +70,11 @@ function clothsGet(pageName){
                 // tr 태그
                 const tr = document.createElement('tr');
                 tr.className = "text-center td-py10 td-px15";
-                tr.id = data.clothId;
+                tr.id = data.cloth.clothId;
                 // icon 체크
                 let icon = '', clothCheckBox = '', clothBottomTd = '';
-                let clothNameLink = '<a href="#;" onclick="withItemSelected()">' + data.cloth.clothName + '</a>';
+                let clothNameLink = '<a href="#;" onclick="withItemSelected(this.className)" class="' + data.cloth.clothId +
+                    '" id="clothName_' + data.cloth.clothId + '">' + data.cloth.clothName + '</a>';
                 if (data.mainCategory.mainName == 'onlySuncloth') {
                     icon += '<img src="/icon/only.png" alt="이미지 없음" width = "45px" height = "18px">'
                 }
@@ -119,18 +120,21 @@ function clothsGet(pageName){
             if (result.pageObject.numberOfElements > 0) {
                 // < 버튼 부분 추가
                 pagingStr = '<li class="page-item ' + ((1 === result.pageObject.pageable.pageNumber + 1) ? 'disabled' : '') + '">\n' +
-                    '    <a class="page-link" href="#;" onclick="clothPaging(this.id)" id="' + (result.pageObject.pageable.pageNumber - 1) + '">&lt;</a>\n' +
-                    '</li>\n';
+                        '<a class="page-link" href="#;" onclick="clothPaging(this.id, \'' + pageName + '\')" id="' +
+                        (result.pageObject.pageable.pageNumber - 1) + '">&lt;</a>\n' +
+                        '</li>\n';
                 // 1,2,... 버튼 부분 추가
                 for (let i = result.startPage; i < result.endPage + 1; i++) {
                     pagingStr += '<li class="page-item ' + ((i === result.pageObject.pageable.pageNumber + 1) ? 'disabled' : '') + '">\n' +
-                        '    <a class="page-link" href="#;" onclick="clothPaging(this.id)" id="' + (i - 1) + '">' + i + '</a>\n' +
-                        '</li>\n';
+                            '<a class="page-link" href="#;" onclick="clothPaging(this.id, \'' + pageName + '\')" id="' +
+                            (i - 1) + '">' + i + '</a>\n' +
+                            '</li>\n';
                 }
                 // > 버튼 부분 추가
                 pagingStr += '<li class="page-item ' + ((result.pageObject.totalPages === result.pageObject.pageable.pageNumber + 1) ? 'disabled' : '') + '">\n' +
-                    '    <a class="page-link" href="#;" onclick="clothPaging(this.id)" id="' + (result.pageObject.pageable.pageNumber + 1) + '">&gt;</a>\n' +
-                    '</li>';
+                        '<a class="page-link" href="#;" onclick="clothPaging(this.id, \'' + pageName + '\')" id="' +
+                        (result.pageObject.pageable.pageNumber + 1) + '">&gt;</a>\n' +
+                        '</li>';
             } else {
                 pagingStr = '<li class="page-item disabled"><a class="page-link">&lt;</a></li>' +
                             '<li class="page-item disabled"><a class="page-link">1</a></li>' +
@@ -143,7 +147,7 @@ function clothsGet(pageName){
     });
 }
 // --- 페이지 넘기기 --- //
-function clothPaging(page){
+function clothPaging(page, pageName){
     // ajax로 검색결과의 상품 가져와서 목록 Update
     $.ajax({
         type: 'GET',
@@ -165,28 +169,37 @@ function clothPaging(page){
                 // tr 태그
                 const tr = document.createElement('tr');
                 tr.className = "text-center td-py10 td-px15";
-                tr.id = data.clothId;
+                tr.id = data.cloth.clothId;
                 // icon 체크
-                let icon = '';
+                let icon = '', clothCheckBox = '', clothBottomTd = '';
+                let clothNameLink = '<a href="#;" onclick="withItemSelected(this.className)" class="' + data.cloth.clothId +
+                    '" id="clothName_' + data.cloth.clothId + '">' + data.cloth.clothName + '</a>';
                 if(data.mainCategory.mainName == 'onlySuncloth'){ icon += '<img src="/icon/only.png" alt="이미지 없음" width = "45px" height = "18px">'}
                 if(data.cloth.icon == 'best'){ icon += '<img src="/icon/best.png" alt="이미지 없음" width = "45px" height = "18px">'}
                 if(data.cloth.icon == 'hot'){ icon += '<img src="/icon/hot.png" alt="이미지 없음" width = "45px" height = "18px">'}
                 if(data.cloth.icon == 'minPrice'){ icon += '<img src="/icon/minPrice.png" alt="이미지 없음" width = "30px" height = "30px">'}
                 if(data.cloth.regDate == new Date()){ icon += '<img src="/icon/minPrice.png" alt="이미지 없음" width = "30px" height = "30px">'}
+                if(pageName === 'host_productList'){
+                    clothCheckBox = '<td><input type = "checkbox" name = "clothIds" value = "' + data.cloth.clothId + '"></td>';
+                    clothNameLink = '<a href="/host/productInput?clothId=' + data.cloth.clothId + '">' + data.cloth.clothName + "</a>";
+                    clothBottomTd = '<td>' + data.cloth.regDate + '</td>' +
+                        '<td><a href="/host/stockList?clothId=' + data.cloth.clothId + '">' +
+                        '<input type = "button" value = "재고 관리" name = "csInput" class="whiteButton"/>' +
+                        '</a></td>';
+                }
                 // td 태그 추가
-                tr.innerHTML =  '<td><input type = "checkbox" name = "clothIds" value = "' + data.cloth.clothId + '"></td>' +
+                tr.innerHTML = clothCheckBox +
                     '<td>' +
                     '<img src="/uploadMainImageView/' + data.cloth.clothId + '" alt="이미지 없음" width = "50px" height = "60px">' +
                     '</td>' +
                     '<td>' + data.cloth.clothId + '</td>' +
                     '<td>' + data.subCategory.subName + '</td>' +
                     '<td class="text-start">' + icon +
-                    '<a href="/host/productInput?clothId=' + data.cloth.clothId + '">' + data.cloth.clothName +
-                    '</a></td>' +
+                    clothNameLink +
+                    '</td>' +
                     '<td>' + data.cloth.basePrice + '</td>' +
                     '<td>' + data.cloth.deliPrice + '</td>' +
-                    '<td>' + data.cloth.regDate + '</td>' +
-                    '<td><a href="/host/stockList?clothId=' + data.cloth.clothId +'"><input type = "button" value = "재고 관리" name = "csInput" class="whiteButton"/></a></td>';
+                    clothBottomTd;
                 productListTBody.append(tr);
             })
 
@@ -194,17 +207,20 @@ function clothPaging(page){
             const pagingBlock = document.getElementById("pagingBlock");
             // < 버튼 부분 추가
             let pagingStr = '<li class="page-item ' + ((1 === result.pageObject.pageable.pageNumber+1)?'disabled':'') + '">\n' +
-                '    <a class="page-link" href="#;" onclick="clothPaging(this.id)" id="' + (result.pageObject.pageable.pageNumber-1) + '">&lt;</a>\n' +
+                '<a class="page-link" href="#;" onclick="clothPaging(this.id, \'' + pageName + '\')" id="' +
+                (result.pageObject.pageable.pageNumber-1) + '">&lt;</a>\n' +
                 '</li>\n';
             // 1,2,... 버튼 부분 추가
             for (let i = result.startPage; i < result.endPage+1; i++) {
                 pagingStr += '<li class="page-item ' + ((i === result.pageObject.pageable.pageNumber+1)?'disabled':'') + '">\n' +
-                    '    <a class="page-link" href="#;" onclick="clothPaging(this.id)" id="' + (i - 1) + '">' + i + '</a>\n' +
+                    '<a class="page-link" href="#;" onclick="clothPaging(this.id, \'' + pageName + '\')" id="' +
+                    (i - 1) + '">' + i + '</a>\n' +
                     '</li>\n';
             }
             // > 버튼 부분 추가
             pagingStr += '<li class="page-item ' + ((result.pageObject.totalPages === result.pageObject.pageable.pageNumber+1)?'disabled':'') + '">\n' +
-                '    <a class="page-link" href="#;" onclick="clothPaging(this.id)" id="' + (result.pageObject.pageable.pageNumber+1) + '">&gt;</a>\n' +
+                '<a class="page-link" href="#;" onclick="clothPaging(this.id, \'' + pageName + '\')" id="' +
+                (result.pageObject.pageable.pageNumber+1) + '">&gt;</a>\n' +
                 '</li>';
             pagingBlock.innerHTML = pagingStr;
         }, error:function(e) {
@@ -225,7 +241,8 @@ function boardTextTypeChange(textType) {
 // Board 게시판 추가하기
 function boardAdd(userRole){
     let boardInputForm = new FormData(document.getElementById("boardInputForm"));
-    const boardState = document.getElementById("boardState").value;
+    let boardState = document.getElementById("boardState").value;
+    if(boardState === 'Q&A'){ boardState = 'Q%26A'; }
     let hrefURL = ''
     if(userRole === 'host'){ hrefURL = "/host/boardList?name=" + boardState; }
     if(userRole === 'guest'){ hrefURL = "/board/boardList?name=" + boardState; }

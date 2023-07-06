@@ -57,7 +57,7 @@ public class ClothApiController {
             , @RequestParam(required = false) Long subCategoryId                    // 서브 카테고리 식별자
             , @RequestParam(required = false) String firstDay                       // 시작 날짜
             , @RequestParam(required = false) String lastDay                        // 끝 날짜
-            , @PageableDefault(size = 3) Pageable pageable) {                       // 페이지 객체
+            , @PageableDefault Pageable pageable) {                       // 페이지 객체
 
         Brand brand = brandRepository.findById(brandId).orElse(null);
         MainCategory mainCategory = mainCategoryRepository.findById(mainCategoryId).orElse(null);

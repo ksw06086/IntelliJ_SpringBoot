@@ -32,14 +32,14 @@ public class BoardController {
     @GetMapping("/boardList")
     public String boardList(Model model
             , @RequestParam(required = false) String name
-            , @PageableDefault(size = 3) Pageable pageable) {
+            , @PageableDefault(size = 10) Pageable pageable) {
         Page<Board> boardList = boardRepository.findByBoardState(name, pageable);
 
         // 현재 아래 바를 1~5까지 보여주게 하기 위해서 끝에 4를 빼고 더해준 것
         int startPage = Math.max(1, boardList.getPageable().getPageNumber()-1);
         int endPage = Math.min(boardList.getTotalPages(), boardList.getPageable().getPageNumber()+4);
 
-        
+
 
         model.addAttribute("boardList", boardList);
         model.addAttribute("name", name);

@@ -56,7 +56,7 @@ public class BoardApiController {
             , @RequestParam(required = false) String firstDay                       // 시작 날짜
             , @RequestParam(required = false) String lastDay                        // 끝 날짜
             , @RequestParam(required = false) String boardState                     // 페이지 이름
-            , @PageableDefault(size = 3) Pageable pageable) {                       // 페이지 객체
+            , @PageableDefault(size = 10) Pageable pageable) {                       // 페이지 객체
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDetails userDetails = (UserDetails)principal;
         String username = userDetails.getUsername();
@@ -88,6 +88,7 @@ public class BoardApiController {
             boardMap.get(boardMap.size()-1).put("board", board);
             List<BoardFile> boardFileList = boardFileRepository.findByBoard(board);
             boardMap.get(boardMap.size()-1).put("boardFileList", boardFileList);
+            boardMap.get(boardMap.size()-1).put("boardCloth", board.getBoardCloth());
             boardMap.get(boardMap.size()-1).put("user", board.getBoardUser());
         }
 

@@ -953,6 +953,7 @@ function boardsGet(){
     pageSize = document.getElementById("pageSize").value;
     // 검색 요소 - Q&A일때만
     if(name === "Q&A"){
+        name = "Q%26A";
         writeState = document.getElementById("writeState").value;
         contentState = document.getElementById("contentState").value;
     }
@@ -1037,13 +1038,14 @@ function boardsGet(){
 // --- 페이지 넘기기 --- //
 function boardPaging(page){
     name = document.getElementById("title").value;
+    if(name === "Q&A") { name = "Q%26A"; }
 
     // ajax로 검색결과의 상품 가져와서 목록 Update
     $.ajax({
         type: 'GET',
         url: '/api/boards?searchType=' + searchType + '&searchInput=' + searchInput + '&size=' + pageSize +
             '&writeState=' + writeState + '&contentState=' + contentState +
-            "&firstDay=" + firstDay + "&lastDay=" + lastDay + "&boardState=" + name,
+            "&firstDay=" + firstDay + "&lastDay=" + lastDay + "&boardState=" + name + "&page=" + page,
         success: (result) => {
             //AJAX 성공시 실행 코드(* mainCategoriesSelector Class)
             const boardListTBody = document.getElementById("boardListTBody");
@@ -1065,13 +1067,20 @@ function boardPaging(page){
                 if(data.board.boardState === "FAQ" || data.board.boardState === "Q&A")      // 게시글 분류/문의구분 : FAQ, Q&A
                 { boardTdTopList += '<td>' + data.board.contentState + '</td>'; }
                 if(data.board.boardState === "REVIEW" || data.board.boardState === "Q&A")   // 상품 이미지 : Review, Q&A
-                { boardTdTopList += '<td><img src="/uploadBoardImageView/' + data.boardFileList.get(0).fileId + '" alt="" width = "50px" height = "60px"></td>'; }
+                {
+                    if (data.boardCloth !== null) {
+                        alert(data.boardCloth.clothId);
+                        boardTdTopList += '<td><img src="/uploadBoardImageView/' + data.boardCloth.clothId + '" alt="" width = "50px" height = "60px"></td>';
+                    } else {
+                        boardTdTopList += '<td><div class="bg-secondary-subtle w-50px h-60px mx-auto fs-75">No image</div></td>';
+                    }
+                }
                 if(data.board.boardState === "Q&A")                                         // 게시글 답변상태 : Q&A
                 { boardTdBottomList += '<td>' + data.board.writeState + '</td>'; }
                 if(data.board.boardState === "REVIEW")                                      // 게시글 방문횟수 : Review
                 { boardTdBottomList += '<td>' + data.board.readCnt + '</td>'; }
                 if(data.board.refLevel > 0)                                                 // 답글 여부 확인
-                { refImage += '&nbsp;<img src = "${project}ascloimage/re.png" width = "20" height = "15">'}
+                { refImage += '&nbsp;<img src = "${project}ascloimage/re.png" width = "20" height = "15">';}
                 // td 태그 추가
                 tr.innerHTML =  '<!-- 게시글 NO : All -->' +
                     '<th scope="row">' + data.board.num + '</th>' +
