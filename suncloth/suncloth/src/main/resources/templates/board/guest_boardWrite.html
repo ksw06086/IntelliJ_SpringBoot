@@ -32,7 +32,7 @@
                             <div id = "imageDiv" class="bg-secondary-subtle wh-100px mx-auto">
                                 <img th:if="${board.getBoardCloth() != null}"
                                      th:src="|/uploadMainImageView/${board.getBoardCloth().getClothId()}|" class="w-100 h-100"/>
-                                No image
+                                <span th:if="${board.getBoardCloth() == null}">No image</span>
                             </div>
                         </a></td>
                         <td class="ps-2">
@@ -92,7 +92,6 @@
                                 <div th:class="${files.size() == 0}?'d-none'">
                                     <input type = "checkbox" id = "baseBoardFileYN" th:onchange="baseBoardFileUpdateYN()" th:checked="${files.size() > 0}?true">
                                     <label for="baseBoardFileYN">이전 이미지 그대로</label>
-                                    <label th:if="${name == 'Q&A'}">(Q&A 답변등록일 경우 고객이 첨부한 이미지가 기존 이미지로 지정됩니다.)</label>
                                 </div>
                                 <div><input type = "file" multiple="multiple" id="boardFile" name = "boardFile" th:class="${files.size() > 0}?'d-none'"></div>
                             </div>

@@ -11,13 +11,12 @@
     <section th:replace="fragments/guest_common :: headName(${name})"></section>
 
     <!-- QnA 비번이 걸려있는 경우 비번 인증하는 부분 보여줌 : 내가 아니고 QnA일 때만-->
-    <section class="body" th:if="${name == 'Q&A'}">
-        <form name="QnADoor" action="BoardView" method="post" class="mt-30 mb-50"
-        onsubmit="return inputCheck();">
-            <input type = "hidden" name = "num" value = "${num}">
+    <section class="body" th:classappend="${board.getTextType() != 'close'}?'d-none'" id="QnADoor">
+        <form name="QnADoor" action="BoardView" method="post" class="mt-30 mb-50">
+            <!--<input type = "hidden" name = "num" value = "${num}">
             <input type = "hidden" name = "number" value = "${number}">
             <input type = "hidden" name = "pageNum" value = "${pageNum}">
-            <input type = "hidden" name = "choose" value = "${choose}">
+            <input type = "hidden" name = "choose" value = "${choose}">-->
             <fieldset class="py-10 mt-10 mx-auto w-50 a-tag-css text-center border-all-1-ccc">
                 <table class="body">
                     <col style = "width: 40%;">
@@ -37,17 +36,18 @@
                     </tr>
                     <tr>
                         <td>
-                            <label for="qnaPwd" class="fw-bold fs-75">비밀번호</label>
+                            <label for="pwdInput" class="fw-bold fs-75">비밀번호</label>
                         </td>
-                        <td><input type = "password" id="qnaPwd" name = "password" class="w-98 py-5px"></td>
+                        <td><input type = "password" id="pwdInput" name = "password" class="w-98 py-5px"></td>
                     </tr>
 
                     <tr>
                         <td colspan = "2">
-                            <a href = "QnA?num=${num}&number=${number}&pageNum=${pageNum}&choose=${choose}">
+                            <a th:href = "@{/board/boardList(name='Q&A')}">
                                 <input type = "button" class="fs-75 whiteBaseButton w-49 py-10 mt-10" id = "list" value = "목록" >
                             </a>
-                            <input type = "submit" class="fs-75 grayButton w-49 py-10 mt-10" id = "ok" value = "확인">
+                            <input type = "button" class="fs-75 grayButton w-49 py-10 mt-10" th:id="${board.getPwd()}"
+                                   value = "확인" th:onclick="boardPwdCheck(this.id)">
                         </td>
                     </tr>
                 </table>
@@ -56,7 +56,9 @@
     </section>
 
     <!-- 게시판 Body 부분 -->
-    <section class="body">
+    <section class="body" th:classappend="${board.getTextType() == 'close'}?'d-none'" id="boardBody">
+        <input type = "hidden" id = "boardNum" th:value="${board.getNum()}">
+        <input type = "hidden" id = "boardState" th:value="${board.getBoardState()}">
         <!-- 리뷰할 상품을 선택해서 올리는 부분(Review Item Select) -->
         <th:block th:if="${name == 'REVIEW' || name == 'Q&A'}">
             <div id = "prdData" class = "my-15 w-100 fs-75 border-y-1-ccc boardView-header">
@@ -66,17 +68,24 @@
                     <tr>
                         <!-- prdImage block(image 클릭시 상품 선택 가능한 팝업 생성) -->
                         <td rowspan = "2" class="text-center py-10">
-                            <img src = "./ascloimage/jang1.jpg" width = "100px" height = "100px" class="align-middle">
+                            <div id = "imageDiv" class="bg-secondary-subtle wh-100px mx-auto">
+                                <img th:if="${board.getBoardCloth() != null}"
+                                     th:src="|/uploadMainImageView/${board.getBoardCloth().getClothId()}|" class="w-100 h-100"/>
+                                <span th:if="${board.getBoardCloth() == null}">No image</span>
+                            </div>
                         </td>
                         <!-- prdTitle block -->
-                        <td><img src = "../ascloimage/n.png" width = "10px" height = "10px" class="align-middle"><br>
-                            장원영의 이쁜 티셔츠(3color)<br>
-                            KRW 37,000</td>
+                        <td>
+                            <img src = "../ascloimage/n.png" width = "10px" height = "10px" class="align-middle"><br>
+                            <span class="fw-bold"> &lt;WITH ITEM SELECT&gt; </span><br>
+                            <span id="clothName" class="fs-15" th:text="${board.getBoardCloth() != null}?${board.getBoardCloth().getClothName()}"></span>
+                        </td>
                     </tr>
                     <tr>
                         <!-- product detail block(해당 상품의 페이지 보러가기) -->
                         <td class="pb-15">
-                            <input type = "submit" name = "detailPrd" value = "상품 상세보기" class="fs-9 whiteButton">
+                            <input type = "button" name = "detailPrd" value = "상품 상세보기" class="fs-9 whiteButton"
+                                   th:onclick="|window.location.href='/guest/productDetail?clothId=${board.getBoardCloth().getClothId()}';|">
                         </td>
                     </tr>
                 </table>
@@ -126,7 +135,7 @@
             <!-- 게시판이 review 또는 Q&A이고 내가 작성한 게시물일 경우 -->
             <th:block th:if="${#authentication.getName() == board.getBoardUser().getUsername()}">
                 <!-- 수정 버튼 -->
-                <a href = "reviewupdate?num=${num}&number=${number}&pageNum=${pageNum}&choose=${choose}">
+                <a th:href = "@{/board/boardWrite(name=${name}, num=${board.getNum()})}">
                     <input type = "submit" name = "update" value = "수정"  class="fs-75 whiteButton">
                 </a>
 
@@ -148,89 +157,96 @@
 
         <!-- 댓글작성 block -->
         <article th:if="${name == 'REVIEW'}">
-            <form action="replyPro" method = "post" name = "replyForm">
-                <input type = "hidden" name = "num" th:value = "${num}">
-                <input type = "hidden" name = "number" th:value = "${number}">
-                <input type = "hidden" name = "pageNum" th:value = "${pageNum}">
-                <input type = "hidden" name = "choose" th:value = "${choose}">
+            <form method = "post" name = "boardInputForm" id="boardInputForm">
                 <div class = "replyContents">
-                    <table class="w-100">
+                    <input type="hidden" id="pageSize" value="5">
+                    <table class="w-100 ">
+                        <col width="5%">
+                        <col width="15%">
+                        <col >
+                        <col width="8%">
+                        <col width="5%">
                         <tr>
-                            <th class="text-center" colspan = "3">
-                                <!-- 댓글이 있으면 -->
-                                <!--<c:if test="${srhCnt > 0}">-->
-                                    <!-- 처음[◀◀] : ㅁ + 한자키 / 이전블록 [◀] -->
-                                    <!--<c:if test="${startPage > pageBlock}">-->
-                                        <a href = "reviewForm?num=${num}&number=${number}&pageNum=${pageNum}&choose=${choose}">
-                                            [◀◀]</a>
-                                        <a href = "reviewForm?num=${num}&number=${number}&pageNum=${pageNum}&r_pageNum=${startPage - pageBlock}&choose=${choose}">
-                                            [◀]</a>
-                                    <!--</c:if>-->
+                            <th class="text-center" colspan = "5">
+                                <div class="d-flex px-3">
+                                    <!-- 현재 가져온 게시판이 총 몇개이고 그 중 몇개가 한페이지에 출력이 되어있는지 확인 -->
+                                    <div class="me-auto my-auto">
+                                        <b class="fs-9" th:id="|getPageCountText_REPLY|"
+                                           th:text="| 검색 ${replyBoardList.getNumberOfElements()}건 / 총 ${replyBoardList.getTotalElements()}건 |">
+                                            검색 10건 / 총 50건
+                                        </b>
+                                    </div>
 
-                                    <!-- 블럭내의 페이지 번호 -->
-                                    <!--<c:forEach var = "i" begin = "${startPage}" end = "${endPage}">-->
-                                        <!-- 현재 페이지 -->
-<!--                                        <c:if test="${i == currentPage}">-->
-                                            <span><b th:text="|[${1}]|">[${i}]</b></span>
-                                        <!--</c:if>-->
-                                        <!--<c:if test="${i != currentPage}">-->
-                                            <span><a href = "reviewForm?num=${num}&number=${number}&pageNum=${pageNum}&r_pageNum=${i}&choose=${choose}" th:text="|[${2}]|">
-                                                [${i}]
-                                            </a></span>
-                                        <!--</c:if>-->
-                                    <!--</c:forEach>-->
-
-                                    <!-- 다음블럭 [▶] / 끝[▶▶] -->
-                                    <!--<c:if test="${pageCount > endPage}">-->
-                                        <a href = "reviewForm?num=${num}&number=${number}&pageNum=${pageNum}&r_pageNum=${startPage + pageBlock}&choose=${choose}">
-                                            [▶]</a>
-                                        <a href = "reviewForm?num=${num}&number=${number}&pageNum=${pageNum}&r_pageNum=${pageCount}&choose=${choose}">
-                                            [▶▶]</a>
-                                    <!--</c:if>-->
-                                <!--</c:if>-->
+                                    <!-- 댓글이 있으면 -->
+                                    <div th:if="${replyBoardList.getNumberOfElements() > 0}">
+                                        <ul class="pagination justify-content-center my-0" th:id="|pagingBlock_REPLY|">
+                                            <li class="page-item" th:classappend="${1 == replyBoardList.pageable.pageNumber+1} ? 'disabled'">
+                                                <a class="page-link" href="#;" th:onclick="boardPaging(this.id, 'REPLY')" th:id="${replyBoardList.pageable.pageNumber - 1}">&lt;</a>
+                                            </li>
+                                            <li class="page-item" th:classappend="${i == replyBoardList.pageable.pageNumber+1} ? 'disabled'"
+                                                th:each="i : ${#numbers.sequence(replyStartPage, replyEndPage)}">
+                                                <a class="page-link" href="#;" th:onclick="boardPaging(this.id, 'REPLY')" th:id="${i - 1}" th:text="${i}">1</a>
+                                            </li>
+                                            <li class="page-item" th:classappend="${replyBoardList.totalPages == replyBoardList.pageable.pageNumber+1} ? 'disabled'">
+                                                <a class="page-link" href="#;" th:onclick="boardPaging(this.id, 'REPLY')" th:id="${replyBoardList.pageable.pageNumber + 1}">&gt;</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <!-- Paging Process : boardList == 0 -->
+                                    <div th:if="${replyBoardList.getNumberOfElements() == 0}">
+                                        <ul class="pagination justify-content-center my-0" id="pagingBlock">
+                                            <li class="page-item disabled"><a class="page-link">&lt;</a></li>
+                                            <li class="page-item disabled"><a class="page-link">1</a></li>
+                                            <li class="page-item disabled"><a class="page-link">&gt;</a></li>
+                                        </ul>
+                                        <!--<ul class="pagination justify-content-center my-0" id="pagingBlock">
+                                            <a href="#;" class="fw-bold">[◀]</a>
+                                            <a href="#;" class="fw-bold">[1]</a>
+                                            <a href="#;" class="fw-bold">[▶]</a>
+                                        </ul>-->
+                                    </div>
+                                </div>
                             </th>
                         </tr>
-                        <!-- 댓글이 있으면 -->
-                        <!--<c:if test="${srhCnt > 0}">-->
-                            <!--<c:forEach var = "list" items = "${list}">-->
-                                <tr>
-                                    <td>
-                                        <!-- 오늘 날짜와 작성 날짜를 yyyy-MM-dd로 변환해주는 block -->
-                                        <!--<c:set var="now" value="<%=new java.util.Date()%>" />
-                                        <c:set var="sysYear"><fmt:formatDate value="${now}" pattern="yyyy-MM-dd" /></c:set>
-                                        <c:set var="boardYear"><fmt:formatDate value="${list.reg_date}" pattern="yyyy-MM-dd" /></c:set>-->
 
-                                        <!-- 오늘 날짜와 작성 날짜가 같으면 댓글 앞에 new 이미지 넣어줌 -->
-                                        <!--<c:if test = "${boardYear == sysYear}">-->
-                                        <img src = "./ascloimage/newicon.png" width = "20px" height = "15px" class="align-middle" alt="">
-                                        <span th:text="|${1} ${'kim'}|" class="align-middle" >${list.num} ${list.writer}</span>
-                                    </td>
-                                    <td colspan = "2" class="text-end">
-                                        <span th:text="|${'2023-05-15'}|">${list.reg_date}</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <!-- 상세 페이지 -->
-                                    <td colspan = "2" th:text="|${'너 정말 멋지다'}|">
-                                        ${list.content}
-                                    </td>
-                                    <!-- 댓글 작성한 사람이 나라면 삭제버튼 추가 -->
-                                    <!--<c:if test="${list.writer == sessionScope.memId}">-->
-                                        <td class="text-end">
-                                            <input type = "button" class="whiteButton" name = "replyDel" value = "삭제"
-                                                   onclick = "window.location = 'replydelete?num=${num}&number=${number}&pageNum=${pageNum}&rpageNum=${rpageNum}&choose=${choose}&onenum=${list.num}'">
-                                        </td>
-                                </tr>
-                            <!--</c:forEach>-->
-                        <!--</c:if>-->
+                        <!-- 댓글이 있으면 -->
+                        <tbody th:id="|boardListTBody_REPLY|">
+                        <th:block th:if="${replyBoardList.getNumberOfElements() > 0}">
+                        <tr th:each="list:${replyBoardList}" th:id="${list.getNum()}">
+                            <td th:text="${list.getNum()}">1</td>
+                            <td>
+                                <!-- 오늘 날짜와 작성 날짜를 yyyy-MM-dd로 변환해주는 block -->
+                                <!--<c:set var="now" value="<%=new java.util.Date()%>" />
+                                <c:set var="sysYear"><fmt:formatDate value="${now}" pattern="yyyy-MM-dd" /></c:set>
+                                <c:set var="boardYear"><fmt:formatDate value="${list.reg_date}" pattern="yyyy-MM-dd" /></c:set>-->
+
+                                <!-- 오늘 날짜와 작성 날짜가 같으면 댓글 앞에 new 이미지 넣어줌 -->
+                                <!--<c:if test = "${boardYear == sysYear}">-->
+                                <img th:src="|/icon/new.png|" alt="이미지 없음" width = "20px" height = "20px"
+                                     th:if="${#dates.format(list.getRegDate(), 'yyyy-MM-dd') == #dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+                                <span th:text="|${list.getBoardUser().getUsername()}|" class="align-middle" >kim</span>
+                            </td>
+                            <td th:text="|${list.getSubject()}|">
+                                너 정말 멋지다
+                            </td>
+                            <td>
+                                <span th:text="|${list.getRegDate()}|">2023-05-15</span>
+                            </td>
+                            <td class="text-end">
+                                <input type = "button" class="whiteButton" name = "replyDel" value = "삭제"
+                                       th:onclick="boardOneDel([[${list.getNum}]])">
+                            </td>
+                        </tr>
+                        </th:block>
                         <!-- 댓글이 없으면 없음을 출력해줌 -->
-                        <!--<c:if test="${srhCnt <= 0}">-->
-                            <tr>
-                                <td colspan = "3" class="text-center">
-                                    댓글이 없습니다. 첫 댓글이 되어주세요!!
-                                </td>
-                            </tr>
-                        <!--</c:if>-->
+                        <th:block th:if="${replyBoardList.getNumberOfElements() == 0}">
+                        <tr>
+                            <td colspan = "5" class="text-center">
+                                댓글이 없습니다. 첫 댓글이 되어주세요!!
+                            </td>
+                        </tr>
+                        </th:block>
+                        </tbody>
                     </table>
 
                     <!-- 댓글 달기위한 입력 폼 -->
@@ -241,15 +257,13 @@
                             <td></td>
                         </tr>
                         <tr>
-                            <td><label for="userPwd">비밀번호: </label></td>
-                            <td><input type = "password" id = "userPwd" name = "password"></td>
-                            <td></td>
-                        </tr>
-                        <tr>
                             <td colspan = "2">
-                                <textarea id="replyContent" rows="3" cols="80" name = "content" class="resize-none w-100 align-middle"></textarea>
+                                <textarea id="replyContent" rows="3" cols="80" name = "subject" class="resize-none w-100 align-middle"></textarea>
                             </td>
-                            <td class="text-end"><input type = "submit" class="whiteMSizeButton w-100 h-100" name = "ok" value = "확인"></td>
+                            <td class="text-end">
+                                <input type = "button" class="whiteMSizeButton w-100 h-100"
+                                       th:onclick="boardAdd('reply')" value = "확인">
+                            </td>
                         </tr>
                     </table>
                 </div>
@@ -264,14 +278,22 @@
                 <!-- 이전글 -->
                 <!--<c:if test="${vo.fwsubject != null}">-->
                     <tr>
-                        <td><img src = "ascloimage/up.png" width = "12px" height = "12px">이전글</td>
-                        <td><a href = "noticeForm?num=${vo.fwnum}&number=${number-1}&pageNum=${pageNum}&choose=${choose}" th:text="${'재미있다.'}">${vo.fwsubject}</a></td>
+                        <td class="vertical-middle-all"><img src = "/icon/up.png" width = "12px" height = "12px" class="me-2"><span>이전글</span></td>
+                        <td>
+                            <a th:href = "@{/board/boardView(name=${name}, num=${beforeBoard.getNum()})}"
+                               th:if="${beforeBoard != null}" th:text="${beforeBoard.getSubject()}">재미있다.</a>
+                            <span th:if="${beforeBoard == null}">이전글이 없습니다.</span>
+                        </td>
                     </tr>
                 <!-- 다음글 -->
                 <!--<c:if test="${vo.nextsubject != null}">-->
                     <tr>
-                        <td><img src = "ascloimage/down.png" width = "12px" height = "12px">다음글</td>
-                        <td><a href = "noticeForm?num=${vo.nextnum}&number=${number+1}&pageNum=${pageNum}&choose=${choose}" th:text="${'재미없는 글'}">${vo.nextsubject}</a></td>
+                        <td class="vertical-middle-all"><img src = "/icon/down.png" width = "12px" height = "12px" class="me-2"><span>다음글</span></td>
+                        <td>
+                            <a th:href = "@{/board/boardView(name=${name}, num=${afterBoard.getNum()})}"
+                               th:if="${afterBoard != null}" th:text="${afterBoard.getSubject()}">재미있다.</a>
+                            <span th:if="${afterBoard == null}">다음글이 없습니다.</span>
+                        </td>
                     </tr>
             </table>
         </div>

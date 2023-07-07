@@ -24,6 +24,7 @@
     <!-- guest html js input -->
     <script type="text/javascript" th:src = "@{/js/guest_common_script.js}"></script> <!-- 고객 공통 script -->
     <script type="text/javascript" th:src = "@{/js/all_common_script.js}"></script> <!-- 고객/관리자 공통 script -->
+    <script type="text/javascript" th:src = "@{/js/all_board_script.js}"></script> <!-- 게시판 관련 script -->
 
     <!-- guest html css input -->
     <link th:href="@{/css/common_css.css}" rel="stylesheet"> <!-- 클래스 변수설정 css -->
@@ -192,20 +193,20 @@
     <div class="boardMenu">
         <table>
             <tr>
-                <td><a href = "notice?choose=1">
+                <td><a th:href = "@{/board/boardList(name='NOTICE')}">
                     <img src = "https://cdn-icons-png.flaticon.com/128/7177/7177029.png"
                          width = "50px" height = "50px" class="opacity-50 mb-1" alt=""><br>
                     공지사항
                 </a></td>
 
-                <td><a href = "QnA?choose=2">
+                <td><a th:href = "@{/board/boardList(name='Q&A')}">
                     <img src = "https://cdn-icons-png.flaticon.com/128/5194/5194713.png"
                          width = "50px" height = "50px" class="opacity-50 mb-1" alt=""><br>
                     상품문의
                 </a>
                 </td>
 
-                <td><a href = "review?choose=4">
+                <td><a th:href = "@{/board/boardList(name='REVIEW')}">
                     <img src = "https://cdn-icons-png.flaticon.com/128/1365/1365446.png"
                          width = "50px" height = "50px" class="opacity-50 mb-1" alt=""><br>
                     사용후기
@@ -221,7 +222,7 @@
     <div class="d-flex my-10">
         <!-- 현재 가져온 게시판이 총 몇개이고 그 중 몇개가 한페이지에 출력이 되어있는지 확인 -->
         <div class="me-auto">
-            <b class="fs-9 align-middle" id="getPageCountText"
+            <b class="fs-9 align-middle" th:id="|getPageCountText_${title}|"
                th:text="| 검색 ${boardList.getNumberOfElements()}건 / 총 ${boardList.getTotalElements()}건 |">
                 검색 10건 / 총 50건
             </b>
@@ -272,7 +273,7 @@
             <th scope="col" th:if="${name == 'REVIEW'}">HIT</th>
         </tr>
         </thead>
-        <tbody id="boardListTBody">
+        <tbody th:id="|boardListTBody_${title}|">
         <th:block th:if="${boardList.getNumberOfElements() > 0}">
         <tr class = "td-py10 td-px15" th:each="list:${boardList}" th:id="${list.getNum()}">
             <!-- 게시글 NO : All -->
@@ -305,7 +306,7 @@
         </th:block>
         <th:block th:if="${boardList.getNumberOfElements() == 0}">
             <tr class = "text-center td-py10 td-px15">
-                <td th:colspan="${name == 'Q&A'}?7:(${name == 'FAQ'}?5:4)">
+                <td th:colspan="${name == 'Q&A'}?7:(${name == 'REVIEW'}?6:(${name == 'FAQ'}?5:4))">
                     등록된 게시글이 없습니다. 글을 작성해주세요!!
                 </td>
             </tr>
@@ -316,16 +317,16 @@
     <div class="d-flex mb-5">
         <!-- Paging Process : boardList > 0-->
         <div th:if="${boardList.getNumberOfElements() > 0}">
-            <ul class="pagination justify-content-center my-0" id="pagingBlock">
+            <ul class="pagination justify-content-center my-0" th:id="|pagingBlock_${title}|">
                 <li class="page-item" th:classappend="${1 == boardList.pageable.pageNumber+1} ? 'disabled'">
-                    <a class="page-link" href="#;" th:onclick="boardPaging(this.id)" th:id="${boardList.pageable.pageNumber - 1}">&lt;</a>
+                    <a class="page-link" href="#;" th:onclick="boardPaging(this.id, [[${title}]])" th:id="${boardList.pageable.pageNumber - 1}">&lt;</a>
                 </li>
                 <li class="page-item" th:classappend="${i == boardList.pageable.pageNumber+1} ? 'disabled'"
                     th:each="i : ${#numbers.sequence(startPage, endPage)}">
-                    <a class="page-link" href="#;" th:onclick="boardPaging(this.id)" th:id="${i - 1}" th:text="${i}">1</a>
+                    <a class="page-link" href="#;" th:onclick="boardPaging(this.id, [[${title}]])" th:id="${i - 1}" th:text="${i}">1</a>
                 </li>
                 <li class="page-item" th:classappend="${boardList.totalPages == boardList.pageable.pageNumber+1} ? 'disabled'">
-                    <a class="page-link" href="#;" th:onclick="boardPaging(this.id)" th:id="${boardList.pageable.pageNumber + 1}">&gt;</a>
+                    <a class="page-link" href="#;" th:onclick="boardPaging(this.id, [[${title}]])" th:id="${boardList.pageable.pageNumber + 1}">&gt;</a>
                 </li>
             </ul>
         </div>

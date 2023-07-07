@@ -211,7 +211,7 @@ public class HostController {
     public String boardList(Model model
             , @RequestParam(required = false) String name
             , @PageableDefault(size = 3) Pageable pageable) {
-        Page<Board> boardList = boardRepository.findByBoardState(name, pageable);
+        Page<Board> boardList = boardRepository.findByBoardStateOrderByNum(name, pageable);
         model.addAttribute("name", name);
         model.addAttribute("boardList", boardList);
         return "/host/board/host_boardList";

@@ -170,7 +170,7 @@
                             </a>
                             <!-- Q&A가 아닐 경우 이거 출력 -->
                             <a th:if="${name != 'Q&A'}" th:text="${list.subject}"
-                               th:href="${name == 'REVIEW'}? @{/board/boardView(name='REVIEW')} : @{/host/boardInput(name=${name}, boardNum=${list.getNum()})}">
+                               th:href="${name == 'REVIEW'}? @{/board/boardView(name='REVIEW', num=${list.getNum()}))} : @{/host/boardInput(name=${name}, boardNum=${list.getNum()})}">
                                 오늘 이 옷 너무 예뻐요
                             </a></td>
                         <td th:text="${list.getBoardUser().getUsername()}">kim</td>

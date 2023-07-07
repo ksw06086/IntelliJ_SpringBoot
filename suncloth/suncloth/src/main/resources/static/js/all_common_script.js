@@ -1,3 +1,11 @@
+// 날짜 포멧 함수(yyyy-MM-dd)
+function dateFormat(date) {
+    let dateFormat2 = date.getFullYear() +
+        '-' + ( (date.getMonth()+1) < 9 ? "0" + (date.getMonth()+1) : (date.getMonth()+1) )+
+        '-' + ( (date.getDate()) < 9 ? "0" + (date.getDate()) : (date.getDate()) );
+    return dateFormat2;
+}
+
 // checkbox 한번에 체크 함수
 function allCheck(listName) {
     const checkAllButton = document.getElementById(listName + "CheckAll");
@@ -88,7 +96,7 @@ function clothsGet(pageName){
                     icon += '<img src="/icon/minPrice.png" alt="이미지 없음" width = "30px" height = "30px">'
                 }
                 if (data.cloth.regDate == new Date()) {
-                    icon += '<img src="/icon/minPrice.png" alt="이미지 없음" width = "30px" height = "30px">'
+                    icon += '<img src="/icon/new.png" alt="이미지 없음" width = "30px" height = "30px">'
                 }
                 if(pageName === 'host_productList'){
                     clothCheckBox = '<td><input type = "checkbox" name = "clothIds" value = "' + data.cloth.clothId + '"></td>';
@@ -229,88 +237,3 @@ function clothPaging(page, pageName){
     });
 }
 
-// *** Board 게시판 관련 Script *** //
-// Board 게시판 비밀글 여부 radioButton Event
-function boardTextTypeChange(textType) {
-    if(textType === "open") {
-        document.getElementById("pwd").setAttribute("disabled", "disabled");
-    } else {
-        document.getElementById("pwd").removeAttribute("disabled");
-    }
-}
-// Board 게시판 추가하기
-function boardAdd(userRole){
-    let boardInputForm = new FormData(document.getElementById("boardInputForm"));
-    let boardState = document.getElementById("boardState").value;
-    if(boardState === 'Q&A'){ boardState = 'Q%26A'; }
-    let hrefURL = ''
-    if(userRole === 'host'){ hrefURL = "/host/boardList?name=" + boardState; }
-    if(userRole === 'guest'){ hrefURL = "/board/boardList?name=" + boardState; }
-    $.ajax({
-        type:"POST",
-        url: "/api/board",
-        enctype: 'multipart/form-data',
-        processData: false,
-        contentType: false,
-        data: boardInputForm,
-        success: function(result){
-            alert(boardState + " 게시글이 등록되었습니다.");
-            boardFilesAdd(result.num);
-            window.location.href=hrefURL;
-        },
-        err: function(err){
-            console.log("err:", err);
-            alert("실패");
-        }
-    });
-}
-
-// 게시판 이미지 파일들 삽입
-function boardFilesAdd(boardNum) {
-    const boardImageInput = document.getElementById("boardFile");
-    const formData = new FormData();
-    if(boardImageInput === null || boardImageInput.files.length === 0){ return false; } // 게시판 이미지 파일 선택 안했으면 그냥 넘기기
-    for (let i = 0; i < boardImageInput.files.length; i++) {
-        // formData 에 'subImages' 이라는 키값으로 subImageFile 값을 append 시킨다.
-        formData.append('boardImages', boardImageInput.files[i]);
-    }
-    formData.append("boardNum", boardNum);
-
-    // 게시판 이미지 재삽입하기
-    $.ajax({
-        type:"POST",
-        url: "/api/boardFiles",
-        processData: false,
-        contentType: false,
-        data: formData,
-        success: function(result){
-            alert("게시판 이미지 삽입 성공");
-        },
-        err: function(err){
-            alert("게시판 이미지 삽입 실패");
-        }
-    })
-}
-
-// 게시판 이미지 파일들 삭제
-function boardFilesDel() {
-    const boardFileIds = document.getElementsByName("boardFileIds"); // boardFileIds 게시판이미지들
-
-    // 서브 이미지 삭제
-    for (let i = 0; i < boardFileIds.length; i++) {
-        subFileDelAjax(boardFileIds[i].value);
-    }
-
-    // subFile 1개 삭제하는 Ajax 함수
-    function subFileDelAjax(boardFileId){
-        $.ajax({
-            type: 'DELETE',
-            url: '/api/boardFiles/' + boardFileId,
-            success: (result) => {
-                //AJAX 성공시 실행 코드
-            }, error:function(e) {
-                alert("error: " + e);
-            }
-        });
-    }
-}

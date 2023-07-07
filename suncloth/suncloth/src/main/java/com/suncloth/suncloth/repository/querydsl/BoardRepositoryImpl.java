@@ -24,7 +24,8 @@ public class BoardRepositoryImpl {
     //** 상품 검색 **//
     QBoard board = QBoard.board;
     public Page<Board> findSearchAll(String searchType, String searchInput, User user, String writeState,
-                                     String contentState, String firstDay, String lastDay, String boardState, Pageable pageable) {
+                                     String contentState, String firstDay, String lastDay, String boardState,
+                                     Cloth cloth, Pageable pageable) {
         List<Board> content = queryFactory
                 .select(board)
                 .from(board)
@@ -34,9 +35,11 @@ public class BoardRepositoryImpl {
                         contentStateContains(contentState),
                         searchInputContains(searchType, searchInput),
                         boardStateEq(boardState),
+                        boardClothEq(cloth),
                         userEq(user),
                         dateBetween(firstDay, lastDay)
                 )
+                .orderBy(board.num.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -46,7 +49,12 @@ public class BoardRepositoryImpl {
                 .from(board)
                 .where(
                         searchInputContains(searchType, searchInput),
-                        // userEq(user),
+                        writeStateContains(writeState),
+                        contentStateContains(contentState),
+                        searchInputContains(searchType, searchInput),
+                        boardStateEq(boardState),
+                        boardClothEq(cloth),
+                        userEq(user),
                         dateBetween(firstDay, lastDay)
                 );
                 // 페이지 관련 추가시
@@ -108,6 +116,13 @@ public class BoardRepositoryImpl {
             return null;
         }
         return board.boardState.eq(boardState);
+    }
+    // ClothId 비교
+    public BooleanExpression boardClothEq(Cloth cloth){
+        if(cloth == null){
+            return null;
+        }
+        return board.boardCloth.eq(cloth);
     }
     // 날짜 비교
     public BooleanExpression dateBetween(String firstDay, String lastDay){

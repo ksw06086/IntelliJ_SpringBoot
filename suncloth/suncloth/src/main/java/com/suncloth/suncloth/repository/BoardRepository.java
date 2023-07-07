@@ -17,7 +17,24 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     List<Board> findByBoardUser(User user);
 
     // BoardState 를 기준으로 정보들 가져오기(where board_state = ?1)
-    Page<Board> findByBoardState(String boardState, Pageable pageable);
+    Page<Board> findByBoardStateOrderByNum(String boardState, Pageable pageable);
+
+    // BoardState 를 기준으로 정보들 가져오기(where board_state = ?1)
+    Page<Board> findByBoardClothAndBoardState(Cloth cloth, String boardState, Pageable pageable);
+
+    // Board 이전글의 대한 정보 가져오기
+    @Query(value = "SELECT * FROM board_tbl " +
+            "WHERE num = (SELECT prev_no FROM (SELECT num, LAG(num, 1, -1) OVER(ORDER BY num) AS prev_no FROM board_tbl " +
+            "WHERE board_state = :boardState) B " +
+            "WHERE num = :num)", nativeQuery = true)
+    Board findByBeforeBoard(Long num, String boardState);
+
+    // Board 다음글의 대한 정보 가져오기
+    @Query(value = "SELECT * FROM board_tbl " +
+            "WHERE num = (SELECT prev_no FROM (SELECT num, LEAD(num, 1, -1) OVER(ORDER BY num) AS prev_no FROM board_tbl " +
+            "WHERE board_state = :boardState) B " +
+            "WHERE num = :num)", nativeQuery = true)
+    Board findByAfterBoard(Long num, String boardState);
 
     // Q&A : 해당 글의 refStep Max값 가져오기
     @Query("""

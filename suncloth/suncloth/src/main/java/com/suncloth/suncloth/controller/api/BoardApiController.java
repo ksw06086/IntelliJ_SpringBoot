@@ -56,20 +56,25 @@ public class BoardApiController {
             , @RequestParam(required = false) String firstDay                       // 시작 날짜
             , @RequestParam(required = false) String lastDay                        // 끝 날짜
             , @RequestParam(required = false) String boardState                     // 페이지 이름
-            , @PageableDefault(size = 10) Pageable pageable) {                       // 페이지 객체
+            , @RequestParam(required = false) Long clothId                          // 상품 ID
+            , @PageableDefault(size = 10) Pageable pageable) {                      // 페이지 객체
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDetails userDetails = (UserDetails)principal;
         String username = userDetails.getUsername();
         User user = null;
+        Cloth cloth = null;
         if(boardState == "NOTICE" || boardState == "FAQ") {
             user = userRepository.findByUsername("host");
         } else if(boardState == "MY BOARD"){
             user = userRepository.findByUsername(username);
         }
+        if(clothId != null && clothId != 0){
+            cloth = clothRepository.findById(clothId).orElse(null);
+        }
 
-        Page<Board> boardList = boardRepositoyImpl.findSearchAll(searchType, searchInput, user, writeState, contentState, firstDay, lastDay, boardState, pageable);
+        Page<Board> boardList = boardRepositoyImpl.findSearchAll(searchType, searchInput, user, writeState, contentState, firstDay, lastDay, boardState, cloth, pageable);
         // 현재 아래 바를 1~5까지 보여주게 하기 위해서 끝에 4를 빼고 더해준 것
-        int startPage = Math.max(1, boardList.getPageable().getPageNumber()-4);
+        int startPage = Math.max(1, boardList.getPageable().getPageNumber()-1);
         int endPage = Math.min(boardList.getTotalPages(), boardList.getPageable().getPageNumber()+4);
 
         // 각 프로퍼티 결과 출력
@@ -80,7 +85,11 @@ public class BoardApiController {
         log.info("contentState : {}", contentState);
         log.info("firstDay : {}, lastDay : {}", firstDay, lastDay);
         log.info("pageSize : {}", pageable.getPageSize());
+        log.info("pageTotal : {}", boardList.getTotalPages());
+        log.info("boardPageList.size() : {}", boardList.getTotalElements());
+        log.info("boardPageList.getElements() : {}", boardList.getNumberOfElements());
         log.info("boardState : {}", boardState);
+        log.info("startPage : {}, endPage : {}", startPage, endPage);
 
         List<Map<String, Object>> boardMap = new ArrayList<>();
         for (Board board : boardList) {
@@ -161,7 +170,6 @@ public class BoardApiController {
     }
 
     // 관리자일 경우에만 삭제가 가능하고, ID에 맞는 한가지의 Board 만 삭제
-    @Secured("ROLE_ADMIN")
     @DeleteMapping("/boards/{num}")
     void deleteBoard(@PathVariable Long num) {
         boardRepository.deleteById(num);

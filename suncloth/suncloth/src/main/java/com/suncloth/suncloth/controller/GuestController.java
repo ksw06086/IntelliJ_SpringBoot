@@ -3,6 +3,9 @@ package com.suncloth.suncloth.controller;
 import com.suncloth.suncloth.model.*;
 import com.suncloth.suncloth.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -39,6 +42,8 @@ public class GuestController {
     CartRepository cartRepository;
     @Autowired
     OrderRepository orderRepository;
+    @Autowired
+    BoardRepository boardRepository;
 
     @GetMapping("/category")
     public String categoryPage(Model model
@@ -116,11 +121,20 @@ public class GuestController {
 
     @GetMapping("/productDetail")
     public String productDetail(Model model
-            , @RequestParam(required = false) Long clothId) {
+            , @RequestParam(required = false) Long clothId
+            , @PageableDefault(size = 3) Pageable pageable) {
         Cloth cloth = clothRepository.findById(clothId).orElse(null);
         List<File> mainFile = fileRepository.findByClothAndFileType(cloth, "main");
         List<File> subFile = fileRepository.findByClothAndFileType(cloth, "sub");
         List<Color> colorList = stockRepository.findColorByStockCloth(cloth);
+        Page<Board> reviewBoardList = boardRepository.findByBoardClothAndBoardState(cloth, "REVIEW", pageable);
+        // 현재 아래 바를 1~5까지 보여주게 하기 위해서 끝에 4를 빼고 더해준 것
+        int reviewStartPage = Math.max(1, reviewBoardList.getPageable().getPageNumber()-1);
+        int reviewEndPage = Math.min(reviewBoardList.getTotalPages(), reviewBoardList.getPageable().getPageNumber()+4);
+        Page<Board> QnABoardList = boardRepository.findByBoardClothAndBoardState(cloth, "Q&A", pageable);
+        // 현재 아래 바를 1~5까지 보여주게 하기 위해서 끝에 4를 빼고 더해준 것
+        int QnAStartPage = Math.max(1, QnABoardList.getPageable().getPageNumber()-1);
+        int QnAEndPage = Math.min(QnABoardList.getTotalPages(), QnABoardList.getPageable().getPageNumber()+4);
         for (Color color : colorList) {
             System.out.println("color : " + color.getColorName());
         }
@@ -129,6 +143,12 @@ public class GuestController {
         model.addAttribute("mainFile", mainFile.get(0));
         model.addAttribute("subFileList", subFile);
         model.addAttribute("colorList", colorList);
+        model.addAttribute("reviewBoardList", reviewBoardList);
+        model.addAttribute("reviewStartPage", reviewStartPage);
+        model.addAttribute("reviewEndPage", reviewEndPage);
+        model.addAttribute("QnABoardList", QnABoardList);
+        model.addAttribute("QnAStartPage", QnAStartPage);
+        model.addAttribute("QnAEndPage", QnAEndPage);
         return "/guest/guest_productDetail";
     }
 

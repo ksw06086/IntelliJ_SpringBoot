@@ -74,7 +74,6 @@
         <section id="detail" class="detailDiv">
             <div class="d-flex justify-content-center titles">
                 <div><a><p class="actionTitle">DETALE</p></a></div>
-                <div><a th:href="@{#withItem}"><p>WITH ITEM</p></a></div>
                 <div><a th:href="@{#review}"><p>REVIEW</p></a></div>
                 <div><a th:href="@{#qna}"><p>Q&A</p></a></div>
             </div>
@@ -90,7 +89,7 @@
         </section>
 
         <!-- withItem Content -->
-        <section id="withItem" class="detailDiv">
+        <!--<section id="withItem" class="detailDiv">
             <div class="d-flex justify-content-center titles">
                 <div><a th:href="@{#detail}"><p>DETALE</p></a></div>
                 <div><a><p class="actionTitle">WITH ITEM</p></a></div>
@@ -105,11 +104,11 @@
                 </p>
             </div>
 
-            <!-- with product List(단순 반복문) -->
-            <!--${#numbers.sequence(from,to)}, ${#numbers.sequence(from,to,step)}-->
-            <!--<th:block th:each="num : ${#numbers.sequence(1,5)}">
+            &lt;!&ndash; with product List(단순 반복문) &ndash;&gt;
+            &lt;!&ndash;${#numbers.sequence(from,to)}, ${#numbers.sequence(from,to,step)}&ndash;&gt;
+            &lt;!&ndash;<th:block th:each="num : ${#numbers.sequence(1,5)}">
                 <div th:text="${num}"></div>
-            </th:block>-->
+            </th:block>&ndash;&gt;
             <div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">
                 <div class="carousel-indicators">
                     <button th:each="num1 : ${#numbers.sequence(1,3)}" type="button" data-bs-target="#carouselExampleDark" th:data-bs-slide-to="${num1 - 1}" th:classappend="${num1 == 1}?'active'"></button>
@@ -120,19 +119,19 @@
                             <div th:each="num : ${#numbers.sequence(1,5)}" class="card border-0 p-1" style="width: 19%;">
                                 <img src="data:image/jpeg;base64,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" class="rounded" alt="...">
                                 <div class="card-body p-1">
-                                        <div class="withCheck">
-                                            <input type = "checkbox" class = "withItem">
-                                            <label th:text="|멋있는 옷 ${num+num1}|">멋있는 옷</label><br>
-                                        </div>
-                                        <div>10000원</div>
-                                        <div>
-                                            <select class="form-select">
-                                                <option value = "black">-[필수] 1+1 색상 선택-</option>
-                                                <option value = "black">베이지</option>
-                                            </select>
-                                        </div>
-                                        <div><input class="form-control" type = "number" value = "1" min = "1" max = "5" step = "1"></div>
+                                    <div class="withCheck">
+                                        <input type = "checkbox" class = "withItem">
+                                        <label th:text="|멋있는 옷 ${num+num1}|">멋있는 옷</label><br>
                                     </div>
+                                    <div>10000원</div>
+                                    <div>
+                                        <select class="form-select">
+                                            <option value = "black">-[필수] 1+1 색상 선택-</option>
+                                            <option value = "black">베이지</option>
+                                        </select>
+                                    </div>
+                                    <div><input class="form-control" type = "number" value = "1" min = "1" max = "5" step = "1"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -143,40 +142,218 @@
                 <input type = "button" value = "함께 구매하기" id = "withBuyBtn">
                 <input type = "button" value = "함께 장바구니담기" id = "withCartBtn">
             </div>
-        </section>
+        </section>-->
 
+        <!-- Board PageSize Input Hidden -->
+        <input type="hidden" id="pageSize" value="3">
         <!-- Review Content -->
         <section id="review" class="detailDiv">
             <div class="d-flex justify-content-center titles">
                 <div><a th:href="@{#detail}"><p>DETALE</p></a></div>
-                <div><a th:href="@{#withItem}"><p>WITH ITEM</p></a></div>
                 <div><a><p class="actionTitle">REVIEW</p></a></div>
                 <div><a th:href="@{#qna}"><p>Q&A</p></a></div>
             </div>
 
-            <section th:replace="fragments/guest_common :: boardList('productBoard')"></section>
+            <section class="body">
+                <div class="d-flex my-10">
+                    <!-- 현재 가져온 게시판이 총 몇개이고 그 중 몇개가 한페이지에 출력이 되어있는지 확인 -->
+                    <div class="me-auto">
+                        <b class="fs-9 align-middle" th:id="|getPageCountText_REVIEW|"
+                           th:text="| 검색 ${reviewBoardList.getNumberOfElements()}건 / 총 ${reviewBoardList.getTotalElements()}건 |">
+                            검색 10건 / 총 50건
+                        </b>
+                    </div>
+                </div>
 
-            <div class = "btnList">
-                <input type = "button" value = "상품후기쓰기" id = "reviewWriteBtn">
-                <input type = "button" value = "모두 보기" id = "reviewListBtn">
-            </div>
+                <!-- 게시판 목록 Block -->
+                <table class="table border-top-1-ccc align-middle text-center a-tag-css a-tag-hover">
+                    <col class="w-10">
+                    <thead>
+                    <tr>
+                        <th scope="col">NO</th>
+                        <th scope="col">상품</th>
+                        <th scope="col">제목</th>
+                        <th scope="col">작성자</th>
+                        <th scope="col">작성날짜</th>
+                        <th scope="col">HIT</th>
+                    </tr>
+                    </thead>
+                    <tbody th:id="|boardListTBody_REVIEW|">
+                    <th:block th:if="${reviewBoardList.getNumberOfElements() > 0}">
+                        <tr class = "td-py10 td-px15" th:each="list:${reviewBoardList}" th:id="${list.getNum()}">
+                            <!-- 게시글 NO : All -->
+                            <td scope="row" th:text="${list.getNum()}">1</td>
+                            <!-- 상품 이미지 : Review, Q&A -->
+                            <td>
+                                <img th:src="|/uploadMainImageView/${list.getBoardCloth().getClothId()}|"
+                                     th:if="${list.getBoardCloth() != null}" width = "50px" height = "60px">
+                                <div th:if="${list.getBoardCloth() == null}" class="bg-secondary-subtle w-50px h-60px mx-auto fs-75">No image</div>
+                            </td>
+                            <!-- 게시글 제목 : All -->
+                            <td><a th:href="@{/board/boardView(name='REVIEW', num=${list.getNum})}">
+                                <th:block th:if="${list.getRefLevel() > 0}">
+                                    &nbsp;<img src = "${project}ascloimage/re.png" width = "20" height = "15">
+                                </th:block> <!-- 답글인 경우 이미지 출력 -->
+                                [[${list.getSubject()}]]
+                            </a></td>
+                            <!-- 게시글 작성자 : All -->
+                            <td th:text="${list.getBoardUser().getUsername()}">kim</td>
+                            <!-- 게시글 작성날짜 : All -->
+                            <td th:text="${list.getRegDate()}">[[#dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm')]]</td>
+                            <!-- 게시글 방문횟수 : Review -->
+                            <td th:text="|${list.getReadCnt()}|">15</td>
+                        </tr>
+                    </th:block>
+                    <th:block th:if="${reviewBoardList.getNumberOfElements() == 0}">
+                        <tr class = "text-center td-py10 td-px15">
+                            <td colspan="6">
+                                등록된 게시글이 없습니다. 글을 작성해주세요!!
+                            </td>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+
+                <div class="d-flex mb-5">
+                    <!-- Paging Process : boardList > 0-->
+                    <div th:if="${reviewBoardList.getNumberOfElements() > 0}">
+                        <ul class="pagination justify-content-center my-0" th:id="|pagingBlock_REVIEW|">
+                            <li class="page-item" th:classappend="${1 == reviewBoardList.pageable.pageNumber+1} ? 'disabled'">
+                                <a class="page-link" href="#;" th:onclick="boardPaging(this.id, 'REVIEW')" th:id="${reviewBoardList.pageable.pageNumber - 1}">&lt;</a>
+                            </li>
+                            <li class="page-item" th:classappend="${i == reviewBoardList.pageable.pageNumber+1} ? 'disabled'"
+                                th:each="i : ${#numbers.sequence(reviewStartPage, reviewEndPage)}">
+                                <a class="page-link" href="#;" th:onclick="boardPaging(this.id, 'REVIEW')" th:id="${i - 1}" th:text="${i}">1</a>
+                            </li>
+                            <li class="page-item" th:classappend="${reviewBoardList.totalPages == reviewBoardList.pageable.pageNumber+1} ? 'disabled'">
+                                <a class="page-link" href="#;" th:onclick="boardPaging(this.id, 'REVIEW')" th:id="${reviewBoardList.pageable.pageNumber + 1}">&gt;</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Paging Process : boardList == 0 -->
+                    <div th:if="${reviewBoardList.getNumberOfElements() == 0}">
+                        <ul class="pagination justify-content-center my-0" id="pagingBlock">
+                            <li class="page-item disabled"><a class="page-link">&lt;</a></li>
+                            <li class="page-item disabled"><a class="page-link">1</a></li>
+                            <li class="page-item disabled"><a class="page-link">&gt;</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- 검색(Search) Block -->
+                    <div class="ms-auto align-self-center">
+                        <div class = "btnList a-tag-css fs-9">
+                            <a th:href="@{/board/boardWrite(name='REVIEW', clothId=${cloth.getClothId()})}" id = "reviewWriteBtn" class="px-2">상품후기쓰기</a>
+                            <a th:href="@{/board/boardList(name='REVIEW', clothId=${cloth.getClothId()})}" id = "reviewListBtn" class="px-2">모두 보기</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </section>
-
         <!-- Q&A Content -->
         <section id="qna" class="detailDiv">
             <div class="d-flex justify-content-center titles">
                 <div><a th:href="@{#detail}"><p>DETALE</p></a></div>
-                <div><a th:href="@{#withItem}"><p>WITH ITEM</p></a></div>
                 <div><a th:href="@{#review}"><p>REVIEW</p></a></div>
                 <div><a><p class="actionTitle">Q&A</p></a></div>
             </div>
 
-            <section th:replace="fragments/guest_common :: boardList('productBoard')"></section>
+            <section class="body">
+                <div class="d-flex my-10">
+                    <!-- 현재 가져온 게시판이 총 몇개이고 그 중 몇개가 한페이지에 출력이 되어있는지 확인 -->
+                    <div class="me-auto">
+                        <b class="fs-9 align-middle" th:id="|getPageCountText_Q&A|"
+                           th:text="| 검색 ${QnABoardList.getNumberOfElements()}건 / 총 ${QnABoardList.getTotalElements()}건 |">
+                            검색 10건 / 총 50건
+                        </b>
+                    </div>
+                </div>
 
-            <div class = "btnList">
-                <input type = "button" value = "상품문의하기" id = "qnaWriteBtn">
-                <input type = "button" value = "모두 보기" id = "qnaListBtn">
-            </div>
+                <!-- 게시판 목록 Block -->
+                <table class="table border-top-1-ccc align-middle text-center a-tag-css a-tag-hover">
+                    <col class="w-10">
+                    <thead>
+                    <tr>
+                        <th scope="col">NO</th>
+                        <th scope="col">상품</th>
+                        <th scope="col">질문유형</th>
+                        <th scope="col">제목</th>
+                        <th scope="col">작성자</th>
+                        <th scope="col">작성날짜</th>
+                        <th scope="col">답변상태</th>
+                    </tr>
+                    </thead>
+                    <tbody th:id="|boardListTBody_Q&A|">
+                    <th:block th:if="${QnABoardList.getNumberOfElements() > 0}">
+                        <tr class = "td-py10 td-px15" th:each="list:${QnABoardList}" th:id="${list.getNum()}">
+                            <!-- 게시글 NO : All -->
+                            <td scope="row" th:text="${list.getNum()}">1</td>
+                            <!-- 상품 이미지 : Review, Q&A -->
+                            <td>
+                                <img th:src="|/uploadMainImageView/${list.getBoardCloth().getClothId()}|"
+                                     th:if="${list.getBoardCloth() != null}" width = "50px" height = "60px">
+                                <div th:if="${list.getBoardCloth() == null}" class="bg-secondary-subtle w-50px h-60px mx-auto fs-75">No image</div>
+                            </td>
+                            <!-- 게시글 분류/문의구분 : FAQ, Q&A -->
+                            <td th:text="${list.getContentState()}">회원등급 또는 상품문의</td>
+                            <!-- 게시글 제목 : All -->
+                            <td><a th:href="@{/board/boardView(name='Q&A', num=${list.getNum})}">
+                                <th:block th:if="${list.getRefLevel() > 0}">
+                                    &nbsp;<img src = "${project}ascloimage/re.png" width = "20" height = "15">
+                                </th:block> <!-- 답글인 경우 이미지 출력 -->
+                                [[${list.getSubject()}]]
+                            </a></td>
+                            <!-- 게시글 작성자 : All -->
+                            <td th:text="${list.getBoardUser().getUsername()}">kim</td>
+                            <!-- 게시글 작성날짜 : All -->
+                            <td th:text="${list.getRegDate()}">[[#dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm')]]</td>
+                            <!-- 게시글 답변상태 : Q&A -->
+                            <td th:text="${list.getWriteState()}">답변완료</td>
+                        </tr>
+                    </th:block>
+                    <th:block th:if="${QnABoardList.getNumberOfElements() == 0}">
+                        <tr class = "text-center td-py10 td-px15">
+                            <td colspan="7">
+                                등록된 게시글이 없습니다. 글을 작성해주세요!!
+                            </td>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+
+                <div class="d-flex mb-5">
+                    <!-- Paging Process : boardList > 0-->
+                    <div th:if="${QnABoardList.getNumberOfElements() > 0}">
+                        <ul class="pagination justify-content-center my-0" th:id="|pagingBlock_Q&A|">
+                            <li class="page-item" th:classappend="${1 == QnABoardList.pageable.pageNumber+1} ? 'disabled'">
+                                <a class="page-link" href="#;" th:onclick="boardPaging(this.id, 'Q&A')" th:id="${QnABoardList.pageable.pageNumber - 1}">&lt;</a>
+                            </li>
+                            <li class="page-item" th:classappend="${i == QnABoardList.pageable.pageNumber+1} ? 'disabled'"
+                                th:each="i : ${#numbers.sequence(QnAStartPage, QnAEndPage)}">
+                                <a class="page-link" href="#;" th:onclick="boardPaging(this.id, 'Q&A')" th:id="${i - 1}" th:text="${i}">1</a>
+                            </li>
+                            <li class="page-item" th:classappend="${QnABoardList.totalPages == QnABoardList.pageable.pageNumber+1} ? 'disabled'">
+                                <a class="page-link" href="#;" th:onclick="boardPaging(this.id, 'Q&A')" th:id="${QnABoardList.pageable.pageNumber + 1}">&gt;</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Paging Process : boardList == 0 -->
+                    <div th:if="${QnABoardList.getNumberOfElements() == 0}">
+                        <ul class="pagination justify-content-center my-0" id="pagingBlock">
+                            <li class="page-item disabled"><a class="page-link">&lt;</a></li>
+                            <li class="page-item disabled"><a class="page-link">1</a></li>
+                            <li class="page-item disabled"><a class="page-link">&gt;</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- 검색(Search) Block -->
+                    <div class="ms-auto align-self-center">
+                        <div class = "btnList a-tag-css fs-9">
+                            <a th:href="@{/board/boardWrite(name='Q&A', clothId=${cloth.getClothId()})}" id = "qnaWriteBtn" class="px-2">상품문의하기</a>
+                            <a th:href="@{/board/boardList(name='Q&A', clothId=${cloth.getClothId()})}" id = "qnaListBtn" class="px-2">모두 보기</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </section>
     </article>
 
