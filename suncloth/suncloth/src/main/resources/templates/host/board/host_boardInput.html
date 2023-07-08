@@ -19,7 +19,7 @@
     </div>
     <div class="flex-fill">
         <form method="POST" id="boardInputForm" enctype="multipart/form-data"
-              th:onsubmit="${board.getBoardUser() == null|| board.getBoardUser().getUsername() != 'host'}?'return boardAdd(\'host\')':'return boardUpdate()'">
+              th:onsubmit="${board.getBoardUser() == null || board.getBoardUser().getUsername() != 'host'}?'return boardAdd(\'host\')':'return boardUpdate()'">
         <div class="position-relative text-center w-95 mx-auto my-15 vertical-middle-all">
             <input type="hidden" name="boardState" id="boardState" th:value="${name}">
             <input type="hidden" name="num" id="boardNum" th:value="${board.getNum()}"
@@ -40,50 +40,56 @@
         <div class="bg-white w-95 mx-auto mb-20 pb-15">
             <!-- 작성된 게시글 정보 출력 : Q&A -->
             <th:block th:if="${name == 'Q&A'}">
-                <input type="hidden" name="refBoardNum" th:value="${board.getNum()}">
-                <input type="hidden" name="ref" th:value="${board.getNum()}">
-                <input type="hidden" name="refLevel" th:value="${board.getRefLevel()+1}">
+                <input type="hidden" name="ref" th:value="${userBoard.getNum()}">
+                <input type="hidden" name="refLevel" th:value="${userBoard.getRefLevel()+1}">
                 <!-- 사용자 Q&A 정보 Title Block -->
                 <div class="w-97 mx-auto bg-white px-10 py-15">
-                    <b th:text="|'·' 사용자 ${board.getBoardUser().getUsername()} 정보|">· 사용자 kim 정보</b>
+                    <b th:text="|'·' 사용자 ${userBoard.getBoardUser().getUsername()} 정보|">· 사용자 kim 정보</b>
                 </div>
                 <!-- 사용자 Q&A 정보 : withItem -->
-                <table class="w-97 mx-auto bg-white border-top-1-ccc border-bottom-1-ccc td-py15 td-px10 fs-8 td-border-bottom-1-ccc tdChild1-fw-bold vertical-middle-all">
-                    <col style = "width:20%">
-                    <col>
-                    <tr>
-                        <!-- prdImage block(image 클릭시 상품 선택 가능한 팝업 생성) -->
-                        <td rowspan = "2" class="text-center py-10 bg-EAECEE">
-                            <img src = "./ascloimage/jang1.jpg" width = "100px" height = "100px" class="align-middle">
-                        </td>
-                        <!-- prdTitle block -->
-                        <td><img src = "../ascloimage/n.png" width = "10px" height = "10px" class="align-middle"><br>
-                            장원영의 이쁜 티셔츠(3color)<br>
-                            KRW 37,000</td>
-                    </tr>
-                    <tr>
-                        <!-- product detail block(해당 상품의 페이지 보러가기) -->
-                        <td class="pb-15">
-                            <input type = "submit" name = "detailPrd" value = "상품 상세보기" class="fs-9 whiteButton">
-                        </td>
-                    </tr>
-                </table>
+                <div id = "prdData" class = "my-15 w-97 mx-auto fs-75 border-y-1-ccc boardView-header">
+                    <table class="w-100">
+                        <col style = "width: 20%;">
+                        <col style = "width: 80%;">
+                        <tr>
+                            <!-- prdImage block(image 클릭시 상품 선택 가능한 팝업 생성) -->
+                            <td rowspan = "2" class="text-center py-10">
+                                <div id = "imageDiv" class="bg-secondary-subtle wh-100px mx-auto">
+                                    <img th:if="${userBoard.getBoardCloth() != null}"
+                                         th:src="|/uploadMainImageView/${userBoard.getBoardCloth().getClothId()}|" class="w-100 h-100"/>
+                                    <span th:if="${userBoard.getBoardCloth() == null}">No image</span>
+                                </div>
+                            </td>
+                            <!-- prdTitle block -->
+                            <td>
+                                <input type="hidden" name="clothId" id="clothId" th:value="${userBoard.getBoardCloth() != null}?${userBoard.getBoardCloth().getClothId()}">
+                                <span class="fw-bold"> &lt;WITH ITEM SELECT&gt; </span><br>
+                                <span id="clothName" class="fs-15" th:text="${userBoard.getBoardCloth() != null}?${userBoard.getBoardCloth().getClothName()}"></span>
+                            </td>
+                        </tr>
+                        <tr th:if="${userBoard.getBoardCloth() != null}">
+                            <!-- product detail block(해당 상품의 페이지 보러가기) -->
+                            <td class="pb-15"><a th:href="@{/guest/productDetail?clothId=${userBoard.getBoardCloth().getClothId()}}"
+                                class="fs-9 whiteButton">상품 상세보기</a></td>
+                        </tr>
+                    </table>
+                </div>
                 <!-- 사용자 Q&A 정보 : 게시글 관련 정보 -->
                 <table class="w-97 mx-auto bg-white border-top-1-ccc border-bottom-1-ccc td-py15 td-px10 fs-8 td-border-bottom-1-ccc tdChild1-fw-bold tdChild1-bg-lightGray vertical-middle-all">
                     <col style = "width:20%">
                     <col>
                     <tr>
                         <td>문의구분</td>
-                        <td th:text="|${board.getContentState()}|">상품문의</td>
+                        <td th:text="|${userBoard.getContentState()}|">상품문의</td>
                     </tr>
                     <tr>
                         <td>제목</td>
-                        <td th:text="|${board.getSubject()}|">옷이 왜 이래여?</td>
+                        <td th:text="|${userBoard.getSubject()}|">옷이 왜 이래여?</td>
                     </tr>
 
                     <tr>
                         <td>작성자</td>
-                        <td><b th:text="|${board.getBoardUser().getUsername()}|">kim</b></td>
+                        <td><b th:text="|${userBoard.getBoardUser().getUsername()}|">kim</b></td>
                     </tr>
                 </table>
             </th:block>
@@ -178,13 +184,11 @@
                 <!-- 비밀글 비밀번호 확인 부분 : Q&A -->
                 <th:block th:if="${name == 'Q&A'}">
                 <!-- Q&A 작성자의 글이 비밀글이면 관리자 답변글도 비밀글로 만듦 -->
-                // 비밀글일 경우
                 <tr th:if="${board.getTextType() == 'close'}">
                     <td><label for="pwd">비밀번호</label></td>
                     <td><input type = "password" id = "pwd" name = "pwd" th:value="${board.getPwd()}" readonly></td>
                 </tr>
                 <input type = "hidden" name = "textType" value = "close" th:if="${board.getTextType() == 'close'}">
-                // 공개글일 경우
                 <input type = "hidden" name = "textType" value = "open" th:if="${board.getTextType() == 'open'}">
                 </th:block>
             </table>

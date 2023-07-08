@@ -220,12 +220,17 @@ public class HostController {
     @GetMapping("/boardInput")
     public String boardInput(Model model
             , @RequestParam(required = false) String name
-            , @RequestParam(required = false) Long boardNum) {
+            , @RequestParam(required = false) Long boardNum
+            , @RequestParam(required = false) Long userBoardNum) {
         Board board = new Board();
         List<BoardFile> files = new ArrayList<>();
         if(boardNum != null) {
             board = boardRepository.findById(boardNum).orElse(null);
             files = boardFileRepository.findByBoard(board);
+        }
+        if(board.getRef() != 0 || userBoardNum != null){
+            Board userBoard = boardRepository.findById(userBoardNum).orElse(null);
+            model.addAttribute("userBoard", userBoard);
         }
 
         model.addAttribute("board", board);

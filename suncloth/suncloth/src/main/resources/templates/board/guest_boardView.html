@@ -148,7 +148,7 @@
             <th:block th:if="${name == 'Q&A(HOST)'}">
                 <!-- 답글달기 버튼 -->
                 <!--<a href = "h_QnAwrite?num=${num}&number=${number}&pageNum=${pageNum}&choose=${choose}">-->
-                <a th:href="@{/host/boardInput(name = 'Q&A')}">
+                <a th:href="@{/host/boardInput(name = 'Q&A', userBoardNum = ${board.getNum()})}">
                     <input type = "button" name = "answer" value = "답글달기" class="fs-75 whiteButton">
                 </a>
             </th:block>
