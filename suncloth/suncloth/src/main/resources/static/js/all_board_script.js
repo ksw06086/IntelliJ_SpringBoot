@@ -313,7 +313,8 @@ function boardFilesDel() {
 // Board 게시판 수정하기
 function boardUpdate(){
     let boardInputForm = new FormData(document.getElementById("boardInputForm"));
-    const boardState = document.getElementById("boardState").value;
+    let boardState = document.getElementById("boardState").value;
+    if(boardState === 'Q&A'){ boardState = 'Q%26A'; }
     const boardSubject = document.getElementById("boardSubject").value;
     const boardNum = document.getElementById("boardNum");
     const baseBoardFileYN = document.getElementById("baseBoardFileYN");
@@ -331,7 +332,7 @@ function boardUpdate(){
                 boardFilesDel();
                 boardFilesAdd(boardNum.value);
             }
-            alert(boardSubject + "게시글이 수정되었습니다.");
+            alert(boardSubject + " 게시글이 수정되었습니다.");
             window.location.href="/host/boardList?name=" + boardState;
         },
         err: function(err){

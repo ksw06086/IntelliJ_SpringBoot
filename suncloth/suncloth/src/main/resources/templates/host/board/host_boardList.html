@@ -161,12 +161,12 @@
                             th:text="${list.getContentState()}">회원등급 또는 상품문의</td>
                         <td class="text-start">
                             <!-- Q&A일 경우에 사용자글과 관리자답글(이미지 추가) 구분짓기 -->
-                            <a th:if="${name == 'Q&A'}" th:text="${list.getSubject()}"
+                            <a th:if="${name == 'Q&A'}"
                                th:href="${#authentication.getName() == list.getBoardUser().getUsername()} ? @{/host/boardInput(name=${name}, boardNum=${list.getNum()})} : @{/board/boardView(name='Q&A(HOST)', num=${list.getNum()})}">
                                 <th:block th:if="${list.getRefLevel() > 0}">
-                                    &nbsp;<img src = "${project}ascloimage/re.png" width = "20" height = "15">
+                                    &nbsp;<img src = "/icon/re.png" width = "20" height = "15">
                                 </th:block> <!-- 답글인 경우 이미지 출력 -->
-                                오늘 이 옷 너무 예뻐요
+                                [[${list.getSubject()}]]
                             </a>
                             <!-- Q&A가 아닐 경우 이거 출력 -->
                             <a th:if="${name != 'Q&A'}" th:text="${list.subject}"

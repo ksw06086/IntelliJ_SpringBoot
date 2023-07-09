@@ -36,7 +36,7 @@ public class BoardController {
     public String boardList(Model model
             , @RequestParam(required = false) String name
             , @PageableDefault(size = 10) Pageable pageable) {
-        Page<Board> boardList = boardRepository.findByBoardStateOrderByNum(name, pageable);
+        Page<Board> boardList = boardRepository.findByBoardStateOrderByRefDescRefLevelAscNumAsc(name, pageable);
 
         // 현재 아래 바를 1~5까지 보여주게 하기 위해서 끝에 4를 빼고 더해준 것
         int startPage = Math.max(1, boardList.getPageable().getPageNumber()-1);
@@ -60,7 +60,7 @@ public class BoardController {
         Board beforeBoard = boardRepository.findByBeforeBoard(num, name);
         Board afterBoard = boardRepository.findByAfterBoard(num, name);
         if(name.equals("REVIEW")){
-            Page<Board> replyBoardList = boardRepository.findByBoardStateOrderByNum("REPLY", pageable);
+            Page<Board> replyBoardList = boardRepository.findByBoardStateOrderByRefDescRefLevelAscNumAsc("REPLY", pageable);
             // 현재 아래 바를 1~5까지 보여주게 하기 위해서 끝에 4를 빼고 더해준 것
             int replyStartPage = Math.max(1, replyBoardList.getPageable().getPageNumber()-1);
             int replyEndPage = Math.min(replyBoardList.getTotalPages(), replyBoardList.getPageable().getPageNumber()+4);

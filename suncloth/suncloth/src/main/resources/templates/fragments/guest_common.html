@@ -290,7 +290,7 @@
             <!-- 게시글 제목 : All -->
             <td><a th:href="@{/board/boardView(name=${title}, num=${list.getNum})}">
                     <th:block th:if="${list.getRefLevel() > 0}">
-                        &nbsp;<img src = "${project}ascloimage/re.png" width = "20" height = "15">
+                        &nbsp;<img src = "/icon/re.png" width = "20" height = "15">
                     </th:block> <!-- 답글인 경우 이미지 출력 -->
                     [[${list.getSubject()}]]
                 </a></td>

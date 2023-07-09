@@ -211,7 +211,7 @@ public class HostController {
     public String boardList(Model model
             , @RequestParam(required = false) String name
             , @PageableDefault(size = 3) Pageable pageable) {
-        Page<Board> boardList = boardRepository.findByBoardStateOrderByNum(name, pageable);
+        Page<Board> boardList = boardRepository.findByBoardStateOrderByRefDescRefLevelAscNumAsc(name, pageable);
         model.addAttribute("name", name);
         model.addAttribute("boardList", boardList);
         return "/host/board/host_boardList";
@@ -223,18 +223,21 @@ public class HostController {
             , @RequestParam(required = false) Long boardNum
             , @RequestParam(required = false) Long userBoardNum) {
         Board board = new Board();
+        Board userBoard = null;
         List<BoardFile> files = new ArrayList<>();
         if(boardNum != null) {
             board = boardRepository.findById(boardNum).orElse(null);
             files = boardFileRepository.findByBoard(board);
         }
-        if(board.getRef() != 0 || userBoardNum != null){
-            Board userBoard = boardRepository.findById(userBoardNum).orElse(null);
-            model.addAttribute("userBoard", userBoard);
+        if(userBoardNum != null){
+            userBoard = boardRepository.findById(userBoardNum).orElse(null);
+        } else if(board.getRefLevel() > 0){
+            userBoard = boardRepository.findByRefAndRefLevel(board.getRef(), board.getRefLevel()-1);
         }
 
         model.addAttribute("board", board);
         model.addAttribute("files", files);
+        model.addAttribute("userBoard", userBoard);
         model.addAttribute("name", name);
         return "/host/board/host_boardInput";
     }

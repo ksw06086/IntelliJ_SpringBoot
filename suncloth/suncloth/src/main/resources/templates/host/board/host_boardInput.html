@@ -40,8 +40,9 @@
         <div class="bg-white w-95 mx-auto mb-20 pb-15">
             <!-- 작성된 게시글 정보 출력 : Q&A -->
             <th:block th:if="${name == 'Q&A'}">
-                <input type="hidden" name="ref" th:value="${userBoard.getNum()}">
+                <input type="hidden" name="refBoardNum" th:value="${userBoard.getNum()}">
                 <input type="hidden" name="refLevel" th:value="${userBoard.getRefLevel()+1}">
+                <input type="hidden" name="contentState" th:value="${userBoard.getContentState()}">
                 <!-- 사용자 Q&A 정보 Title Block -->
                 <div class="w-97 mx-auto bg-white px-10 py-15">
                     <b th:text="|'·' 사용자 ${userBoard.getBoardUser().getUsername()} 정보|">· 사용자 kim 정보</b>

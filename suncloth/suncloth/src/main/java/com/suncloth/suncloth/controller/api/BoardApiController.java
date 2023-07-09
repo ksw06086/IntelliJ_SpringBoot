@@ -121,15 +121,21 @@ public class BoardApiController {
         User user = userRepository.findByUsername(username);
         newBoard.setBoardUser(user);
         newBoard.setIp(InetAddress.getLocalHost().getHostAddress());
+        newBoard.setRef(boardRepository.findByMaxRef()+1);
 
         if(clothId != null) {
             Cloth cloth = clothRepository.findById(clothId).orElse(null);
             newBoard.setBoardCloth(cloth);
         }
         if(refBoardNum != null && refBoardNum != 0) {
+            int updateResult = boardRepository.writeStateUpdateById(refBoardNum);
+            Long ref = boardRepository.refById(refBoardNum);
             Long maxRefStep = boardRepository.findByMaxRefStep(refBoardNum);
+            newBoard.setRef(ref);
             newBoard.setRefStep(maxRefStep + 1);
-            System.out.println("maxRefStep : " + maxRefStep);
+            newBoard.setWriteState(" ");
+            log.info("updateResult : {}", updateResult);
+            log.info("maxRefStep : {}", maxRefStep);
         }
 
         log.info("newBoard : {}", newBoard.toString());
