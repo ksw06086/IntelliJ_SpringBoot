@@ -83,7 +83,7 @@
                     </tr>
                     <tr>
                         <!-- product detail block(해당 상품의 페이지 보러가기) -->
-                        <td class="pb-15">
+                        <td class="pb-15" th:if="${board.getBoardCloth() != null}">
                             <input type = "button" name = "detailPrd" value = "상품 상세보기" class="fs-9 whiteButton"
                                    th:onclick="|window.location.href='/guest/productDetail?clothId=${board.getBoardCloth().getClothId()}';|">
                         </td>

@@ -321,13 +321,12 @@ function boardUpdate(){
 
     // api/board에서 추가와 수정 둘다 가능함(save함수)
     $.ajax({
-        type:"POST",
-        url: "/api/board",
-        enctype: 'multipart/form-data',
-        processData: false,
-        contentType: false,
-        data: boardInputForm,
+        type:"PUT",
+        url: "/api/board/" + boardNum.value,
+        contentType:'application/json',
+        data: JSON.stringify(boardInputForm),
         success: function(result){
+            return false;
             if(baseBoardFileYN.checked === false){
                 boardFilesDel();
                 boardFilesAdd(boardNum.value);

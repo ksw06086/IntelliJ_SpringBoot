@@ -121,7 +121,9 @@ public class BoardApiController {
         User user = userRepository.findByUsername(username);
         newBoard.setBoardUser(user);
         newBoard.setIp(InetAddress.getLocalHost().getHostAddress());
-        newBoard.setRef(boardRepository.findByMaxRef()+1);
+        if(newBoard.getNum() > 0) {
+            newBoard.setRef(boardRepository.findByMaxRef() + 1);
+        }
 
         if(clothId != null) {
             Cloth cloth = clothRepository.findById(clothId).orElse(null);
@@ -162,10 +164,13 @@ public class BoardApiController {
 
     // PUT : Id에 맞게 한가지 Board 정보만 갱신
     @PutMapping("/board/{num}")
-    Board replaceBoard(@RequestBody Board newBoard, @PathVariable Long num) {
-
+    Board replaceBoard(Board newBoard, @PathVariable Long num) {
+        log.info("newBoard : {}, {}, {}, {}, {}, {}, {}, {}", newBoard.getNum(), newBoard.getBoardUser()
+                , newBoard.getBoardState(), newBoard.getRef(), newBoard.getRegDate(), newBoard.getSubject(), newBoard.getContent(), newBoard.getContentState());
         return boardRepository.findById(num)
                 .map(board -> {
+                    log.info("board : {}, {}, {}, {}, {}, {}, {}, {}", board.getNum(), board.getBoardUser()
+                            , board.getBoardState(), board.getRef(), board.getRegDate(), board.getSubject(), board.getContent(), board.getContentState());
                     board.setSubject(newBoard.getSubject());
                     return boardRepository.save(board);
                 })
