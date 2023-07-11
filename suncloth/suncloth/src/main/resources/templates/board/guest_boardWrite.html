@@ -13,7 +13,7 @@
     <!-- 게시판 Body 부분 -->
     <section class="body">
         <form method="POST" id="boardInputForm" enctype="multipart/form-data"
-              th:onsubmit="${board.getBoardUser() == null || board.getBoardUser().getUsername() != #authentication.getName()}?'return boardAdd(\'guest\')':'return boardUpdate()'">
+              th:onsubmit="${board.getBoardUser() == null || board.getBoardUser().getUsername() != #authentication.getName()}?'return boardAdd(\'guest\')':'return boardUpdate(\'guest\')'">
             <input type="hidden" name="boardState" id="boardState" th:value="${name}">
             <input type="hidden" name="num" id="boardNum" th:value="${board.getNum()}">
             <input type="hidden" name="ref" id="ref" th:value="${board.getRef()}">

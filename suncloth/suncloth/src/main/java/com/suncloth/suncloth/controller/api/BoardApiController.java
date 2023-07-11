@@ -4,6 +4,7 @@ import com.suncloth.suncloth.model.*;
 import com.suncloth.suncloth.repository.*;
 import com.suncloth.suncloth.repository.querydsl.BoardRepositoryImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -121,10 +123,16 @@ public class BoardApiController {
         User user = userRepository.findByUsername(username);
         newBoard.setBoardUser(user);
         newBoard.setIp(InetAddress.getLocalHost().getHostAddress());
-        if(newBoard.getNum() > 0) {
-            newBoard.setRef(boardRepository.findByMaxRef() + 1);
+        newBoard.setRef(boardRepository.findByMaxRef() + 1);
+        if(newBoard.getNum() > 0) { // 게시글 수정시 기존 데이터 입력
+            Board board = boardRepository.findById(newBoard.getNum()).orElse(null);
+            newBoard.setRef(board.getRef());
+            newBoard.setRefStep(board.getRefStep());
+            newBoard.setRefLevel(board.getRefLevel());
+            newBoard.setWriteState(board.getWriteState());
+            newBoard.setReadCnt(board.getReadCnt());
+            newBoard.setRegDate(board.getRegDate());
         }
-
         if(clothId != null) {
             Cloth cloth = clothRepository.findById(clothId).orElse(null);
             newBoard.setBoardCloth(cloth);
@@ -165,12 +173,8 @@ public class BoardApiController {
     // PUT : Id에 맞게 한가지 Board 정보만 갱신
     @PutMapping("/board/{num}")
     Board replaceBoard(Board newBoard, @PathVariable Long num) {
-        log.info("newBoard : {}, {}, {}, {}, {}, {}, {}, {}", newBoard.getNum(), newBoard.getBoardUser()
-                , newBoard.getBoardState(), newBoard.getRef(), newBoard.getRegDate(), newBoard.getSubject(), newBoard.getContent(), newBoard.getContentState());
         return boardRepository.findById(num)
                 .map(board -> {
-                    log.info("board : {}, {}, {}, {}, {}, {}, {}, {}", board.getNum(), board.getBoardUser()
-                            , board.getBoardState(), board.getRef(), board.getRegDate(), board.getSubject(), board.getContent(), board.getContentState());
                     board.setSubject(newBoard.getSubject());
                     return boardRepository.save(board);
                 })

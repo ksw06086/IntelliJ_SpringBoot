@@ -311,28 +311,32 @@ function boardFilesDel() {
     }
 }
 // Board 게시판 수정하기
-function boardUpdate(){
+function boardUpdate(userRole){
     let boardInputForm = new FormData(document.getElementById("boardInputForm"));
     let boardState = document.getElementById("boardState").value;
     if(boardState === 'Q&A'){ boardState = 'Q%26A'; }
+    let hrefURL = ''
+    if(userRole === 'host'){ hrefURL = "/host/boardList?name=" + boardState; }
+    if(userRole === 'guest'){ hrefURL = "/board/boardList?name=" + boardState; }
     const boardSubject = document.getElementById("boardSubject").value;
     const boardNum = document.getElementById("boardNum");
     const baseBoardFileYN = document.getElementById("baseBoardFileYN");
 
     // api/board에서 추가와 수정 둘다 가능함(save함수)
     $.ajax({
-        type:"PUT",
-        url: "/api/board/" + boardNum.value,
-        contentType:'application/json',
-        data: JSON.stringify(boardInputForm),
+        type:"POST",
+        url: "/api/board",
+        enctype: 'multipart/form-data',
+        processData: false,
+        contentType: false,
+        data: boardInputForm,
         success: function(result){
-            return false;
             if(baseBoardFileYN.checked === false){
                 boardFilesDel();
                 boardFilesAdd(boardNum.value);
             }
             alert(boardSubject + " 게시글이 수정되었습니다.");
-            window.location.href="/host/boardList?name=" + boardState;
+            window.location.href=hrefURL;
         },
         err: function(err){
             console.log("err:", err);

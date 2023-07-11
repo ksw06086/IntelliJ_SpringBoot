@@ -10,7 +10,8 @@ select * from cloth_tbl;
 select * from stock_tbl;
 select * from color_tbl;
 select * from size_tbl;
-select * from board_tbl;
+select * from board_tbl
+order by ref DESC, ref_step asc, num asc;
 select * from board_file_tbl;
 select * from cart_tbl;
 select * from order_tbl;
